@@ -8,7 +8,7 @@ type Language = "한국어" | "English";
 
 export default function Header() {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>("한국어");
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -16,8 +16,13 @@ export default function Header() {
   }, []);
 
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    const currentTheme = resolvedTheme || theme || "light";
+    setTheme(currentTheme === "dark" ? "light" : "dark");
   };
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <header className="w-full border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
@@ -63,7 +68,7 @@ export default function Header() {
               onClick={toggleTheme}
               aria-label="테마 전환"
             >
-              {mounted && theme === "dark" ? (
+              {(resolvedTheme || theme) === "dark" ? (
                 // Sun icon (라이트 모드로 전환)
                 <svg
                   className="w-5 h-5"
