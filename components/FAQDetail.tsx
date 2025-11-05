@@ -14,7 +14,7 @@ export default function FAQDetail({ faq }: FAQDetailProps) {
     <div className="w-full">
       <button
         onClick={() => router.push("/")}
-        className="mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+        className="mb-6 flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
       >
         <svg
           className="w-5 h-5"
@@ -33,7 +33,7 @@ export default function FAQDetail({ faq }: FAQDetailProps) {
         <span className="text-sm font-medium">질문 목록</span>
       </button>
 
-      <h1 className="mb-4 text-2xl font-bold text-gray-900">
+      <h1 className="mb-4 text-2xl font-bold text-gray-900 dark:text-gray-100">
         {faq.title}
       </h1>
 
@@ -42,7 +42,7 @@ export default function FAQDetail({ faq }: FAQDetailProps) {
           {faq.tags.map((tag, index) => (
             <span
               key={index}
-              className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700"
+              className="rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-300"
             >
               {tag}
             </span>
@@ -53,7 +53,7 @@ export default function FAQDetail({ faq }: FAQDetailProps) {
       {faq.content && (
         <div className="prose prose-sm max-w-none">
           {faq.content.split("\n\n").map((paragraph, index) => (
-            <p key={index} className="mb-4 text-gray-700 leading-relaxed">
+            <p key={index} className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed">
               {paragraph}
             </p>
           ))}
@@ -61,7 +61,7 @@ export default function FAQDetail({ faq }: FAQDetailProps) {
       )}
 
       {!faq.content && (
-        <p className="text-gray-500">내용이 준비되지 않았습니다.</p>
+        <p className="text-gray-500 dark:text-gray-400">내용이 준비되지 않았습니다.</p>
       )}
     </div>
   );

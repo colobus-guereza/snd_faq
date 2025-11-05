@@ -22,7 +22,7 @@ export default function CategoryMenu({
               className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
                 selectedCategory === category
                   ? "text-[#14B8A6] font-medium"
-                  : "text-gray-700 hover:text-gray-900"
+                  : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
               }`}
             >
               {category}
