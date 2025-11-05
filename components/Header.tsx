@@ -11,26 +11,6 @@ export default function Header() {
               고객센터
             </span>
           </div>
-          <nav className="flex items-center gap-6">
-            <a
-              href="#"
-              className="text-sm font-medium text-gray-900 hover:text-blue-600"
-            >
-              자주 묻는 질문
-            </a>
-            <a
-              href="#"
-              className="text-sm text-gray-600 hover:text-gray-900"
-            >
-              피해 사건 신고
-            </a>
-            <a
-              href="#"
-              className="text-sm text-gray-600 hover:text-gray-900"
-            >
-              토스의 보안
-            </a>
-          </nav>
         </div>
       </div>
     </header>
