@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FAQ 사이트
 
-## Getting Started
+자주 묻는 질문 FAQ 사이트입니다.
 
-First, run the development server:
+## 기술 스택
+
+- Next.js 16.0.1 (App Router)
+- TypeScript
+- Tailwind CSS v4
+- Fuse.js (검색 기능)
+
+## 주요 기능
+
+- 검색 기능 (Fuse.js 기반)
+- 카테고리별 필터링
+- FAQ 상세 페이지
+- 반응형 디자인
+
+## 개발 환경 설정
 
 ```bash
+# 의존성 설치
+npm install
+
+# 개발 서버 실행
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# 프로덕션 빌드
+npm run build
+
+# 프로덕션 서버 실행
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 배포
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+이 프로젝트는 Vercel에 배포되어 있습니다.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Vercel 배포 방법
 
-## Learn More
+1. [Vercel](https://vercel.com)에 가입하고 로그인
+2. "Add New Project" 클릭
+3. GitHub 리포지토리 연결
+4. 프로젝트 설정 확인:
+   - Framework Preset: Next.js (자동 감지)
+   - Build Command: `npm run build` (기본값)
+   - Output Directory: `.next` (기본값)
+5. "Deploy" 클릭
 
-To learn more about Next.js, take a look at the following resources:
+배포가 완료되면 자동으로 URL이 생성됩니다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 프로젝트 구조
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+app/
+  ├── page.tsx          # 메인 FAQ 리스트 페이지
+  ├── faq/[id]/
+  │   ├── layout.tsx   # FAQ 상세 페이지 레이아웃
+  │   └── page.tsx     # FAQ 상세 페이지
+components/
+  ├── Header.tsx       # 헤더 컴포넌트
+  ├── SearchBar.tsx    # 검색바 컴포넌트
+  ├── CategoryMenu.tsx # 카테고리 메뉴 컴포넌트
+  ├── FAQList.tsx      # FAQ 리스트 컴포넌트
+  └── FAQDetail.tsx    # FAQ 상세 컴포넌트
+data/
+  └── faqs.ts          # FAQ 데이터
+types/
+  └── faq.ts           # FAQ 타입 정의
+```
 
-## Deploy on Vercel
+## 라이선스
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
