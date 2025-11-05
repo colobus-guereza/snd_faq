@@ -68,7 +68,7 @@ export default function Home() {
           자주묻는 질문
         </h1>
 
-        <div className="mb-10 flex justify-center">
+        <div className="mb-10 flex justify-start">
           <div className="w-full max-w-2xl">
             <SearchBar
               value={searchQuery}
