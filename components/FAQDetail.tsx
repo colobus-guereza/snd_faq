@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { FAQ } from "@/types/faq";
 
 interface FAQDetailProps {
@@ -9,24 +9,16 @@ interface FAQDetailProps {
 }
 
 export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
-  const router = useRouter();
-
-  const handleBackClick = () => {
-    if (returnCategory) {
-      // 이전 카테고리로 돌아가기
-      const categoryParam = encodeURIComponent(returnCategory);
-      router.push(`/?category=${categoryParam}`);
-    } else {
-      // 카테고리 정보가 없으면 기본으로
-      router.push("/");
-    }
-  };
+  const backHref = returnCategory 
+    ? `/?category=${encodeURIComponent(returnCategory)}`
+    : "/";
 
   return (
     <div className="w-full">
-      <button
-        onClick={handleBackClick}
-        className="mb-6 flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+      <Link
+        href={backHref}
+        prefetch={true}
+        className="mb-6 inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
       >
         <svg
           className="w-5 h-5"
@@ -43,7 +35,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
           />
         </svg>
         <span className="text-sm font-medium">질문 목록</span>
-      </button>
+      </Link>
 
       <h1 className="mb-4 text-2xl font-bold text-gray-900 dark:text-gray-100">
         {faq.title}
