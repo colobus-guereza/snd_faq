@@ -1,4 +1,12 @@
+"use client";
+
+import { useState } from "react";
+
+type Language = "한국어" | "English";
+
 export default function Header() {
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>("한국어");
+
   return (
     <header className="w-full border-b border-gray-200 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -12,15 +20,31 @@ export default function Header() {
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <button
-              type="button"
-              className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
-              onClick={() => {
-                // TODO: 언어 선택 기능 구현 예정
-              }}
-            >
-              한국어
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                className={`text-sm transition-colors ${
+                  selectedLanguage === "한국어"
+                    ? "font-bold text-gray-900"
+                    : "font-medium text-gray-700 hover:text-gray-900"
+                }`}
+                onClick={() => setSelectedLanguage("한국어")}
+              >
+                한국어
+              </button>
+              <span className="text-sm text-gray-400">/</span>
+              <button
+                type="button"
+                className={`text-sm transition-colors ${
+                  selectedLanguage === "English"
+                    ? "font-bold text-gray-900"
+                    : "font-medium text-gray-700 hover:text-gray-900"
+                }`}
+                onClick={() => setSelectedLanguage("English")}
+              >
+                English
+              </button>
+            </div>
             <button
               type="button"
               className="p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
