@@ -5,15 +5,27 @@ import { FAQ } from "@/types/faq";
 
 interface FAQDetailProps {
   faq: FAQ;
+  returnCategory?: string;
 }
 
-export default function FAQDetail({ faq }: FAQDetailProps) {
+export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   const router = useRouter();
+
+  const handleBackClick = () => {
+    if (returnCategory) {
+      // 이전 카테고리로 돌아가기
+      const categoryParam = encodeURIComponent(returnCategory);
+      router.push(`/?category=${categoryParam}`);
+    } else {
+      // 카테고리 정보가 없으면 기본으로
+      router.push("/");
+    }
+  };
 
   return (
     <div className="w-full">
       <button
-        onClick={() => router.push("/")}
+        onClick={handleBackClick}
         className="mb-6 flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
       >
         <svg

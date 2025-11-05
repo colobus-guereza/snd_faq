@@ -10,15 +10,17 @@ export async function generateStaticParams() {
 
 interface PageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ category?: string }>;
 }
 
-export default async function FAQDetailPage({ params }: PageProps) {
+export default async function FAQDetailPage({ params, searchParams }: PageProps) {
   const { id } = await params;
+  const { category } = await searchParams;
   const faq = faqs.find((f) => f.id === id);
 
   if (!faq) {
     notFound();
   }
 
-  return <FAQDetail faq={faq} />;
+  return <FAQDetail faq={faq} returnCategory={category} />;
 }

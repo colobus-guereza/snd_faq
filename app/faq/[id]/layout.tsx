@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import Header from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
 import CategoryMenu from "@/components/CategoryMenu";
@@ -13,18 +14,53 @@ export default function FAQLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<Category>("질문 Top 10");
+  
+  // 카테고리 타입 검증 함수
+  const getValidCategory = (categoryParam: string | null): Category => {
+    const validCategories: Category[] = [
+      "질문 Top 10",
+      "결제/배송",
+      "튜닝/리튠",
+      "수리 A/S",
+      "관리법",
+      "특징",
+      "레슨/교육",
+      "문의/제안",
+    ];
+    if (categoryParam && validCategories.includes(categoryParam as Category)) {
+      return categoryParam as Category;
+    }
+    return "질문 Top 10";
+  };
+
+  // URL 쿼리 파라미터에서 초기 카테고리 설정
+  const [selectedCategory, setSelectedCategory] = useState<Category>(() => {
+    return getValidCategory(searchParams.get("category"));
+  });
+
+  // URL 쿼리 파라미터 변경 시 카테고리 업데이트
+  useEffect(() => {
+    const categoryParam = searchParams.get("category");
+    const newCategory = getValidCategory(categoryParam);
+    setSelectedCategory((prevCategory) => {
+      if (prevCategory !== newCategory) {
+        return newCategory;
+      }
+      return prevCategory;
+    });
+  }, [searchParams]);
 
   const handleCategorySelect = (category: Category) => {
     setSelectedCategory(category);
-    router.push("/");
+    router.push(`/?category=${encodeURIComponent(category)}`);
   };
 
   const handleTitleClick = () => {
     setSearchQuery("");
     setSelectedCategory("질문 Top 10");
-    router.push("/");
+    router.push("/?category=질문 Top 10");
   };
 
   return (
