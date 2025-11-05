@@ -20,8 +20,8 @@ export default function FAQList({ faqs }: FAQListProps) {
           key={faq.id}
           className="cursor-pointer py-4 transition-colors hover:text-blue-600"
         >
-          <div className="flex items-start gap-3">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-medium text-white mt-0.5">
+          <div className="flex items-center gap-3">
+            <span className="text-gray-900">
               Q
             </span>
             <h3 className="flex-1 text-gray-900 text-[15px] leading-relaxed">
