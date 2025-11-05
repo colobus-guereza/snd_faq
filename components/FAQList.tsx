@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { FAQ } from "@/types/faq";
 
 interface FAQListProps {
@@ -5,6 +8,8 @@ interface FAQListProps {
 }
 
 export default function FAQList({ faqs }: FAQListProps) {
+  const router = useRouter();
+
   if (faqs.length === 0) {
     return (
       <div className="w-full text-center py-12">
@@ -18,6 +23,7 @@ export default function FAQList({ faqs }: FAQListProps) {
       {faqs.map((faq) => (
         <div
           key={faq.id}
+          onClick={() => router.push(`/faq/${faq.id}`)}
           className="cursor-pointer py-4 transition-colors hover:text-blue-600"
         >
           <div className="flex items-center gap-3">
