@@ -27,7 +27,7 @@ export default function FAQLayout({
       <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <h1 
           onClick={() => router.push("/")}
-          className="mb-10 text-left text-4xl font-bold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
+          className="mb-10 text-left text-4xl font-bold text-gray-900 cursor-pointer hover:text-[#14B8A6] transition-colors"
         >
           자주묻는 질문
         </h1>

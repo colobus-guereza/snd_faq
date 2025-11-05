@@ -21,7 +21,7 @@ export default function CategoryMenu({
               onClick={() => onSelectCategory(category)}
               className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
                 selectedCategory === category
-                  ? "text-blue-600 font-medium"
+                  ? "text-[#14B8A6] font-medium"
                   : "text-gray-700 hover:text-gray-900"
               }`}
             >

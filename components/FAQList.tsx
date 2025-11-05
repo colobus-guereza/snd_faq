@@ -24,7 +24,7 @@ export default function FAQList({ faqs }: FAQListProps) {
         <div
           key={faq.id}
           onClick={() => router.push(`/faq/${faq.id}`)}
-          className="cursor-pointer py-4 transition-colors hover:text-blue-600"
+          className="cursor-pointer py-4 px-3 -mx-3 rounded-lg transition-all duration-200 hover:bg-gray-50 hover:text-blue-600 hover:shadow-[0_1px_3px_rgba(20,184,166,0.3)] hover:scale-[1.01]"
         >
           <div className="flex items-center gap-3">
             <span className="text-gray-900">
