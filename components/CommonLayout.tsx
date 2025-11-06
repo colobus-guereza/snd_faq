@@ -110,11 +110,11 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
   // URL 복사 상태 관리
   const [copied, setCopied] = useState(false);
   
-  // 현재 페이지 URL 복사 함수
+  // 초기화면(메인 페이지) URL 복사 함수
   const handleShareClick = async () => {
     try {
-      const currentUrl = window.location.href;
-      await navigator.clipboard.writeText(currentUrl);
+      const homeUrl = `${window.location.origin}/`;
+      await navigator.clipboard.writeText(homeUrl);
       setCopied(true);
       // 2초 후 복사 완료 메시지 숨김
       setTimeout(() => {
@@ -123,8 +123,9 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
     } catch (err) {
       console.error("URL 복사 실패:", err);
       // 클립보드 API가 지원되지 않는 경우 대체 방법
+      const homeUrl = `${window.location.origin}/`;
       const textArea = document.createElement("textarea");
-      textArea.value = window.location.href;
+      textArea.value = homeUrl;
       document.body.appendChild(textArea);
       textArea.select();
       document.execCommand("copy");
