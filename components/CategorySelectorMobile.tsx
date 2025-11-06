@@ -167,10 +167,10 @@ export default function CategorySelectorMobile({
                         onSelectCategory(category);
                         setIsOpen(false);
                       }}
-                      className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                      className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-[#14B8A6] dark:hover:text-[#14B8A6] hover:shadow-[0_1px_3px_rgba(20,184,166,0.3)] hover:scale-[1.01] ${
                         selectedCategory === category
                           ? "text-[#14B8A6] font-medium bg-gray-100 dark:bg-gray-800"
-                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                          : "text-gray-700 dark:text-gray-300"
                       }`}
                     >
                       {t(category)}
