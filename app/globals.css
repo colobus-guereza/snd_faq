@@ -6,6 +6,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* 카테고리와 질문 목록 사이의 여백 (Tailwind gap-12 = 3rem = 48px) */
+  --category-list-gap: 0.5rem; /* 수동 조절 가능: 1rem = 16px, 2rem = 32px, 3rem = 48px, 4rem = 64px 등 */
 }
 
 .dark {
@@ -18,6 +20,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --spacing-category-list-gap: var(--category-list-gap);
 }
 
 html {

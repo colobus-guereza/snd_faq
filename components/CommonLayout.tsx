@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
 import CategoryMenu from "@/components/CategoryMenu";
 import { Category } from "@/types/faq";
+import { categoryDirectLinkMap } from "@/data/faqs";
 
 interface SearchContextType {
   searchQuery: string;
@@ -72,7 +73,15 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
 
   const handleCategorySelect = (category: Category) => {
     setSelectedCategory(category);
-    // 메인 페이지로 이동하면서 카테고리 정보 전달
+    
+    // 특정 카테고리는 바로 질문 페이지로 이동
+    const directLinkQuestionId = categoryDirectLinkMap[category];
+    if (directLinkQuestionId) {
+      router.push(`/faq/${directLinkQuestionId}?category=${encodeURIComponent(category)}`);
+      return;
+    }
+    
+    // 일반 카테고리는 메인 페이지로 이동하면서 카테고리 정보 전달
     router.push(`/?category=${encodeURIComponent(category)}`);
   };
 
@@ -112,7 +121,8 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
             </div>
           </div>
 
-          <div className="flex flex-row gap-12 items-start">
+          {/* 카테고리와 질문 목록 사이의 여백은 globals.css의 --category-list-gap 변수로 조절 가능 */}
+          <div className="flex flex-row items-start" style={{ gap: 'var(--category-list-gap)' }}>
             <aside className="w-[125px] shrink-0">
               <CategoryMenu
                 selectedCategory={selectedCategory}
