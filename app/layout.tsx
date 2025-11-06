@@ -18,6 +18,25 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "자주 묻는 질문 | 고객센터",
   description: "자주 묻는 질문 FAQ 페이지",
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  },
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#171717' },
+  ],
+  icons: {
+    icon: '/favicon.ico',
+  },
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'FAQ',
+  },
 };
 
 export default function RootLayout({
