@@ -153,8 +153,11 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
             {/* 차트 제목 */}
             <div className="mb-6 text-center">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                {language === "ko" ? "쉘 구조 파라미터 비교" : "Shell Structure Parameter Comparison"}
+                {language === "ko" ? "쉘 구조·기계적 특성 비교" : "Shell Structure·Mechanical Properties Comparison"}
               </h3>
+              <p className="text-xs text-gray-600 dark:text-gray-400 text-center mt-2 mb-6">
+                {language === "ko" ? "상대값 (1.0mm 기준)" : "Relative Value (Based on 1.0mm)"}
+              </p>
             </div>
 
             {/* 범례 */}
@@ -299,7 +302,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
             {/* 정량적 지표 - 통합 막대 그래프 */}
             <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800">
               <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2 text-center">
-                {language === "ko" ? "핸드팬 음향 구조 성능 지표 비교" : "Handpan Acoustic Structure Performance Index Comparison"}
+                {language === "ko" ? "구조·기계적 특성에 따른 음향·기능적 성능 지표 비교" : "Acoustic·Functional Performance Index Comparison Based on Structural·Mechanical Properties"}
               </h4>
               <p className="text-xs text-gray-600 dark:text-gray-400 text-center mb-6">
                 {language === "ko" ? "상대값 (1.0mm 기준)" : "Relative Value (Based on 1.0mm)"}
