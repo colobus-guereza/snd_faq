@@ -5,8 +5,9 @@ import { useEffect, useState, createContext, useContext } from "react";
 import Header from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
 import CategoryMenu from "@/components/CategoryMenu";
+import CategorySelectorMobile from "@/components/CategorySelectorMobile";
 import { Category } from "@/types/faq";
-import { categoryDirectLinkMap } from "@/data/faqs";
+import { categoryDirectLinkMap, categories } from "@/data/faqs";
 
 interface SearchContextType {
   searchQuery: string;
@@ -121,16 +122,27 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
             </div>
           </div>
 
+          {/* 모바일: 카테고리 선택 버튼 (질문 목록 위에 표시) */}
+          <div className="md:hidden mb-4">
+            <CategorySelectorMobile
+              selectedCategory={selectedCategory}
+              onSelectCategory={handleCategorySelect}
+              categories={categories}
+            />
+          </div>
+
           {/* 카테고리와 질문 목록 사이의 여백은 globals.css의 --category-list-gap 변수로 조절 가능 */}
           <div className="flex flex-row items-start" style={{ gap: 'var(--category-list-gap)' }}>
-            <aside className="w-[125px] shrink-0">
+            {/* 웹: 카테고리 사이드바 (md 이상에서만 표시) */}
+            <aside className="hidden md:block w-[125px] shrink-0">
               <CategoryMenu
                 selectedCategory={selectedCategory}
                 onSelectCategory={handleCategorySelect}
               />
             </aside>
 
-            <section className="flex-1">
+            {/* 질문 목록 섹션 */}
+            <section className="flex-1 w-full">
               {children}
             </section>
           </div>
