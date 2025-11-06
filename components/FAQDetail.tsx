@@ -19,6 +19,9 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   // "문의/제안" 카테고리 질문(id: "7")은 뒤로가기 버튼 숨김
   const isInquiryPage = faq.id === "7";
   
+  // "1.2mm 스테인레스를 사용하는 이유" 질문(id: "14")은 도표 표시
+  const isStainlessPage = faq.id === "14";
+  
   // 영어일 경우 번역된 FAQ 데이터 사용
   const translatedFAQ = getFAQ(faq.id);
   
@@ -145,6 +148,149 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
 
       {displayContent && (
         <div className="prose prose-sm max-w-none">
+          {/* 1.2mm 스테인레스 질문 페이지 도표 */}
+          {isStainlessPage && (
+            <div className="mb-8">
+              {/* 차트 컨테이너 */}
+              <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800">
+                {/* 범례 */}
+                <div className="flex justify-end mb-4">
+                  <div className="flex gap-4 text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded bg-gray-400 opacity-30"></div>
+                      <span className="text-gray-700 dark:text-gray-300">1.0 mm</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded bg-gray-500 opacity-100"></div>
+                      <span className="text-gray-700 dark:text-gray-300">1.2 mm</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 차트 영역 - 명확한 좌표계: 0.0부터 시작 */}
+                <div className="relative" style={{ height: '300px' }}>
+                  {/* Y축 라벨 및 그리드 */}
+                  <div className="ml-12 relative" style={{ height: '240px', paddingBottom: '60px' }}>
+                    {/* Y축 라벨 */}
+                    <div className="absolute left-[-48px] top-0 flex flex-col justify-between text-xs text-gray-600 dark:text-gray-400 pr-2" style={{ height: '240px', width: '40px' }}>
+                      {[1.8, 1.6, 1.4, 1.2, 1.0, 0.8, 0.6, 0.4, 0.2, 0.0].map((value) => {
+                        const position = ((1.8 - value) / 1.8) * 240;
+                        return (
+                          <div 
+                            key={value} 
+                            className="absolute flex items-center" 
+                            style={{ 
+                              top: `${position}px`,
+                              transform: 'translateY(-50%)'
+                            }}
+                          >
+                            <span>{value.toFixed(1)}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* 그리드 라인 */}
+                    <div className="absolute inset-0" style={{ height: '240px' }}>
+                      {[0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8].map((value) => {
+                        const position = ((1.8 - value) / 1.8) * 240;
+                        return (
+                          <div
+                            key={value}
+                            className="absolute left-0 right-0 border-t border-dashed border-gray-300 dark:border-gray-700"
+                            style={{
+                              top: `${position}px`
+                            }}
+                          ></div>
+                        );
+                      })}
+                    </div>
+
+                    {/* 바 차트 - 0.0에서 정확히 시작 */}
+                    <div className="absolute top-0 left-0 right-0" style={{ height: '240px' }}>
+                      {/* 막대들 */}
+                      <div className="absolute inset-0 flex justify-around px-2">
+                        {[
+                          { value1: 1.0, value2: 1.73, label: language === "ko" ? "굽힘강성 D" : "Bending Stiffness D" },
+                          { value1: 1.0, value2: 1.2, label: language === "ko" ? "면밀도 ρA" : "Area Density ρA" },
+                          { value1: 1.0, value2: 1.2, label: language === "ko" ? "막(인장)강성" : "Membrane Stiffness" },
+                          { value1: 1.0, value2: 1.44, label: language === "ko" ? "항복 모멘트" : "Yield Moment" },
+                          { value1: 1.0, value2: 1.44, label: language === "ko" ? "좌굴 임계하중" : "Buckling Load" },
+                          { value1: 1.0, value2: 1.2, label: language === "ko" ? "고유진동수 ƒ" : "Natural Freq. ƒ" }
+                        ].map((item, index) => (
+                          <div key={index} className="flex-1 max-w-[60px] relative" style={{ height: '240px' }}>
+                            {/* 막대 쌍 - 절대 위치로 각각 배치 */}
+                            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[50px] relative" style={{ height: '240px' }}>
+                              {/* 1.0mm 막대 */}
+                              <div
+                                className="bg-gray-400 opacity-30 rounded-t absolute bottom-0"
+                                style={{ 
+                                  width: '48%', 
+                                  height: `${(item.value1 / 1.8) * 240}px`,
+                                  left: '0'
+                                }}
+                              ></div>
+                              {/* 1.2mm 막대 */}
+                              <div
+                                className="bg-gray-500 opacity-100 rounded-t absolute bottom-0"
+                                style={{ 
+                                  width: '48%', 
+                                  height: `${(item.value2 / 1.8) * 240}px`,
+                                  right: '0'
+                                }}
+                              ></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* 라벨들 - 별도로 배치 */}
+                      <div className="absolute left-0 right-0 flex justify-around px-2" style={{ top: '248px' }}>
+                        {[
+                          language === "ko" ? "굽힘강성 D" : "Bending Stiffness D",
+                          language === "ko" ? "면밀도 ρA" : "Area Density ρA",
+                          language === "ko" ? "막(인장)강성" : "Membrane Stiffness",
+                          language === "ko" ? "항복 모멘트" : "Yield Moment",
+                          language === "ko" ? "좌굴 임계하중" : "Buckling Load",
+                          language === "ko" ? "고유진동수 ƒ" : "Natural Freq. ƒ"
+                        ].map((label, index) => (
+                          <div key={index} className="flex-1 max-w-[60px] text-center">
+                            <span className="text-[10px] text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                              {label}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 요약 텍스트 */}
+              <div className="mt-6 text-sm text-gray-700 dark:text-gray-300">
+                <p>
+                  <strong className="font-semibold">{language === "ko" ? "요약:" : "Summary:"}</strong>{" "}
+                  {language === "ko" 
+                    ? "1.2 mm는 1.0 mm 대비 굽힘강성 +73%, 면밀도 +20%, 막(인장)강성 +20%, 좌굴·찌그러짐 내성 +44%. 같은 재질·직경이면 고유진동수는 대략 +20% 상승"
+                    : "1.2 mm shows +73% bending stiffness, +20% area density, +20% membrane (tensile) stiffness, and +44% buckling/dent resistance compared to 1.0 mm. With the same material and diameter, natural frequency increases by approximately +20%."
+                  }
+                </p>
+              </div>
+
+              {/* 파라미터 설명 */}
+              <div className="mt-6 pl-6 border-l-2 border-gray-300 dark:border-gray-700 space-y-2 text-xs text-gray-600 dark:text-gray-400 italic">
+                <p className="mb-2 text-[10px] font-medium text-gray-500 dark:text-gray-500 not-italic">
+                  {language === "ko" ? "※ 참고" : "※ Note"}
+                </p>
+                <p><strong className="text-gray-700 dark:text-gray-300 not-italic">{language === "ko" ? "굽힘강성 D" : "Bending Stiffness D"}:</strong> {language === "ko" ? "쉘의 휘어짐 저항. 두께 세제곱에 비례." : "Shell's bending resistance. Proportional to the cube of thickness."} <span className="font-mono not-italic">(D = Eh³ / 12(1 - ν²))</span></p>
+                <p><strong className="text-gray-700 dark:text-gray-300 not-italic">{language === "ko" ? "면밀도 ρA" : "Area Density ρA"}:</strong> {language === "ko" ? "단위면적당 질량. 두께 1차 비례." : "Mass per unit area. Directly proportional to thickness."} <span className="font-mono not-italic">(ρA = ρh)</span></p>
+                <p><strong className="text-gray-700 dark:text-gray-300 not-italic">{language === "ko" ? "막(인장)강성" : "Membrane (Tensile) Stiffness"}:</strong> {language === "ko" ? "스피닝·튜닝 시 펴짐/늘어짐 저항. 얇을수록 늘어남 큼." : "Resistance to stretching/elongation during spinning/tuning. Greater elongation with thinner material."} <span className="font-mono not-italic">(~ Eh)</span></p>
+                <p><strong className="text-gray-700 dark:text-gray-300 not-italic">{language === "ko" ? "항복 모멘트" : "Yield Moment"}:</strong> {language === "ko" ? "충격·국부 눌림에 대한 내성 증가." : "Increased resistance to impact and local indentation."} <span className="font-mono not-italic">(~ σy h²)</span></p>
+                <p><strong className="text-gray-700 dark:text-gray-300 not-italic">{language === "ko" ? "좌굴 임계하중" : "Buckling Critical Load"}:</strong> {language === "ko" ? "압축·잔류응력에서 형상 안정성." : "Shape stability under compression and residual stress."} <span className="font-mono not-italic">(∝ h²)</span></p>
+                <p><strong className="text-gray-700 dark:text-gray-300 not-italic">{language === "ko" ? "고유진동수 ƒ" : "Natural Frequency ƒ"}:</strong> {language === "ko" ? "같은 지름·경계조건이면 전반적 모드 주파수 상승." : "Overall mode frequency increase with same diameter and boundary conditions."} <span className="font-mono not-italic">(ƒ ∝ h)</span></p>
+              </div>
+            </div>
+          )}
           {isInquiryPage ? (
             // "문의/제안" 페이지는 특별한 렌더링
             <div className="flex flex-col gap-3">
