@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FAQ } from "@/types/faq";
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FAQDetailProps {
   faq: FAQ;
@@ -10,6 +11,7 @@ interface FAQDetailProps {
 }
 
 export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
+  const { language, t, getFAQ } = useLanguage();
   const backHref = returnCategory 
     ? `/?category=${encodeURIComponent(returnCategory)}`
     : "/";
@@ -17,8 +19,17 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   // "문의/제안" 카테고리 질문(id: "7")은 뒤로가기 버튼 숨김
   const isInquiryPage = faq.id === "7";
   
+  // 영어일 경우 번역된 FAQ 데이터 사용
+  const translatedFAQ = getFAQ(faq.id);
+  
   // "문의/제안" 카테고리 질문은 타이틀 변경
-  const displayTitle = isInquiryPage ? "문의와 제안" : faq.title;
+  const displayTitle = isInquiryPage 
+    ? t("문의와 제안")
+    : (translatedFAQ ? translatedFAQ.title : faq.title);
+  
+  // 번역된 내용 사용
+  const displayContent = translatedFAQ ? translatedFAQ.content : faq.content;
+  const displayTags = translatedFAQ ? translatedFAQ.tags : faq.tags;
   
   // URL 복사 상태 관리
   const [copied, setCopied] = useState(false);
@@ -71,7 +82,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          <span className="text-sm font-medium">질문 목록</span>
+          <span className="text-sm font-medium">{t("질문 목록")}</span>
         </Link>
       )}
 
@@ -82,8 +93,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
         <button
           onClick={handleShareClick}
           className="flex-shrink-0 p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-          aria-label="링크 공유하기"
-          title={copied ? "복사됨!" : "링크 공유하기"}
+          aria-label={t("링크 공유하기")}
+          title={copied ? t("복사됨!") : t("링크 공유하기")}
         >
           {copied ? (
             <svg
@@ -119,9 +130,9 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
         </button>
       </div>
 
-      {!isInquiryPage && faq.tags && faq.tags.length > 0 && (
+      {!isInquiryPage && displayTags && displayTags.length > 0 && (
         <div className="mb-8 flex flex-wrap gap-2">
-          {faq.tags.map((tag, index) => (
+          {displayTags.map((tag: string, index: number) => (
             <span
               key={index}
               className="rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-300"
@@ -132,18 +143,18 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
         </div>
       )}
 
-      {faq.content && (
+      {displayContent && (
         <div className="prose prose-sm max-w-none">
           {isInquiryPage ? (
             // "문의/제안" 페이지는 특별한 렌더링
             <div className="flex flex-col gap-3">
-              {faq.content.split("\n").map((line, index) => (
+              {displayContent.split("\n").map((line: string, index: number) => (
                 <p key={index} className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
                   {line}
                 </p>
               ))}
               <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-                - 유튜브: <a
+                · {t("유튜브")}: <a
                   href="https://www.youtube.com/@sndhandpanofficial2990"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -153,7 +164,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                 </a>
               </p>
               <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-                - 인스타: <a
+                · {t("인스타")}: <a
                   href="https://www.instagram.com/snd_handpan_official/"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -165,7 +176,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
             </div>
           ) : (
             // 일반 페이지는 기존 방식 유지
-            faq.content.split("\n\n").map((paragraph, index) => (
+            displayContent.split("\n\n").map((paragraph: string, index: number) => (
               <p key={index} className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
                 {paragraph}
               </p>
@@ -174,8 +185,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
         </div>
       )}
 
-      {!faq.content && (
-        <p className="text-gray-500 dark:text-gray-400">내용이 준비되지 않았습니다.</p>
+      {!displayContent && (
+        <p className="text-gray-500 dark:text-gray-400">{t("내용이 준비되지 않았습니다.")}</p>
       )}
     </div>
   );

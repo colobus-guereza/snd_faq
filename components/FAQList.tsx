@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FAQ, Category } from "@/types/faq";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FAQListProps {
   faqs: FAQ[];
@@ -9,10 +10,12 @@ interface FAQListProps {
 }
 
 export default function FAQList({ faqs, selectedCategory }: FAQListProps) {
+  const { t, getFAQ } = useLanguage();
+  
   if (faqs.length === 0) {
     return (
       <div className="w-full text-center py-12">
-        <p className="text-gray-500 dark:text-gray-400">표시할 질문이 없습니다.</p>
+        <p className="text-gray-500 dark:text-gray-400">{t("표시할 질문이 없습니다.")}</p>
       </div>
     );
   }
@@ -22,6 +25,10 @@ export default function FAQList({ faqs, selectedCategory }: FAQListProps) {
       {faqs.map((faq) => {
         const categoryParam = encodeURIComponent(selectedCategory);
         const href = `/faq/${faq.id}?category=${categoryParam}`;
+        
+        // 영어일 경우 번역된 FAQ 데이터 사용
+        const translatedFAQ = getFAQ(faq.id);
+        const displayTitle = translatedFAQ ? translatedFAQ.title : faq.title;
         
         return (
           <Link
@@ -35,7 +42,7 @@ export default function FAQList({ faqs, selectedCategory }: FAQListProps) {
                 Q
               </span>
               <h3 className="flex-1 text-gray-900 dark:text-gray-100 text-[15px] leading-relaxed">
-                {faq.title}
+                {displayTitle}
               </h3>
             </div>
           </Link>

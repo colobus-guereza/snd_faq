@@ -7,10 +7,12 @@ import FAQList from "@/components/FAQList";
 import { useSearch } from "@/components/CommonLayout";
 import { faqs, top10QuestionIds } from "@/data/faqs";
 import { FAQ, Category } from "@/types/faq";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Home() {
   const searchParams = useSearchParams();
   const { searchQuery } = useSearch();
+  const { language, getFAQ } = useLanguage();
   
   // 카테고리 타입 검증 함수
   const getValidCategory = (categoryParam: string | null): Category => {
@@ -20,7 +22,7 @@ export default function Home() {
       "튜닝/리튠",
       "수리 A/S",
       "관리법",
-      "특징",
+      "기술특징",
       "레슨/교육",
       "문의/제안",
     ];
@@ -71,13 +73,15 @@ export default function Home() {
 
     // 태그 필터링 적용
     if (selectedTag) {
-      result = result.filter((faq) => 
-        faq.tags && faq.tags.includes(selectedTag)
-      );
+      result = result.filter((faq) => {
+        const translatedFAQ = getFAQ(faq.id);
+        const tagsToCheck = translatedFAQ ? translatedFAQ.tags : faq.tags;
+        return tagsToCheck && tagsToCheck.includes(selectedTag);
+      });
     }
 
     return result;
-  }, [searchQuery, selectedCategory, selectedTag, fuse]);
+  }, [searchQuery, selectedCategory, selectedTag, fuse, language, getFAQ]);
 
   return (
     <FAQList faqs={filteredFaqs} selectedCategory={selectedCategory} />

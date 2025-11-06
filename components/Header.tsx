@@ -3,11 +3,10 @@
 import { useState } from "react";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
-
-type Language = "한국어" | "English";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Header() {
-  const [selectedLanguage, setSelectedLanguage] = useState<Language>("한국어");
+  const { language, setLanguage, t } = useLanguage();
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -18,6 +17,10 @@ export default function Header() {
   const toggleTheme = () => {
     const currentTheme = resolvedTheme || theme || "light";
     setTheme(currentTheme === "dark" ? "light" : "dark");
+  };
+
+  const handleLanguageClick = (lang: "ko" | "en") => {
+    setLanguage(lang);
   };
 
   if (!mounted) {
@@ -46,11 +49,11 @@ export default function Header() {
               <button
                 type="button"
                 className={`text-sm transition-colors ${
-                  selectedLanguage === "한국어"
+                  language === "ko"
                     ? "font-bold text-gray-900 dark:text-gray-100"
                     : "font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
                 }`}
-                onClick={() => setSelectedLanguage("한국어")}
+                onClick={() => handleLanguageClick("ko")}
               >
                 한국어
               </button>
@@ -58,11 +61,11 @@ export default function Header() {
               <button
                 type="button"
                 className={`text-sm transition-colors ${
-                  selectedLanguage === "English"
+                  language === "en"
                     ? "font-bold text-gray-900 dark:text-gray-100"
                     : "font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
                 }`}
-                onClick={() => setSelectedLanguage("English")}
+                onClick={() => handleLanguageClick("en")}
               >
                 English
               </button>
@@ -71,7 +74,7 @@ export default function Header() {
               type="button"
               className="p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               onClick={toggleTheme}
-              aria-label="테마 전환"
+              aria-label={t("테마 전환")}
             >
               {(resolvedTheme || theme) === "dark" ? (
                 // Sun icon (라이트 모드로 전환)
@@ -113,4 +116,3 @@ export default function Header() {
     </header>
   );
 }
-

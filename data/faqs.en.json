@@ -1,0 +1,243 @@
+[
+  {
+    "id": "1",
+    "title": "What payment methods are available?",
+    "category": "Payment/Ship",
+    "views": 1250,
+    "content": "For bank transfers, we will provide the deposit account information. For card payments, we will send you a Naver Smart Store purchase link.",
+    "tags": ["Payment", "Card"]
+  },
+  {
+    "id": "2",
+    "title": "How long does shipping take?",
+    "category": "Payment/Ship",
+    "views": 980,
+    "content": "Shipping time varies by region and shipping method.\n\nFor standard shipping, it usually takes 2-3 days after order confirmation. If you choose express shipping, delivery will be within 1-2 days. Jeju Island and remote areas may take an additional 1-2 days.\n\nYou can track your shipment in real-time through the order confirmation email or your account page.",
+    "tags": ["Shipping", "Shipping Time"]
+  },
+  {
+    "id": "3",
+    "title": "How do I get my guitar tuned?",
+    "category": "Retune",
+    "views": 850,
+    "content": "Guitar tuning services can be requested through online booking or by phone.\n\nTuning services include various options such as standard tuning, drop tuning, and open tuning. A professional tuner will visit your location to perform the tuning, which typically takes about 30 minutes.\n\nTuning costs vary depending on the guitar type and tuning options. Detailed pricing will be provided when you book the service.",
+    "tags": ["Tuning", "Guitar"]
+  },
+  {
+    "id": "4",
+    "title": "How can I get my instrument repaired?",
+    "category": "A/S",
+    "views": 720,
+    "content": "Instrument repair services can be requested through online booking or our customer service center.\n\nWe provide free diagnostic services before repair, and after diagnosis, we will inform you of the repair cost and timeframe. We can repair most instruments including guitars, bass, violins, cellos, and drums.\n\nRepair time varies depending on the instrument's condition and repair content, but typically takes 1-2 weeks. We also offer urgent repair services, which may incur additional costs.",
+    "tags": ["Repair", "Service"]
+  },
+  {
+    "id": "5",
+    "title": "How should I maintain my instrument?",
+    "category": "Maintenance",
+    "views": 650,
+    "content": "Regular maintenance is essential for long-lasting instruments.\n\nFor guitars, it's important to regularly replace strings and keep the body and neck clean. In humid environments, use dehumidifiers, and in dry environments, use humidifiers.\n\nFor string instruments like violins, proper bow maintenance and maintaining string tension are important. For drums, regularly replace drumheads and clean hardware.",
+    "tags": ["Maintenance", "Storage"]
+  },
+  {
+    "id": "6",
+    "title": "How do I sign up for lessons?",
+    "category": "Lessons",
+    "views": 580,
+    "content": "Lesson registration is available through our online booking system.\n\nBoth private and group lessons are available, with various lesson programs tailored to instrument type and level. Lesson schedules can be arranged in consultation with instructors, and both online and offline lessons are supported.\n\nLesson costs vary by lesson type and duration. The first lesson is offered as a trial lesson, after which you can register for regular lessons.",
+    "tags": ["Lessons", "Registration"]
+  },
+  {
+    "id": "7",
+    "title": "How can I make a business proposal?",
+    "category": "Contact",
+    "views": 520,
+    "content": "· Email: handpansnd@gmail.com\n· Contact: 010-8967-9204",
+    "tags": ["Business", "Proposal"]
+  },
+  {
+    "id": "8",
+    "title": "Tax Invoice/Cash Receipt",
+    "category": "Payment/Ship",
+    "views": 480,
+    "content": "We can issue electronic tax invoices and cash receipts upon request at the time of purchase.",
+    "tags": ["Payment", "Cancellation"]
+  },
+  {
+    "id": "9",
+    "title": "Where can I track my shipment?",
+    "category": "Payment/Ship",
+    "views": 450,
+    "content": "You can track your shipment in your account's order history.\n\nAfter order confirmation, a tracking number will be issued, and you can check the shipping status in real-time on the tracking page. You can also track through the shipping carrier's app.\n\nIf you have any shipping-related inquiries, please contact our customer service center.",
+    "tags": ["Shipping", "Tracking"]
+  },
+  {
+    "id": "10",
+    "title": "How much does piano tuning cost?",
+    "category": "Retune",
+    "views": 400,
+    "content": "Piano tuning costs vary depending on the type and size of the piano.\n\nUpright pianos start at approximately 50,000 KRW, and grand pianos start at approximately 80,000 KRW. You can receive discounts by joining our regular maintenance program.\n\nTuning typically takes about 1-2 hours, and additional costs may apply if repairs or adjustments are needed.",
+    "tags": ["Tuning", "Piano"]
+  },
+  {
+    "id": "11",
+    "title": "How long does instrument repair take?",
+    "category": "A/S",
+    "views": 380,
+    "content": "Instrument repair time varies depending on the repair content and instrument condition.\n\nGeneral repairs typically take 1-2 weeks, while complex repairs or those requiring parts orders may take 2-4 weeks. We provide free diagnostics before repair to give you an accurate repair timeframe.\n\nWe also offer urgent repair services. Fast repairs are available for an additional fee.",
+    "tags": ["Repair", "Duration"]
+  },
+  {
+    "id": "12",
+    "title": "How should I store my instrument?",
+    "category": "Maintenance",
+    "views": 350,
+    "content": "Temperature and humidity control are most important when storing instruments.\n\nThe ideal humidity is 40-60%, and the temperature should be around 20-25°C. Avoid direct sunlight and store in a well-ventilated area. String instruments like guitars and violins should be stored in cases.\n\nFor long-term storage, regularly inspect the instrument and have it checked by a professional when necessary.",
+    "tags": ["Storage", "Maintenance"]
+  },
+  {
+    "id": "13",
+    "title": "How much do lessons cost?",
+    "category": "Lessons",
+    "views": 320,
+    "content": "Lesson costs vary depending on lesson type and duration.\n\nPrivate lessons start at approximately 50,000 KRW per hour, and group lessons start at approximately 30,000 KRW. You can receive discounts by registering for regular lessons.\n\nThe first lesson is offered as a trial lesson, after which you can register for regular lessons. Lesson costs may vary further depending on instrument type and level.",
+    "tags": ["Lessons", "Cost"]
+  },
+  {
+    "id": "14",
+    "title": "Why We Use 1.2mm Stainless Steel",
+    "category": "Technologies",
+    "views": 280,
+    "content": "The handpan is an instrument that creates 'harmonic resonance' (fundamental tone, octave, and fifth harmonics) by tuning thin metal plates with precise tension. The standard 1.0mm stainless steel is thin and easy to form, but its thinness makes it susceptible to subtle tension changes from temperature, humidity, direct sunlight, and impact. These factors accumulate and lead to detuning.\n\nIn contrast, 1.2mm stainless steel has approximately 70% higher bending stiffness proportional to the cube of thickness. When formed in the same shape, the entire plate maintains uniform tension and reacts less sensitively to external environments. The 70% higher stiffness facilitates accurate phase alignment of harmonic overtones, resulting in clearer, more transparent tones and smooth, natural sustain with reverb. The tension balance is maintained, ensuring high tuning stability.\n\nOf course, the thicker material makes forming and tuning much more difficult, requiring greater force and skilled technique. However, once completed, the instrument undergoes a 'sound aging' process where the sound improves with use, gradually becoming a higher quality instrument.",
+    "tags": ["Thickness", "Specs", "Sound Quality"]
+  },
+  {
+    "id": "15",
+    "title": "Original Korean Handpans Born from Domestically Manufactured Shells",
+    "category": "Technologies",
+    "views": 260,
+    "content": "Many handpan makers worldwide import already verified shells to use. This allows them to reduce the trial and error, time, and costs involved in self-development. However, as a result, many instruments end up sharing similar sound qualities and appearances, making it difficult to accumulate deep understanding and expertise about shells, the core component, internally.\n\nSND Handpan manufactures shells directly in Korea. We have connected design, forming, heat treatment, and tuning into a single flow, understanding and optimizing the entire process. Based on this accumulated capability, we have implemented our own unique sound and design, enabling us to create instruments with competitive sound quality and originality even in the global market.",
+    "tags": ["Manufacturing", "Domestic", "Shell"]
+  },
+  {
+    "id": "16",
+    "title": "Press VS Metal Spinning",
+    "category": "Technologies",
+    "views": 240,
+    "content": "Press and metal spinning are different manufacturing methods used to create shells. Press (deep drawing) method shapes the metal plate in one go by applying strong force. During this process, the applied force varies across different parts, causing some areas to become thinner and others thicker. Additionally, if the die is not perfectly aligned or the metal slides inconsistently, fine wrinkles or edge angles can form on the surface. These differences combined can result in slightly asymmetrical shell shapes or uneven distribution of internal stress.\n\nIn contrast, metal spinning gradually shapes the metal plate while rotating it, allowing the metal to stretch evenly and curves to connect smoothly. Therefore, the thickness and tension of the entire shell remain consistent, and sound transmission is uniform. Shells made this way have excellent structural balance, resulting in consistent resonance and clear harmonics.\n\nSimply put, spinning is like carefully crafting with skilled hands over time, while press is closer to stamping out a shape in one forceful action.",
+    "tags": ["Manufacturing", "Metal Spinning", "Press"]
+  },
+  {
+    "id": "17",
+    "title": "Differences Between Stainless Steel, Embossed Steel, and DC04",
+    "category": "Technologies",
+    "views": 220,
+    "content": "Each material has unique characteristics that affect sound quality and durability.\n\nStainless Steel has excellent corrosion resistance, rarely rusts, and has very good durability. The sound is bright and clear, with good responsiveness and excellent tone consistency. It's easy to maintain and can be used for a long time, making it economical in the long run.\n\nEmbossed Steel has a patterned surface that is visually unique and adds subtle changes to the sound. The pattern increases surface strength and adds depth to the sound. It has high aesthetic value and provides a sophisticated appearance.\n\nDC04 is a cold-rolled steel plate that provides standardized strength and workability. The sound is balanced, manufacturing costs are reasonable, and it's easy to work with. It's a standard material widely used in general instrument manufacturing.\n\nYou can choose products that match the characteristics of each material.",
+    "tags": ["Material", "Stainless Steel", "Embossed Steel", "DC04"]
+  },
+  {
+    "id": "18",
+    "title": "Manufacturing Process",
+    "category": "Technologies",
+    "views": 200,
+    "content": "Instrument manufacturing is completed through precise steps.\n\nStep 1: Design and Drawing - Accurately design the product specifications and dimensions and create drawings.\n\nStep 2: Material Preparation - Inspect selected materials and cut them to required sizes.\n\nStep 3: Forming - Create shell shapes using metal spinning or press manufacturing methods.\n\nStep 4: Surface Treatment - Perform desired surface finishing such as polishing, plating, and pattern treatment.\n\nStep 5: Precision Machining - Perform precision work such as hole drilling and screw threading.\n\nStep 6: Quality Inspection - Inspect dimensions, surface condition, and sound quality to verify quality.\n\nStep 7: Assembly and Tuning - Assemble components and adjust final sound quality through handpan tuning.\n\nStep 8: Final Inspection and Packaging - Perform final inspection on completed products and package them for shipment.\n\nWe provide the highest quality products through thorough quality control at each step.",
+    "tags": ["Manufacturing", "Process", "Procedure"]
+  },
+  {
+    "id": "19",
+    "title": "Handpan Tuning",
+    "category": "Technologies",
+    "views": 180,
+    "content": "Handpan tuning is the process of fine-tuning an instrument's sound quality by hand by an expert.\n\nHandpan tuning involves understanding each instrument's unique characteristics and creating optimal sound quality. It fine-tunes subtle sound quality differences that cannot be achieved through mechanical processing alone.\n\nDuring the tuning process, thickness, shape, surface condition, and other aspects are meticulously adjusted to achieve the desired sound. Particularly, resonance characteristics and harmonics are adjusted to create rich and deep sound quality.\n\nEach instrument has unique characteristics, and optimal performance can be achieved through individual tuning. Handpan tuning is an important process that upgrades from standardized products to premium products.",
+    "tags": ["Tuning", "Handpan", "Sound Quality"]
+  },
+  {
+    "id": "20",
+    "title": "Resonance and Harmonics",
+    "category": "Technologies",
+    "views": 160,
+    "content": "Resonance and harmonics are key elements that determine an instrument's sound quality.\n\nResonance is the natural reverberation that occurs when an instrument vibrates. Good resonance creates rich and deep sound quality and enhances playing feel. Shell thickness, shape, material, and other factors affect resonance characteristics.\n\nHarmonics are overtones added to the fundamental tone, determining the richness and depth of sound. Natural harmonics make the sound even richer and more beautiful.\n\nDuring manufacturing, we precisely adjust shell shape and thickness to optimize resonance and harmonics. Particularly during handpan tuning, we understand each instrument's unique resonance characteristics and adjust harmonics to achieve the best sound quality.\n\nGood resonance and harmonics create living music, not just simple sound.",
+    "tags": ["Resonance", "Harmonics", "Sound Quality"]
+  },
+  {
+    "id": "21",
+    "title": "Scale",
+    "category": "Technologies",
+    "views": 140,
+    "content": "Scale is an important element that determines an instrument's range and playing characteristics.\n\nScale refers to the total length and range of notes of an instrument. Depending on scale length, note pitch, tension, and playing feel vary. Longer scales provide higher tension and brighter sound, while shorter scales provide lower tension and softer sound.\n\nAppropriate scale selection is determined based on the player's hand size and playing style. Shorter scales may be comfortable for players with smaller hands, while longer scales may be suitable for players who want strong tension and bright sound.\n\nWe offer various scale options for different products so players can choose products that meet their needs. Understanding the characteristics of each scale and choosing the one that suits you will allow you to enjoy more satisfying playing.",
+    "tags": ["Scale", "Specs", "Range"]
+  },
+  {
+    "id": "22",
+    "title": "I'm having trouble choosing the instrument scale.",
+    "category": "Contact",
+    "views": 0,
+    "content": "Instrument scale selection varies depending on playing style and purpose.\n\nEach scale has unique characteristics and sound quality, so you can choose based on your desired music genre and playing style. We recommend standard scales for beginners, while experienced players can try various scales.\n\nIf you need detailed consultation, please contact our customer service center.",
+    "tags": ["Scale", "Selection"]
+  },
+  {
+    "id": "23",
+    "title": "Where can I try it?",
+    "category": "Contact",
+    "views": 0,
+    "content": "We have spaces available where you can try instruments directly.\n\nExperience centers are operating in major areas nationwide including Seoul Gangnam and Busan Haeundae. By making a reservation in advance, you can visit and try the instruments directly with guidance from professional staff.\n\nVisit reservations can be made through online booking systems or customer service centers. Detailed locations and operating hours can be found on our website.",
+    "tags": ["Experience", "Demo"]
+  },
+  {
+    "id": "24",
+    "title": "Where can I learn?",
+    "category": "Lessons",
+    "views": 0,
+    "content": "Instrument lessons are provided at partner lesson studios in various regions nationwide.\n\nLesson studios are located in major cities including Seoul, Busan, Daegu, and Incheon, and online lessons are also available. Lesson programs are prepared for all levels from beginners to professionals.\n\nLesson registration is available through online booking systems, and detailed lesson studio locations and programs can be found on our website.",
+    "tags": ["Lessons", "Education"]
+  },
+  {
+    "id": "25",
+    "title": "How long do I need to learn?",
+    "category": "Lessons",
+    "views": 0,
+    "content": "Learning duration varies depending on individual practice time and goals.\n\nLearning basic playing typically takes 3-6 months, and reaching intermediate level takes about a year. Professional playing requires more time and practice.\n\nRegular lessons and consistent practice will help you improve faster. You can learn efficiently through personalized lesson programs tailored to each individual.",
+    "tags": ["Lessons", "Duration"]
+  },
+  {
+    "id": "26",
+    "title": "Why do you use stainless steel?",
+    "category": "Technologies",
+    "views": 0,
+    "content": "Stainless steel is excellent for instrument manufacturing due to its corrosion resistance and durability.\n\nStainless steel rarely rusts, maintaining quality even with long-term use. The sound is bright and clear, with good responsiveness providing consistent tone.\n\nIt's easy to maintain and can be used for a long time, making it economical in the long run, and it's a material preferred by professional musicians. We select optimal materials that match each instrument's characteristics.",
+    "tags": ["Stainless Steel", "Material"]
+  },
+  {
+    "id": "27",
+    "title": "How often should I get tuning?",
+    "category": "Retune",
+    "views": 0,
+    "content": "Tuning frequency varies depending on usage frequency and environment.\n\nGenerally, we recommend tuning every 2-3 months for professional players and every 6 months for hobbyists. More frequent tuning may be necessary if you use the instrument frequently or in environments with significant humidity changes.\n\nIf you notice changes in sound quality or instability, it's good to get tuning anytime. Regular tuning helps extend instrument lifespan and maintain optimal sound quality.",
+    "tags": ["Tuning", "Frequency"]
+  },
+  {
+    "id": "28",
+    "title": "The sound doesn't come out or seems muffled.",
+    "category": "A/S",
+    "views": 0,
+    "content": "There can be several reasons why sound doesn't come out or becomes muffled.\n\nFirst, check if foreign objects have entered the instrument and verify that components are properly secured. It could also be due to humidity or temperature changes.\n\nIf the problem persists, we recommend getting a professional diagnosis. We provide free diagnostic services and can resolve issues through repair or tuning depending on the problem.",
+    "tags": ["Repair", "Sound"]
+  },
+  {
+    "id": "29",
+    "title": "The instrument surface is peeling.",
+    "category": "A/S",
+    "views": 0,
+    "content": "Surface peeling may be due to surface treatment or plating issues.\n\nIn this case, we can restore the surface through professional repair services or restore plating. Free diagnosis before repair helps identify the exact cause and suggest appropriate repair methods.\n\nIf surface peeling is severe or affecting sound quality, it's best to repair it early. Repair time varies depending on condition but typically takes 1-2 weeks.",
+    "tags": ["Repair", "Surface"]
+  },
+  {
+    "id": "30",
+    "title": "The instrument side is cracked from impact or dropping.",
+    "category": "A/S",
+    "views": 0,
+    "content": "Damage from impact requires professional repair services.\n\nIf the instrument side is cracked, there may be structural damage, so stop using it immediately and consult with a professional. To prevent further damage, store the instrument safely and bring it to a repair center as soon as possible or request a visit service.\n\nFree diagnosis before repair helps determine the extent of damage and inform you of repair feasibility and cost. Most cases can be repaired, and the instrument can be used normally after repair.",
+    "tags": ["Repair", "Damage"]
+  }
+]
+

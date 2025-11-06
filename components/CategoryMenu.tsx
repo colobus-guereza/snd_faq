@@ -3,6 +3,7 @@
 import { Category } from "@/types/faq";
 import { categories } from "@/data/faqs";
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface CategoryMenuProps {
   selectedCategory: Category;
@@ -14,6 +15,7 @@ export default function CategoryMenu({
   onSelectCategory,
 }: CategoryMenuProps) {
   const [copiedCategory, setCopiedCategory] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   // 카테고리 URL 복사 함수
   const handleCategoryShare = async (e: React.MouseEvent<HTMLButtonElement>, category: Category) => {
@@ -63,14 +65,14 @@ export default function CategoryMenu({
                       : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
                   }`}
                 >
-                  {category}
+                  {t(category)}
                 </button>
                 {isSelected && (
                   <button
                     onClick={(e) => handleCategoryShare(e, category)}
                     className="flex-shrink-0 p-0.5 -ml-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-                    aria-label={`${category} 링크 공유하기`}
-                    title={isCopied ? "복사됨!" : `${category} 링크 공유하기`}
+                    aria-label={`${t(category)} ${t("링크 공유하기")}`}
+                    title={isCopied ? t("복사됨!") : `${t(category)} ${t("링크 공유하기")}`}
                   >
                     {isCopied ? (
                       <svg

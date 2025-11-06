@@ -3,6 +3,7 @@
 import { Category } from "@/types/faq";
 import { useState } from "react";
 import { categoryDirectLinkMap } from "@/data/faqs";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface CategorySelectorMobileProps {
   selectedCategory: Category;
@@ -17,6 +18,7 @@ export default function CategorySelectorMobile({
 }: CategorySelectorMobileProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const { t } = useLanguage();
 
   // "문의/제안" 카테고리는 직접 링크가 있는 카테고리이므로 공유 아이콘 숨김
   const isDirectLinkCategory = categoryDirectLinkMap[selectedCategory] !== undefined;
@@ -59,7 +61,7 @@ export default function CategorySelectorMobile({
           onClick={() => setIsOpen(true)}
           className="flex items-center gap-2 text-base font-medium text-gray-900 dark:text-gray-100 hover:text-[#14B8A6] transition-colors"
         >
-          <span>{selectedCategory}</span>
+          <span>{t(selectedCategory)}</span>
           <svg
             className="w-4 h-4"
             fill="none"
@@ -79,8 +81,8 @@ export default function CategorySelectorMobile({
           <button
             onClick={handleShareClick}
             className="flex-shrink-0 p-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-            aria-label="카테고리 링크 공유하기"
-            title={copied ? "복사됨!" : "카테고리 링크 공유하기"}
+            aria-label={t("카테고리 링크 공유하기")}
+            title={copied ? t("복사됨!") : t("카테고리 링크 공유하기")}
           >
             {copied ? (
               <svg
@@ -131,12 +133,12 @@ export default function CategorySelectorMobile({
             {/* 헤더 */}
             <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 py-4 flex items-center justify-between">
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                카테고리 선택
+                {t("카테고리 선택")}
               </h2>
               <button
                 onClick={() => setIsOpen(false)}
                 className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
-                aria-label="닫기"
+                aria-label={t("닫기")}
               >
                 <svg
                   className="w-6 h-6"
@@ -171,7 +173,7 @@ export default function CategorySelectorMobile({
                           : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                       }`}
                     >
-                      {category}
+                      {t(category)}
                     </button>
                   </li>
                 ))}

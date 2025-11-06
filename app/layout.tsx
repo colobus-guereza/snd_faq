@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { ThemeInitializer } from "@/components/ThemeInitializer";
 import CommonLayout from "@/components/CommonLayout";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,9 +53,13 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
           <ThemeInitializer />
-          <CommonLayout>
-            {children}
-          </CommonLayout>
+          <LanguageProvider>
+            <Suspense fallback={<div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">Loading...</div>}>
+              <CommonLayout>
+                {children}
+              </CommonLayout>
+            </Suspense>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

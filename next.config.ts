@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
   },
   
   // 빌드 최적화
-  swcMinify: true,
+  // swcMinify는 Next.js 16에서 기본적으로 활성화되어 있어 제거
   
   // 프로덕션 소스맵 비활성화 (성능 최적화)
   productionBrowserSourceMaps: false,

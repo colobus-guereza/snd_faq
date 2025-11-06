@@ -8,6 +8,7 @@ import CategoryMenu from "@/components/CategoryMenu";
 import CategorySelectorMobile from "@/components/CategorySelectorMobile";
 import { Category } from "@/types/faq";
 import { categoryDirectLinkMap, categories, getAllTags } from "@/data/faqs";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface SearchContextType {
   searchQuery: string;
@@ -33,6 +34,7 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState("");
+  const { t } = useLanguage();
   
   // 메인 페이지인지 확인
   const isHomePage = pathname === "/";
@@ -45,7 +47,7 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
       "튜닝/리튠",
       "수리 A/S",
       "관리법",
-      "특징",
+      "기술특징",
       "레슨/교육",
       "문의/제안",
     ];
@@ -178,13 +180,13 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
               onClick={handleTitleClick}
               className="text-left text-4xl font-bold text-gray-900 dark:text-gray-100 cursor-pointer hover:text-[#14B8A6] transition-colors"
             >
-              자주묻는 질문
+              {t("자주묻는 질문")}
             </h1>
             <button
               onClick={handleShareClick}
               className="flex-shrink-0 p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              aria-label="링크 공유하기"
-              title={copied ? "복사됨!" : "링크 공유하기"}
+              aria-label={t("링크 공유하기")}
+              title={copied ? t("복사됨!") : t("링크 공유하기")}
             >
               {copied ? (
                 <svg
