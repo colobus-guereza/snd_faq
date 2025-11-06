@@ -32,6 +32,9 @@ export default function Home() {
 
   // URL 쿼리 파라미터에서 초기 카테고리 설정
   const selectedCategory = getValidCategory(searchParams.get("category"));
+  
+  // 선택된 태그 가져오기
+  const selectedTag = searchParams.get("tag");
 
   // Fuse.js 설정
   const fuse = useMemo(
@@ -66,8 +69,15 @@ export default function Home() {
       }
     }
 
+    // 태그 필터링 적용
+    if (selectedTag) {
+      result = result.filter((faq) => 
+        faq.tags && faq.tags.includes(selectedTag)
+      );
+    }
+
     return result;
-  }, [searchQuery, selectedCategory, fuse]);
+  }, [searchQuery, selectedCategory, selectedTag, fuse]);
 
   return (
     <FAQList faqs={filteredFaqs} selectedCategory={selectedCategory} />

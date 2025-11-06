@@ -1,13 +1,13 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useEffect, useState, createContext, useContext } from "react";
+import { useEffect, useState, createContext, useContext, useMemo } from "react";
 import Header from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
 import CategoryMenu from "@/components/CategoryMenu";
 import CategorySelectorMobile from "@/components/CategorySelectorMobile";
 import { Category } from "@/types/faq";
-import { categoryDirectLinkMap, categories } from "@/data/faqs";
+import { categoryDirectLinkMap, categories, getAllTags } from "@/data/faqs";
 
 interface SearchContextType {
   searchQuery: string;
@@ -72,6 +72,32 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
     });
   }, [searchParams]);
 
+  // 선택된 태그 상태 관리 (URL 쿼리 파라미터에서 가져오기)
+  const selectedTag = searchParams.get("tag");
+
+  // 모든 태그 목록
+  const allTags = useMemo(() => getAllTags(), []);
+
+  // 태그 클릭 핸들러
+  const handleTagClick = (tag: string) => {
+    const categoryParam = searchParams.get("category");
+    // 같은 태그를 다시 클릭하면 필터 해제
+    if (selectedTag === tag) {
+      if (categoryParam) {
+        router.push(`/?category=${encodeURIComponent(categoryParam)}`);
+      } else {
+        router.push(`/`);
+      }
+    } else {
+      // 현재 카테고리 정보를 유지하면서 태그 파라미터 추가
+      if (categoryParam) {
+        router.push(`/?category=${encodeURIComponent(categoryParam)}&tag=${encodeURIComponent(tag)}`);
+      } else {
+        router.push(`/?tag=${encodeURIComponent(tag)}`);
+      }
+    }
+  };
+
   const handleCategorySelect = (category: Category) => {
     setSelectedCategory(category);
     
@@ -82,7 +108,7 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
       return;
     }
     
-    // 일반 카테고리는 메인 페이지로 이동하면서 카테고리 정보 전달
+    // 일반 카테고리는 메인 페이지로 이동하면서 카테고리 정보 전달 (태그 필터 제거)
     router.push(`/?category=${encodeURIComponent(category)}`);
   };
 
@@ -94,9 +120,14 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
-    // 검색어 입력 시 메인 페이지로 이동하여 검색 실행
+    // 검색어 입력 시 메인 페이지로 이동하여 검색 실행 (태그 필터 유지)
     if (!isHomePage) {
-      router.push("/");
+      const tagParam = searchParams.get("tag");
+      if (tagParam) {
+        router.push(`/?tag=${encodeURIComponent(tagParam)}`);
+      } else {
+        router.push("/");
+      }
     }
   };
 
@@ -199,6 +230,29 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
               />
             </div>
           </div>
+
+          {/* 태그 필터 구현했으나 추후 사용 예정으로 현재 비활성화 */}
+          {/* 태그 버튼 영역 - 검색바 아래, 카테고리/질문리스트 위 */}
+          {/* {isHomePage && allTags.length > 0 && (
+            <div className="mb-6 flex flex-wrap gap-2">
+              {allTags.map((tag) => {
+                const isSelected = selectedTag === tag;
+                return (
+                  <button
+                    key={tag}
+                    onClick={() => handleTagClick(tag)}
+                    className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                      isSelected
+                        ? "bg-[#14B8A6] text-white shadow-md hover:bg-[#0d9488]"
+                        : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                    }`}
+                  >
+                    {tag}
+                  </button>
+                );
+              })}
+            </div>
+          )} */}
 
           {/* 모바일: 카테고리 선택 버튼 (질문 목록 위에 표시) */}
           <div className="md:hidden mb-4">

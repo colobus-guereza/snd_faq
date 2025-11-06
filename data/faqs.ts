@@ -273,3 +273,14 @@ export const categoryDirectLinkMap: Record<string, string> = {
   "문의/제안": "7", // "비즈니스 제안은 어떻게 하나요?" - 조회수 가장 높음
 };
 
+// 모든 FAQ에서 사용되는 태그 목록 추출 (중복 제거 및 정렬)
+export const getAllTags = (): string[] => {
+  const tagSet = new Set<string>();
+  faqs.forEach((faq) => {
+    if (faq.tags && Array.isArray(faq.tags)) {
+      faq.tags.forEach((tag) => tagSet.add(tag));
+    }
+  });
+  return Array.from(tagSet).sort();
+};
+
