@@ -32,9 +32,14 @@ export default function Header() {
             <div className="relative h-6 w-6 rounded-full bg-[#14B8A6]">
               <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white dark:bg-gray-900"></div>
             </div>
-            <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
+            <a
+              href="https://handpan.co.kr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-bold text-gray-700 dark:text-gray-300 no-underline hover:no-underline cursor-pointer"
+            >
               Sound & Design
-            </span>
+            </a>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
