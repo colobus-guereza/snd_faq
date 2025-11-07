@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FAQ } from "@/types/faq";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import InquiryForm from "@/components/InquiryForm";
 
 interface FAQDetailProps {
   faq: FAQ;
@@ -16,7 +17,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
     ? `/?category=${encodeURIComponent(returnCategory)}`
     : "/";
   
-  // "문의/제안" 카테고리 질문(id: "7")은 뒤로가기 버튼 숨김
+  // "문의" 카테고리 질문(id: "7")은 뒤로가기 버튼 숨김
   const isInquiryPage = faq.id === "7";
   
   // "1.2mm 스테인레스를 사용하는 이유" 질문(id: "14")은 도표 표시
@@ -25,9 +26,9 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   // 영어일 경우 번역된 FAQ 데이터 사용
   const translatedFAQ = getFAQ(faq.id);
   
-  // "문의/제안" 카테고리 질문은 타이틀 변경
+  // "문의" 카테고리 질문은 타이틀 변경
   const displayTitle = isInquiryPage 
-    ? t("문의와 제안")
+    ? t("문의")
     : (translatedFAQ ? translatedFAQ.title : faq.title);
   
   // 번역된 내용 사용
@@ -40,6 +41,29 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   // 차트 상세 내용 접기/펼치기 상태 관리
   const [isDetailExpanded, setIsDetailExpanded] = useState(false);
   
+  // URL을 링크로 변환하는 함수
+  const convertUrlsToLinks = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+    
+    return parts.map((part, index) => {
+      if (urlRegex.test(part)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-[#14B8A6] transition-colors underline"
+          >
+            {part}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
+
   // 현재 페이지 URL 복사 함수
   const handleShareClick = async () => {
     try {
@@ -156,8 +180,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
           <div className="mb-6">
             <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
               {language === "ko" 
-                ? "핸드팬의 쉘 두께는 악기의 '뼈대'와 같습니다. 두꺼울수록 더 단단하고 견고해지지만, 동시에 더 무거워집니다. 아래 도표는 1.0mm와 1.2mm 쉘의 구조적 특성을 비교한 것으로, 두께 차이에 따라 악기의 강도, 안정성, 반응성 등이 어떻게 달라지는지 보여줍니다."
-                : "The shell thickness of a handpan is like the 'skeleton' of the instrument. The thicker it is, the sturdier and more robust it becomes, but also heavier. The chart below compares the structural properties of 1.0mm and 1.2mm shells, showing how strength, stability, and responsiveness differ based on thickness."
+                ? "핸드팬의 쉘 두께는 악기의 '뼈대'와 같습니다. 두꺼울수록 더 단단하고 견고해지지만, 동시에 더 무거워집니다."
+                : "The shell thickness of a handpan is like the 'skeleton' of the instrument. The thicker it is, the sturdier and more robust it becomes, but also heavier."
               }
             </p>
             <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
@@ -166,10 +190,16 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                 : "The 1.2mm shell, due to its thicker structure, shows differences in acoustic and functional performance. Pitch stability improves by approximately 58%, making the pitch less affected by temperature or impact changes, and the sound shows clearer and more focused resonance characteristics. Distortion resistance improves by approximately 44% with less deformation even under strong impacts, but ease of driving (resonating with light touch) decreases by approximately 17%. In summary, it favors a \"Professional Tone\" suitable for performances requiring accuracy, durability, and concentration."
               }
             </p>
+            <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
+              {language === "ko"
+                ? "반면 1.0mm 쉘은 가볍게 잘 울리는 편이라 작은 힘으로도 반응이 빠릅니다. 다만 두께가 얇아 강한 타격이나 외부 변화에 형상·피치가 상대적으로 민감합니다."
+                : "On the other hand, the 1.0mm shell resonates easily and responds quickly even to small force. However, its thinner thickness makes it relatively sensitive to strong impacts or external changes in shape and pitch."
+              }
+            </p>
             <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
               {language === "ko"
-                ? "반면 1.0mm 쉘은 가볍게 잘 울리는 편이라 작은 힘으로도 반응이 빠릅니다. 다만 두께가 얇아 강한 타격이나 외부 변화에 형상·피치가 상대적으로 민감합니다. 표현력과 부드러운 반응을 선호하면 1.0mm, 높은 정확도와 견고함을 원하면 1.2mm를 선택하면 됩니다. 한 줄 결론: 감응성은 1.0mm, 안정성과 포커스는 1.2mm입니다."
-                : "On the other hand, the 1.0mm shell resonates easily and responds quickly even to small force. However, its thinner thickness makes it relatively sensitive to strong impacts or external changes in shape and pitch. If you prefer expressiveness and soft responsiveness, choose 1.0mm; if you want high accuracy and robustness, choose 1.2mm. In one line: responsiveness is 1.0mm, stability and focus are 1.2mm."
+                ? "아래 도표는 1.0mm와 1.2mm 쉘의 구조적 특성을 비교한 것으로, 두께 차이에 따라 악기의 강도, 안정성, 반응성 등이 어떻게 달라지는지 보여줍니다."
+                : "The chart below compares the structural properties of 1.0mm and 1.2mm shells, showing how strength, stability, and responsiveness differ based on thickness."
               }
             </p>
           </div>
@@ -214,111 +244,149 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                 <div className="flex justify-center mb-4">
                   <div className="flex gap-4 text-xs">
                     <div className="flex items-center gap-1.5">
-                      <div className="w-3 h-3 rounded bg-gray-400 opacity-30"></div>
+                      <div className="w-3 h-3 border-2 rounded" style={{ borderColor: 'rgb(59, 130, 246)', backgroundColor: 'transparent', opacity: 0.7 }}></div>
                       <span className="text-gray-700 dark:text-gray-300">1.0 mm</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <div className="w-3 h-3 rounded bg-gray-500 opacity-100"></div>
+                      <div className="w-3 h-3 border-2 rounded" style={{ borderColor: 'rgb(249, 115, 22)', backgroundColor: 'transparent' }}></div>
                       <span className="text-gray-700 dark:text-gray-300">1.2 mm</span>
                     </div>
                   </div>
                 </div>
 
-                {/* 차트 영역 - 명확한 좌표계: 0.0부터 시작 */}
-                <div className="relative" style={{ height: '300px' }}>
-                  {/* Y축 라벨 및 그리드 */}
-                  <div className="ml-12 relative" style={{ height: '240px', paddingBottom: '60px' }}>
-                    {/* Y축 라벨 */}
-                    <div className="absolute left-[-48px] top-0 flex flex-col justify-between text-xs text-gray-600 dark:text-gray-400 pr-2" style={{ height: '240px', width: '40px' }}>
-                      {[1.8, 1.6, 1.4, 1.2, 1.0, 0.8, 0.6, 0.4, 0.2, 0.0].map((value) => {
-                        const position = ((1.8 - value) / 1.8) * 240;
-                        return (
-                          <div 
-                            key={value} 
-                            className="absolute flex items-center" 
-                            style={{ 
-                              top: `${position}px`,
-                              transform: 'translateY(-50%)'
-                            }}
-                          >
-                            <span>{value.toFixed(1)}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {/* 그리드 라인 */}
-                    <div className="absolute inset-0" style={{ height: '240px' }}>
-                      {[0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8].map((value) => {
-                        const position = ((1.8 - value) / 1.8) * 240;
-                        return (
-                          <div
-                            key={value}
-                            className="absolute left-0 right-0 border-t border-dashed border-gray-300 dark:border-gray-700"
-                            style={{
-                              top: `${position}px`
-                            }}
-                          ></div>
-                        );
-                      })}
-                    </div>
-
-                    {/* 바 차트 - 0.0에서 정확히 시작 */}
-                    <div className="absolute top-0 left-0 right-0" style={{ height: '240px' }}>
-                      {/* 막대들 */}
-                      <div className="absolute inset-0 flex justify-around px-2">
-                        {[
-                          { value1: 1.0, value2: 1.73, label: language === "ko" ? "굽힘강성 D" : "Bending Stiffness D" },
-                          { value1: 1.0, value2: 1.2, label: language === "ko" ? "면밀도 ρA" : "Area Density ρA" },
-                          { value1: 1.0, value2: 1.2, label: language === "ko" ? "막(인장)강성" : "Membrane Stiffness" },
-                          { value1: 1.0, value2: 1.44, label: language === "ko" ? "항복 모멘트" : "Yield Moment" },
-                          { value1: 1.0, value2: 1.44, label: language === "ko" ? "좌굴 임계하중" : "Buckling Load" },
-                          { value1: 1.0, value2: 1.2, label: language === "ko" ? "고유진동수 ƒ" : "Natural Freq. ƒ" }
-                        ].map((item, index) => (
-                          <div key={index} className="flex-1 max-w-[60px] relative" style={{ height: '240px' }}>
-                            {/* 막대 쌍 - 절대 위치로 각각 배치 */}
-                            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[50px] relative" style={{ height: '240px' }}>
-                              {/* 1.0mm 막대 */}
-                              <div
-                                className="bg-gray-400 opacity-30 rounded-t absolute bottom-0"
-                                style={{ 
-                                  width: '48%', 
-                                  height: `${(item.value1 / 1.8) * 240}px`,
-                                  left: '0'
-                                }}
-                              ></div>
-                              {/* 1.2mm 막대 */}
-                              <div
-                                className="bg-gray-500 opacity-100 rounded-t absolute bottom-0"
-                                style={{ 
-                                  width: '48%', 
-                                  height: `${(item.value2 / 1.8) * 240}px`,
-                                  right: '0'
-                                }}
-                              ></div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      {/* 라벨들 - 별도로 배치 */}
-                      <div className="absolute left-0 right-0 flex justify-around px-2" style={{ top: '248px' }}>
-                        {[
+                {/* 레이더 차트 영역 */}
+                <div className="flex justify-center items-center py-6">
+                  <div className="relative" style={{ width: '500px', height: '500px' }}>
+                    <svg width="500" height="500" viewBox="0 0 500 500" className="w-full h-full">
+                      {/* 레이더 차트 데이터 */}
+                      {(() => {
+                        const centerX = 250;
+                        const centerY = 250;
+                        const maxRadius = 200;
+                        const maxValue = 1.8;
+                        const numAxes = 6;
+                        const angleStep = (2 * Math.PI) / numAxes;
+                        
+                        // 데이터 정의
+                        const data1_0mm = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]; // 1.0mm 기준값
+                        const data1_2mm = [1.73, 1.2, 1.2, 1.44, 1.44, 1.2]; // 1.2mm 값
+                        
+                        // 라벨 배열
+                        const labels = [
                           language === "ko" ? "굽힘강성 D" : "Bending Stiffness D",
                           language === "ko" ? "면밀도 ρA" : "Area Density ρA",
                           language === "ko" ? "막(인장)강성" : "Membrane Stiffness",
                           language === "ko" ? "항복 모멘트" : "Yield Moment",
                           language === "ko" ? "좌굴 임계하중" : "Buckling Load",
                           language === "ko" ? "고유진동수 ƒ" : "Natural Freq. ƒ"
-                        ].map((label, index) => (
-                          <div key={index} className="flex-1 max-w-[60px] text-center">
-                            <span className="text-[10px] text-gray-700 dark:text-gray-300 whitespace-nowrap">
-                              {label}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                        ];
+                        
+                        // 좌표 계산 함수
+                        const getPoint = (index: number, value: number) => {
+                          const angle = (index * angleStep) - (Math.PI / 2); // 시작을 위쪽으로
+                          const radius = (value / maxValue) * maxRadius;
+                          const x = centerX + radius * Math.cos(angle);
+                          const y = centerY + radius * Math.sin(angle);
+                          return { x, y };
+                        };
+                        
+                        // 폴리곤 경로 생성 함수
+                        const createPolygonPath = (data: number[]) => {
+                          const points = data.map((value, index) => getPoint(index, value));
+                          return points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ') + ' Z';
+                        };
+                        
+                        return (
+                          <>
+                            {/* 그리드 라인 (동심원) */}
+                            {[0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8].map((value) => {
+                              const radius = (value / maxValue) * maxRadius;
+                              return (
+                                <g key={value}>
+                                  <circle
+                                    cx={centerX}
+                                    cy={centerY}
+                                    r={radius}
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1"
+                                    strokeDasharray="4,4"
+                                    className="text-gray-300 dark:text-gray-700"
+                                  />
+                                  {/* 각 원 위에 숫자 표시 (12시 방향) */}
+                                  <text
+                                    x={centerX}
+                                    y={centerY - radius - 8}
+                                    textAnchor="middle"
+                                    dominantBaseline="middle"
+                                    className="text-[9px] fill-gray-600 dark:fill-gray-400"
+                                  >
+                                    {value.toFixed(1)}
+                                  </text>
+                                </g>
+                              );
+                            })}
+                            
+                            {/* 축 라인 */}
+                            {Array.from({ length: numAxes }).map((_, index) => {
+                              const angle = (index * angleStep) - (Math.PI / 2);
+                              const endX = centerX + maxRadius * Math.cos(angle);
+                              const endY = centerY + maxRadius * Math.sin(angle);
+                              return (
+                                <line
+                                  key={index}
+                                  x1={centerX}
+                                  y1={centerY}
+                                  x2={endX}
+                                  y2={endY}
+                                  stroke="currentColor"
+                                  strokeWidth="1"
+                                  className="text-gray-300 dark:text-gray-700"
+                                />
+                              );
+                            })}
+                            
+                            {/* 1.0mm 폴리곤 (파란색, 테두리만) */}
+                            <path
+                              d={createPolygonPath(data1_0mm)}
+                              fill="none"
+                              stroke="rgb(59, 130, 246)"
+                              strokeWidth="2"
+                              strokeOpacity="0.7"
+                            />
+                            
+                            {/* 1.2mm 폴리곤 (주황색, 테두리만) */}
+                            <path
+                              d={createPolygonPath(data1_2mm)}
+                              fill="none"
+                              stroke="rgb(249, 115, 22)"
+                              strokeWidth="2"
+                              strokeOpacity="1"
+                            />
+                            
+                            {/* 라벨 배치 */}
+                            {labels.map((label, index) => {
+                              const angle = (index * angleStep) - (Math.PI / 2);
+                              const labelRadius = maxRadius + 30;
+                              const x = centerX + labelRadius * Math.cos(angle);
+                              const y = centerY + labelRadius * Math.sin(angle);
+                              return (
+                                <text
+                                  key={index}
+                                  x={x}
+                                  y={y}
+                                  textAnchor="middle"
+                                  dominantBaseline="middle"
+                                  className="text-[10px] fill-gray-700 dark:fill-gray-300"
+                                >
+                                  {label}
+                                </text>
+                              );
+                            })}
+                          </>
+                        );
+                      })()}
+                    </svg>
                   </div>
                 </div>
 
@@ -499,127 +567,147 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
               <div className="flex justify-center mb-4">
                 <div className="flex gap-4 text-xs">
                   <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 rounded bg-gray-400 opacity-30"></div>
+                    <div className="w-3 h-3 border-2 rounded" style={{ borderColor: 'rgb(59, 130, 246)', backgroundColor: 'transparent', opacity: 0.7 }}></div>
                     <span className="text-gray-700 dark:text-gray-300">1.0 mm</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 rounded bg-gray-500 opacity-100"></div>
+                    <div className="w-3 h-3 border-2 rounded" style={{ borderColor: 'rgb(249, 115, 22)', backgroundColor: 'transparent' }}></div>
                     <span className="text-gray-700 dark:text-gray-300">1.2 mm</span>
                   </div>
                 </div>
               </div>
 
-              {/* 통합 막대 그래프 - 상단 그래프와 동일한 스타일 */}
-              <div className="relative" style={{ height: '300px' }}>
-                {/* Y축 라벨 및 그리드 */}
-                <div className="ml-12 relative" style={{ height: '240px', paddingBottom: '60px' }}>
-                  {/* Y축 라벨 */}
-                  <div className="absolute left-[-48px] top-0 flex flex-col justify-between text-xs text-gray-600 dark:text-gray-400 pr-2" style={{ height: '240px', width: '40px' }}>
-                    {[1.8, 1.6, 1.4, 1.2, 1.0, 0.8, 0.6, 0.4, 0.2, 0.0].map((value) => {
-                      const position = ((1.8 - value) / 1.8) * 240;
-                      return (
-                        <div 
-                          key={value} 
-                          className="absolute flex items-center" 
-                          style={{ 
-                            top: `${position}px`,
-                            transform: 'translateY(-50%)'
-                          }}
-                        >
-                          <span>{value.toFixed(1)}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* 그리드 라인 */}
-                  <div className="absolute inset-0" style={{ height: '240px' }}>
-                    {[0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8].map((value) => {
-                      const position = ((1.8 - value) / 1.8) * 240;
-                      return (
-                        <div
-                          key={value}
-                          className="absolute left-0 right-0 border-t border-dashed border-gray-300 dark:border-gray-700"
-                          style={{
-                            top: `${position}px`
-                          }}
-                        ></div>
-                      );
-                    })}
-                  </div>
-
-                  {/* 바 차트 - 0.0에서 정확히 시작 */}
-                  <div className="absolute top-0 left-0 right-0" style={{ height: '240px' }}>
-                    {/* 막대들 */}
-                    <div className="absolute inset-0 flex justify-around px-2">
-                      {[
-                        { 
-                          name: language === "ko" ? "피치 안정성" : "Pitch Stability",
-                          nameShort: language === "ko" ? "피치 안정성" : "Pitch",
-                          value1: 1.0, 
-                          value2: 1.58
-                        },
-                        { 
-                          name: language === "ko" ? "공진 특성" : "Resonance",
-                          nameShort: language === "ko" ? "공진 특성" : "Resonance",
-                          value1: 1.0, 
-                          value2: 1.2
-                        },
-                        { 
-                          name: language === "ko" ? "구동 용이성" : "Ease of Driving",
-                          nameShort: language === "ko" ? "구동 용이성" : "Driving",
-                          value1: 1.0, 
-                          value2: 0.83
-                        },
-                        { 
-                          name: language === "ko" ? "왜곡 저항" : "Distortion Resistance",
-                          nameShort: language === "ko" ? "왜곡 저항" : "Distortion",
-                          value1: 1.0, 
-                          value2: 1.44
-                        }
-                      ].map((item, index) => (
-                        <div key={index} className="flex-1 max-w-[80px] relative" style={{ height: '240px' }}>
-                          {/* 막대 쌍 - 절대 위치로 각각 배치 */}
-                          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[60px] relative" style={{ height: '240px' }}>
-                            {/* 1.0mm 막대 */}
-                            <div
-                              className="bg-gray-400 opacity-30 rounded-t absolute bottom-0"
-                              style={{ 
-                                width: '48%', 
-                                height: `${(item.value1 / 1.8) * 240}px`,
-                                left: '0'
-                              }}
-                            ></div>
-                            {/* 1.2mm 막대 */}
-                            <div
-                              className="bg-gray-500 opacity-100 rounded-t absolute bottom-0"
-                              style={{ 
-                                width: '48%', 
-                                height: `${(item.value2 / 1.8) * 240}px`,
-                                right: '0'
-                              }}
-                            ></div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    {/* 라벨들 - 별도로 배치 */}
-                    <div className="absolute left-0 right-0 flex justify-around px-2" style={{ top: '248px' }}>
-                      {[
+              {/* 레이더 차트 영역 */}
+              <div className="flex justify-center items-center py-6">
+                <div className="relative" style={{ width: '500px', height: '500px' }}>
+                  <svg width="500" height="500" viewBox="0 0 500 500" className="w-full h-full">
+                    {/* 레이더 차트 데이터 */}
+                    {(() => {
+                      const centerX = 250;
+                      const centerY = 250;
+                      const maxRadius = 200;
+                      const maxValue = 1.8;
+                      const numAxes = 4; // 4각형 레이더 차트 (4개 파라미터)
+                      const angleStep = (2 * Math.PI) / numAxes;
+                      
+                      // 데이터 정의
+                      const data1_0mm = [1.0, 1.0, 1.0, 1.0]; // 1.0mm 기준값
+                      const data1_2mm = [1.58, 1.2, 0.83, 1.44]; // 1.2mm 값
+                      
+                      // 라벨 배열
+                      const labels = [
                         language === "ko" ? "피치 안정성" : "Pitch Stability",
                         language === "ko" ? "공진 특성" : "Resonance",
                         language === "ko" ? "구동 용이성" : "Ease of Driving",
                         language === "ko" ? "왜곡 저항" : "Distortion Resistance"
-                      ].map((label, index) => (
-                        <div key={index} className="flex-1 max-w-[80px] text-center">
-                          <span className="text-[10px] text-gray-700 dark:text-gray-300 whitespace-nowrap">
-                            {label}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                      ];
+                      
+                      // 좌표 계산 함수
+                      const getPoint = (index: number, value: number) => {
+                        const angle = (index * angleStep) - (Math.PI / 2); // 시작을 위쪽으로
+                        const radius = (value / maxValue) * maxRadius;
+                        const x = centerX + radius * Math.cos(angle);
+                        const y = centerY + radius * Math.sin(angle);
+                        return { x, y };
+                      };
+                      
+                      // 폴리곤 경로 생성 함수
+                      const createPolygonPath = (data: number[]) => {
+                        const points = data.map((value, index) => getPoint(index, value));
+                        return points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ') + ' Z';
+                      };
+                      
+                      return (
+                        <>
+                          {/* 그리드 라인 (동심원) */}
+                          {[0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8].map((value) => {
+                            const radius = (value / maxValue) * maxRadius;
+                            return (
+                              <g key={value}>
+                                <circle
+                                  cx={centerX}
+                                  cy={centerY}
+                                  r={radius}
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="1"
+                                  strokeDasharray="4,4"
+                                  className="text-gray-300 dark:text-gray-700"
+                                />
+                                {/* 각 원 위에 숫자 표시 (12시 방향) */}
+                                <text
+                                  x={centerX}
+                                  y={centerY - radius - 8}
+                                  textAnchor="middle"
+                                  dominantBaseline="middle"
+                                  className="text-[9px] fill-gray-600 dark:fill-gray-400"
+                                >
+                                  {value.toFixed(1)}
+                                </text>
+                              </g>
+                            );
+                          })}
+                          
+                          {/* 축 라인 */}
+                          {Array.from({ length: numAxes }).map((_, index) => {
+                            const angle = (index * angleStep) - (Math.PI / 2);
+                            const endX = centerX + maxRadius * Math.cos(angle);
+                            const endY = centerY + maxRadius * Math.sin(angle);
+                            return (
+                              <line
+                                key={index}
+                                x1={centerX}
+                                y1={centerY}
+                                x2={endX}
+                                y2={endY}
+                                stroke="currentColor"
+                                strokeWidth="1"
+                                className="text-gray-300 dark:text-gray-700"
+                              />
+                            );
+                          })}
+                          
+                          {/* 1.0mm 폴리곤 (파란색, 테두리만) */}
+                          <path
+                            d={createPolygonPath(data1_0mm)}
+                            fill="none"
+                            stroke="rgb(59, 130, 246)"
+                            strokeWidth="2"
+                            strokeOpacity="0.7"
+                          />
+                          
+                          {/* 1.2mm 폴리곤 (주황색, 테두리만) */}
+                          <path
+                            d={createPolygonPath(data1_2mm)}
+                            fill="none"
+                            stroke="rgb(249, 115, 22)"
+                            strokeWidth="2"
+                            strokeOpacity="1"
+                          />
+                          
+                          {/* 라벨 배치 */}
+                          {labels.map((label, index) => {
+                            const angle = (index * angleStep) - (Math.PI / 2);
+                            const labelRadius = maxRadius + 30;
+                            const x = centerX + labelRadius * Math.cos(angle);
+                            const y = centerY + labelRadius * Math.sin(angle);
+                            return (
+                              <text
+                                key={index}
+                                x={x}
+                                y={y}
+                                textAnchor="middle"
+                                dominantBaseline="middle"
+                                className="text-[10px] fill-gray-700 dark:fill-gray-300"
+                              >
+                                {label}
+                              </text>
+                            );
+                          })}
+                        </>
+                      );
+                    })()}
+                  </svg>
                 </div>
               </div>
 
@@ -777,44 +865,64 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
       {displayContent && (
         <div className="prose prose-sm max-w-none">
           {isInquiryPage ? (
-            // "문의/제안" 페이지는 특별한 렌더링
+            // "문의" 페이지는 특별한 렌더링
             <div className="flex flex-col gap-3">
               {displayContent.split("\n").map((line: string, index: number) => (
                 <p key={index} className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
                   {line}
                 </p>
               ))}
-              <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-                · {t("유튜브")}: <a
+              {/* 소셜 미디어 아이콘 */}
+              <div className="flex items-center gap-4 mt-2">
+                {/* 유튜브 아이콘 */}
+                <a
                   href="https://www.youtube.com/@sndhandpanofficial2990"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#14B8A6] transition-colors underline"
+                  className="w-10 h-10 rounded-full bg-red-600 hover:bg-red-700 flex items-center justify-center transition-colors shadow-md hover:shadow-lg"
+                  aria-label="YouTube"
                 >
-                  https://www.youtube.com/@sndhandpanofficial2990
+                  <svg
+                    className="w-6 h-6 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                  </svg>
                 </a>
-              </p>
-              <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-                · {t("인스타")}: <a
+                {/* 인스타그램 아이콘 */}
+                <a
                   href="https://www.instagram.com/snd_handpan_official/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#14B8A6] transition-colors underline"
+                  className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 hover:from-purple-700 hover:via-pink-700 hover:to-orange-600 flex items-center justify-center transition-all shadow-md hover:shadow-lg"
+                  aria-label="Instagram"
                 >
-                  https://www.instagram.com/snd_handpan_official/
+                  <svg
+                    className="w-6 h-6 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                  </svg>
                 </a>
-              </p>
+              </div>
             </div>
           ) : (
             // 일반 페이지는 기존 방식 유지
             displayContent.split("\n\n").map((paragraph: string, index: number) => (
               <p key={index} className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                {paragraph}
+                {convertUrlsToLinks(paragraph)}
               </p>
             ))
           )}
         </div>
       )}
+
+      {/* 문의 페이지에 문의 폼 추가 */}
+      {isInquiryPage && <InquiryForm recipientEmail="handpansnd@gmail.com" />}
 
       {!displayContent && !isStainlessPage && (
         <p className="text-gray-500 dark:text-gray-400">{t("내용이 준비되지 않았습니다.")}</p>

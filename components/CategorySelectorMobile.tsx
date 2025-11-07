@@ -20,7 +20,7 @@ export default function CategorySelectorMobile({
   const [copied, setCopied] = useState(false);
   const { t } = useLanguage();
 
-  // "문의/제안" 카테고리는 직접 링크가 있는 카테고리이므로 공유 아이콘 숨김
+  // "문의" 카테고리는 직접 링크가 있는 카테고리이므로 공유 아이콘 숨김
   const isDirectLinkCategory = categoryDirectLinkMap[selectedCategory] !== undefined;
 
   // 현재 카테고리의 질문 목록 페이지 URL 복사 함수

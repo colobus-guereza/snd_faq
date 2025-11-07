@@ -21,10 +21,10 @@ export default function Home() {
       "결제/배송",
       "튜닝/리튠",
       "수리 A/S",
-      "관리법",
+      "관리보관",
       "기술특징",
       "레슨/교육",
-      "문의/제안",
+      "문의",
     ];
     if (categoryParam && validCategories.includes(categoryParam as Category)) {
       return categoryParam as Category;
