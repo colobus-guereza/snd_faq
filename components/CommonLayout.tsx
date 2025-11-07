@@ -49,7 +49,6 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
       "관리보관",
       "기술특징",
       "레슨/교육",
-      "문의",
     ];
     if (categoryParam && validCategories.includes(categoryParam as Category)) {
       return categoryParam as Category;

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { FAQ } from "@/types/faq";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import InquiryForm from "@/components/InquiryForm";
 
 interface FAQDetailProps {
   faq: FAQ;
@@ -17,19 +16,14 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
     ? `/?category=${encodeURIComponent(returnCategory)}`
     : "/";
   
-  // "문의" 카테고리 질문(id: "7")은 뒤로가기 버튼 숨김
-  const isInquiryPage = faq.id === "7";
-  
   // "1.2mm 스테인레스를 사용하는 이유" 질문(id: "14")은 도표 표시
   const isStainlessPage = faq.id === "14";
   
   // 영어일 경우 번역된 FAQ 데이터 사용
   const translatedFAQ = getFAQ(faq.id);
   
-  // "문의" 카테고리 질문은 타이틀 변경
-  const displayTitle = isInquiryPage 
-    ? t("문의")
-    : (translatedFAQ ? translatedFAQ.title : faq.title);
+  // 번역된 제목 사용
+  const displayTitle = translatedFAQ ? translatedFAQ.title : faq.title;
   
   // 번역된 내용 사용
   const displayContent = translatedFAQ ? translatedFAQ.content : faq.content;
@@ -92,12 +86,11 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
 
   return (
     <div className="w-full">
-      {!isInquiryPage && (
-        <Link
-          href={backHref}
-          prefetch={true}
-          className="mb-6 inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-        >
+      <Link
+        href={backHref}
+        prefetch={true}
+        className="mb-6 inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+      >
           <svg
             className="w-5 h-5"
             fill="none"
@@ -114,7 +107,6 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
           </svg>
           <span className="text-sm font-medium">{t("질문 목록")}</span>
         </Link>
-      )}
 
       <div className="mb-4 flex items-center gap-2">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -160,7 +152,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
         </button>
       </div>
 
-      {!isInquiryPage && displayTags && displayTags.length > 0 && (
+      {displayTags && displayTags.length > 0 && (
         <div className="mb-8 flex flex-wrap gap-2">
           {displayTags.map((tag: string, index: number) => (
             <span
@@ -864,65 +856,13 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
       {/* 본문 텍스트 - displayContent가 있을 때만 표시 */}
       {displayContent && (
         <div className="prose prose-sm max-w-none">
-          {isInquiryPage ? (
-            // "문의" 페이지는 특별한 렌더링
-            <div className="flex flex-col gap-3">
-              {displayContent.split("\n").map((line: string, index: number) => (
-                <p key={index} className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {line}
-                </p>
-              ))}
-              {/* 소셜 미디어 아이콘 */}
-              <div className="flex items-center gap-4 mt-2">
-                {/* 유튜브 아이콘 */}
-                <a
-                  href="https://www.youtube.com/@sndhandpanofficial2990"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-red-600 hover:bg-red-700 flex items-center justify-center transition-colors shadow-md hover:shadow-lg"
-                  aria-label="YouTube"
-                >
-                  <svg
-                    className="w-6 h-6 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                  </svg>
-                </a>
-                {/* 인스타그램 아이콘 */}
-                <a
-                  href="https://www.instagram.com/snd_handpan_official/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 hover:from-purple-700 hover:via-pink-700 hover:to-orange-600 flex items-center justify-center transition-all shadow-md hover:shadow-lg"
-                  aria-label="Instagram"
-                >
-                  <svg
-                    className="w-6 h-6 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          ) : (
-            // 일반 페이지는 기존 방식 유지
-            displayContent.split("\n\n").map((paragraph: string, index: number) => (
-              <p key={index} className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                {convertUrlsToLinks(paragraph)}
-              </p>
-            ))
-          )}
+          {displayContent.split("\n\n").map((paragraph: string, index: number) => (
+            <p key={index} className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+              {convertUrlsToLinks(paragraph)}
+            </p>
+          ))}
         </div>
       )}
-
-      {/* 문의 페이지에 문의 폼 추가 */}
-      {isInquiryPage && <InquiryForm recipientEmail="handpansnd@gmail.com" />}
 
       {!displayContent && !isStainlessPage && (
         <p className="text-gray-500 dark:text-gray-400">{t("내용이 준비되지 않았습니다.")}</p>

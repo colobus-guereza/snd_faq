@@ -24,7 +24,6 @@ export default function Home() {
       "관리보관",
       "기술특징",
       "레슨/교육",
-      "문의",
     ];
     if (categoryParam && validCategories.includes(categoryParam as Category)) {
       return categoryParam as Category;
@@ -64,10 +63,20 @@ export default function Home() {
         result = top10QuestionIds
           .map((id) => faqs.find((faq) => faq.id === id))
           .filter((faq): faq is FAQ => faq !== undefined);
+        // 가나다순으로 정렬 (번역된 제목 기준)
+        result.sort((a, b) => {
+          const titleA = getFAQ(a.id)?.title || a.title;
+          const titleB = getFAQ(b.id)?.title || b.title;
+          return titleA.localeCompare(titleB, "ko");
+        });
       } else {
         result = faqs.filter((faq) => faq.category === selectedCategory);
-        // 조회수 순으로 정렬
-        result.sort((a, b) => b.views - a.views);
+        // 가나다순으로 정렬 (번역된 제목 기준)
+        result.sort((a, b) => {
+          const titleA = getFAQ(a.id)?.title || a.title;
+          const titleB = getFAQ(b.id)?.title || b.title;
+          return titleA.localeCompare(titleB, "ko");
+        });
       }
     }
 
@@ -77,6 +86,12 @@ export default function Home() {
         const translatedFAQ = getFAQ(faq.id);
         const tagsToCheck = translatedFAQ ? translatedFAQ.tags : faq.tags;
         return tagsToCheck && tagsToCheck.includes(selectedTag);
+      });
+      // 태그 필터링 후에도 가나다순 정렬 유지
+      result.sort((a, b) => {
+        const titleA = getFAQ(a.id)?.title || a.title;
+        const titleB = getFAQ(b.id)?.title || b.title;
+        return titleA.localeCompare(titleB, "ko");
       });
     }
 
