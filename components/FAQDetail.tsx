@@ -37,6 +37,9 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   // URL 복사 상태 관리
   const [copied, setCopied] = useState(false);
   
+  // 차트 상세 내용 접기/펼치기 상태 관리
+  const [isDetailExpanded, setIsDetailExpanded] = useState(false);
+  
   // 현재 페이지 URL 복사 함수
   const handleShareClick = async () => {
     try {
@@ -149,156 +152,340 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
       {/* 1.2mm 스테인레스 질문 페이지 도표 - 항상 표시 */}
       {isStainlessPage && (
         <div className="prose prose-sm max-w-none mb-8">
-          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800">
-            {/* 차트 제목 */}
-            <div className="mb-6 text-center">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                {language === "ko" ? "쉘 구조·기계적 특성 비교" : "Shell Structure·Mechanical Properties Comparison"}
-              </h3>
-              <p className="text-xs text-gray-600 dark:text-gray-400 text-center mt-2 mb-6">
-                {language === "ko" ? "상대값 (1.0mm 기준)" : "Relative Value (Based on 1.0mm)"}
-              </p>
-            </div>
-
-            {/* 범례 */}
-            <div className="flex justify-end mb-4">
-              <div className="flex gap-4 text-xs">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded bg-gray-400 opacity-30"></div>
-                  <span className="text-gray-700 dark:text-gray-300">1.0 mm</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded bg-gray-500 opacity-100"></div>
-                  <span className="text-gray-700 dark:text-gray-300">1.2 mm</span>
-                </div>
-              </div>
-            </div>
-
-            {/* 차트 영역 - 명확한 좌표계: 0.0부터 시작 */}
-            <div className="relative" style={{ height: '300px' }}>
-              {/* Y축 라벨 및 그리드 */}
-              <div className="ml-12 relative" style={{ height: '240px', paddingBottom: '60px' }}>
-                {/* Y축 라벨 */}
-                <div className="absolute left-[-48px] top-0 flex flex-col justify-between text-xs text-gray-600 dark:text-gray-400 pr-2" style={{ height: '240px', width: '40px' }}>
-                  {[1.8, 1.6, 1.4, 1.2, 1.0, 0.8, 0.6, 0.4, 0.2, 0.0].map((value) => {
-                    const position = ((1.8 - value) / 1.8) * 240;
-                    return (
-                      <div 
-                        key={value} 
-                        className="absolute flex items-center" 
-                        style={{ 
-                          top: `${position}px`,
-                          transform: 'translateY(-50%)'
-                        }}
-                      >
-                        <span>{value.toFixed(1)}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* 그리드 라인 */}
-                <div className="absolute inset-0" style={{ height: '240px' }}>
-                  {[0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8].map((value) => {
-                    const position = ((1.8 - value) / 1.8) * 240;
-                    return (
-                      <div
-                        key={value}
-                        className="absolute left-0 right-0 border-t border-dashed border-gray-300 dark:border-gray-700"
-                        style={{
-                          top: `${position}px`
-                        }}
-                      ></div>
-                    );
-                  })}
-                </div>
-
-                {/* 바 차트 - 0.0에서 정확히 시작 */}
-                <div className="absolute top-0 left-0 right-0" style={{ height: '240px' }}>
-                  {/* 막대들 */}
-                  <div className="absolute inset-0 flex justify-around px-2">
-                    {[
-                      { value1: 1.0, value2: 1.73, label: language === "ko" ? "굽힘강성 D" : "Bending Stiffness D" },
-                      { value1: 1.0, value2: 1.2, label: language === "ko" ? "면밀도 ρA" : "Area Density ρA" },
-                      { value1: 1.0, value2: 1.2, label: language === "ko" ? "막(인장)강성" : "Membrane Stiffness" },
-                      { value1: 1.0, value2: 1.44, label: language === "ko" ? "항복 모멘트" : "Yield Moment" },
-                      { value1: 1.0, value2: 1.44, label: language === "ko" ? "좌굴 임계하중" : "Buckling Load" },
-                      { value1: 1.0, value2: 1.2, label: language === "ko" ? "고유진동수 ƒ" : "Natural Freq. ƒ" }
-                    ].map((item, index) => (
-                      <div key={index} className="flex-1 max-w-[60px] relative" style={{ height: '240px' }}>
-                        {/* 막대 쌍 - 절대 위치로 각각 배치 */}
-                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[50px] relative" style={{ height: '240px' }}>
-                          {/* 1.0mm 막대 */}
-                          <div
-                            className="bg-gray-400 opacity-30 rounded-t absolute bottom-0"
-                            style={{ 
-                              width: '48%', 
-                              height: `${(item.value1 / 1.8) * 240}px`,
-                              left: '0'
-                            }}
-                          ></div>
-                          {/* 1.2mm 막대 */}
-                          <div
-                            className="bg-gray-500 opacity-100 rounded-t absolute bottom-0"
-                            style={{ 
-                              width: '48%', 
-                              height: `${(item.value2 / 1.8) * 240}px`,
-                              right: '0'
-                            }}
-                          ></div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {/* 라벨들 - 별도로 배치 */}
-                  <div className="absolute left-0 right-0 flex justify-around px-2" style={{ top: '248px' }}>
-                    {[
-                      language === "ko" ? "굽힘강성 D" : "Bending Stiffness D",
-                      language === "ko" ? "면밀도 ρA" : "Area Density ρA",
-                      language === "ko" ? "막(인장)강성" : "Membrane Stiffness",
-                      language === "ko" ? "항복 모멘트" : "Yield Moment",
-                      language === "ko" ? "좌굴 임계하중" : "Buckling Load",
-                      language === "ko" ? "고유진동수 ƒ" : "Natural Freq. ƒ"
-                    ].map((label, index) => (
-                      <div key={index} className="flex-1 max-w-[60px] text-center">
-                        <span className="text-[10px] text-gray-700 dark:text-gray-300 whitespace-nowrap">
-                          {label}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 요약 텍스트 */}
-          <div className="mt-6 text-sm text-gray-700 dark:text-gray-300">
-            <p>
-              <strong className="font-semibold">{language === "ko" ? "요약:" : "Summary:"}</strong>{" "}
+          {/* 요약문 - 일반 소비자용 설명 */}
+          <div className="mb-6">
+            <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
               {language === "ko" 
-                ? "1.2 mm는 1.0 mm 대비 굽힘강성 +73%, 면밀도 +20%, 막(인장)강성 +20%, 좌굴·찌그러짐 내성 +44%. 같은 재질·직경이면 고유진동수는 대략 +20% 상승"
-                : "1.2 mm shows +73% bending stiffness, +20% area density, +20% membrane (tensile) stiffness, and +44% buckling/dent resistance compared to 1.0 mm. With the same material and diameter, natural frequency increases by approximately +20%."
+                ? "핸드팬의 쉘 두께는 악기의 '뼈대'와 같습니다. 두꺼울수록 더 단단하고 견고해지지만, 동시에 더 무거워집니다. 아래 도표는 1.0mm와 1.2mm 쉘의 구조적 특성을 비교한 것으로, 두께 차이에 따라 악기의 강도, 안정성, 반응성 등이 어떻게 달라지는지 보여줍니다."
+                : "The shell thickness of a handpan is like the 'skeleton' of the instrument. The thicker it is, the sturdier and more robust it becomes, but also heavier. The chart below compares the structural properties of 1.0mm and 1.2mm shells, showing how strength, stability, and responsiveness differ based on thickness."
+              }
+            </p>
+            <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
+              {language === "ko"
+                ? "1.2mm 쉘은 더 두꺼운 구조로 인해 음향·기능적 성능에서도 차이를 보입니다. 음정 안정성이 약 58% 향상되어 온도나 타격 변화에도 음정이 덜 흔들리며, 소리가 더 선명하고 집중된 공진 특성을 보입니다. 강한 타격에도 형태 변형이 적어 왜곡 저항이 약 44% 향상되지만, 반면 가볍게 울리는 구동 용이성은 약 17% 낮아집니다. 요약하면 정확도·내구성·집중감이 필요한 연주에 유리한 \"프로페셔널 톤\" 성향입니다."
+                : "The 1.2mm shell, due to its thicker structure, shows differences in acoustic and functional performance. Pitch stability improves by approximately 58%, making the pitch less affected by temperature or impact changes, and the sound shows clearer and more focused resonance characteristics. Distortion resistance improves by approximately 44% with less deformation even under strong impacts, but ease of driving (resonating with light touch) decreases by approximately 17%. In summary, it favors a \"Professional Tone\" suitable for performances requiring accuracy, durability, and concentration."
+              }
+            </p>
+            <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+              {language === "ko"
+                ? "반면 1.0mm 쉘은 가볍게 잘 울리는 편이라 작은 힘으로도 반응이 빠릅니다. 다만 두께가 얇아 강한 타격이나 외부 변화에 형상·피치가 상대적으로 민감합니다. 표현력과 부드러운 반응을 선호하면 1.0mm, 높은 정확도와 견고함을 원하면 1.2mm를 선택하면 됩니다. 한 줄 결론: 감응성은 1.0mm, 안정성과 포커스는 1.2mm입니다."
+                : "On the other hand, the 1.0mm shell resonates easily and responds quickly even to small force. However, its thinner thickness makes it relatively sensitive to strong impacts or external changes in shape and pitch. If you prefer expressiveness and soft responsiveness, choose 1.0mm; if you want high accuracy and robustness, choose 1.2mm. In one line: responsiveness is 1.0mm, stability and focus are 1.2mm."
               }
             </p>
           </div>
 
-          {/* 파라미터 설명 */}
-          <div className="mt-6 pl-6 border-l-2 border-gray-300 dark:border-gray-700 space-y-2 text-xs text-gray-600 dark:text-gray-400 italic">
-            <p className="mb-2 text-[10px] font-medium text-gray-500 dark:text-gray-500 not-italic">
-              {language === "ko" ? "※ 참고" : "※ Note"}
-            </p>
-            <p><strong className="text-gray-700 dark:text-gray-300 not-italic">{language === "ko" ? "굽힘강성 D" : "Bending Stiffness D"}:</strong> {language === "ko" ? "쉘의 휘어짐 저항. 두께 세제곱에 비례." : "Shell's bending resistance. Proportional to the cube of thickness."} <span className="font-mono not-italic">(D = Eh³ / 12(1 - ν²))</span></p>
-            <p><strong className="text-gray-700 dark:text-gray-300 not-italic">{language === "ko" ? "면밀도 ρA" : "Area Density ρA"}:</strong> {language === "ko" ? "단위면적당 질량. 두께 1차 비례." : "Mass per unit area. Directly proportional to thickness."} <span className="font-mono not-italic">(ρA = ρh)</span></p>
-            <p><strong className="text-gray-700 dark:text-gray-300 not-italic">{language === "ko" ? "막(인장)강성" : "Membrane (Tensile) Stiffness"}:</strong> {language === "ko" ? "스피닝·튜닝 시 펴짐/늘어짐 저항. 얇을수록 늘어남 큼." : "Resistance to stretching/elongation during spinning/tuning. Greater elongation with thinner material."} <span className="font-mono not-italic">(~ Eh)</span></p>
-            <p><strong className="text-gray-700 dark:text-gray-300 not-italic">{language === "ko" ? "항복 모멘트" : "Yield Moment"}:</strong> {language === "ko" ? "충격·국부 눌림에 대한 내성 증가." : "Increased resistance to impact and local indentation."} <span className="font-mono not-italic">(~ σy h²)</span></p>
-            <p><strong className="text-gray-700 dark:text-gray-300 not-italic">{language === "ko" ? "좌굴 임계하중" : "Buckling Critical Load"}:</strong> {language === "ko" ? "압축·잔류응력에서 형상 안정성." : "Shape stability under compression and residual stress."} <span className="font-mono not-italic">(∝ h²)</span></p>
-            <p><strong className="text-gray-700 dark:text-gray-300 not-italic">{language === "ko" ? "고유진동수 ƒ" : "Natural Frequency ƒ"}:</strong> {language === "ko" ? "같은 지름·경계조건이면 전반적 모드 주파수 상승." : "Overall mode frequency increase with same diameter and boundary conditions."} <span className="font-mono not-italic">(ƒ ∝ h)</span></p>
-          </div>
+          {/* 자세히보기 버튼 */}
+          <button
+            onClick={() => setIsDetailExpanded(!isDetailExpanded)}
+            className="mt-4 flex items-center gap-2 text-sm text-[#14B8A6] hover:text-[#0d9488] transition-colors font-medium"
+          >
+            <span>{isDetailExpanded ? t("간단히보기") : t("자세히보기")}</span>
+            <svg
+              className={`w-4 h-4 transition-transform duration-200 ${isDetailExpanded ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
 
-          {/* 비교 시각 자료 */}
-          <div className="mt-8 space-y-6">
+          {/* 차트 및 상세 내용 - 접기/펼치기 */}
+          {isDetailExpanded && (
+            <div className="mt-6">
+              <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800">
+                {/* 차트 제목 */}
+                <div className="mb-6 text-center">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    {language === "ko" ? "쉘 구조·기계적 특성 비교" : "Shell Structure·Mechanical Properties Comparison"}
+                  </h3>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 text-center mt-2 mb-6">
+                    {language === "ko" ? "상대값 (1.0mm 기준)" : "Relative Value (Based on 1.0mm)"}
+                  </p>
+                </div>
+
+                {/* 범례 */}
+                <div className="flex justify-center mb-4">
+                  <div className="flex gap-4 text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded bg-gray-400 opacity-30"></div>
+                      <span className="text-gray-700 dark:text-gray-300">1.0 mm</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded bg-gray-500 opacity-100"></div>
+                      <span className="text-gray-700 dark:text-gray-300">1.2 mm</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 차트 영역 - 명확한 좌표계: 0.0부터 시작 */}
+                <div className="relative" style={{ height: '300px' }}>
+                  {/* Y축 라벨 및 그리드 */}
+                  <div className="ml-12 relative" style={{ height: '240px', paddingBottom: '60px' }}>
+                    {/* Y축 라벨 */}
+                    <div className="absolute left-[-48px] top-0 flex flex-col justify-between text-xs text-gray-600 dark:text-gray-400 pr-2" style={{ height: '240px', width: '40px' }}>
+                      {[1.8, 1.6, 1.4, 1.2, 1.0, 0.8, 0.6, 0.4, 0.2, 0.0].map((value) => {
+                        const position = ((1.8 - value) / 1.8) * 240;
+                        return (
+                          <div 
+                            key={value} 
+                            className="absolute flex items-center" 
+                            style={{ 
+                              top: `${position}px`,
+                              transform: 'translateY(-50%)'
+                            }}
+                          >
+                            <span>{value.toFixed(1)}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* 그리드 라인 */}
+                    <div className="absolute inset-0" style={{ height: '240px' }}>
+                      {[0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8].map((value) => {
+                        const position = ((1.8 - value) / 1.8) * 240;
+                        return (
+                          <div
+                            key={value}
+                            className="absolute left-0 right-0 border-t border-dashed border-gray-300 dark:border-gray-700"
+                            style={{
+                              top: `${position}px`
+                            }}
+                          ></div>
+                        );
+                      })}
+                    </div>
+
+                    {/* 바 차트 - 0.0에서 정확히 시작 */}
+                    <div className="absolute top-0 left-0 right-0" style={{ height: '240px' }}>
+                      {/* 막대들 */}
+                      <div className="absolute inset-0 flex justify-around px-2">
+                        {[
+                          { value1: 1.0, value2: 1.73, label: language === "ko" ? "굽힘강성 D" : "Bending Stiffness D" },
+                          { value1: 1.0, value2: 1.2, label: language === "ko" ? "면밀도 ρA" : "Area Density ρA" },
+                          { value1: 1.0, value2: 1.2, label: language === "ko" ? "막(인장)강성" : "Membrane Stiffness" },
+                          { value1: 1.0, value2: 1.44, label: language === "ko" ? "항복 모멘트" : "Yield Moment" },
+                          { value1: 1.0, value2: 1.44, label: language === "ko" ? "좌굴 임계하중" : "Buckling Load" },
+                          { value1: 1.0, value2: 1.2, label: language === "ko" ? "고유진동수 ƒ" : "Natural Freq. ƒ" }
+                        ].map((item, index) => (
+                          <div key={index} className="flex-1 max-w-[60px] relative" style={{ height: '240px' }}>
+                            {/* 막대 쌍 - 절대 위치로 각각 배치 */}
+                            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[50px] relative" style={{ height: '240px' }}>
+                              {/* 1.0mm 막대 */}
+                              <div
+                                className="bg-gray-400 opacity-30 rounded-t absolute bottom-0"
+                                style={{ 
+                                  width: '48%', 
+                                  height: `${(item.value1 / 1.8) * 240}px`,
+                                  left: '0'
+                                }}
+                              ></div>
+                              {/* 1.2mm 막대 */}
+                              <div
+                                className="bg-gray-500 opacity-100 rounded-t absolute bottom-0"
+                                style={{ 
+                                  width: '48%', 
+                                  height: `${(item.value2 / 1.8) * 240}px`,
+                                  right: '0'
+                                }}
+                              ></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* 라벨들 - 별도로 배치 */}
+                      <div className="absolute left-0 right-0 flex justify-around px-2" style={{ top: '248px' }}>
+                        {[
+                          language === "ko" ? "굽힘강성 D" : "Bending Stiffness D",
+                          language === "ko" ? "면밀도 ρA" : "Area Density ρA",
+                          language === "ko" ? "막(인장)강성" : "Membrane Stiffness",
+                          language === "ko" ? "항복 모멘트" : "Yield Moment",
+                          language === "ko" ? "좌굴 임계하중" : "Buckling Load",
+                          language === "ko" ? "고유진동수 ƒ" : "Natural Freq. ƒ"
+                        ].map((label, index) => (
+                          <div key={index} className="flex-1 max-w-[60px] text-center">
+                            <span className="text-[10px] text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                              {label}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 수식 및 해석 */}
+                <div className="mt-6 grid grid-cols-2 gap-4 text-xs">
+                  <div>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                      {language === "ko" ? "굽힘강성 D:" : "Bending Stiffness D:"}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400 font-mono text-[10px] mb-2">
+                      D = Eh³ / 12(1 - ν²)
+                    </p>
+                    <p className="text-[10px] text-gray-600 dark:text-gray-400 italic">
+                      {language === "ko" ? "쉘의 휘어짐 저항. 두께 세제곱에 비례." : "Shell's bending resistance. Proportional to the cube of thickness."}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                      {language === "ko" ? "면밀도 ρA:" : "Area Density ρA:"}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400 font-mono text-[10px] mb-2">
+                      ρA = ρh
+                    </p>
+                    <p className="text-[10px] text-gray-600 dark:text-gray-400 italic">
+                      {language === "ko" ? "단위면적당 질량. 두께 1차 비례." : "Mass per unit area. Directly proportional to thickness."}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                      {language === "ko" ? "막(인장)강성:" : "Membrane (Tensile) Stiffness:"}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400 font-mono text-[10px] mb-2">
+                      ~ Eh
+                    </p>
+                    <p className="text-[10px] text-gray-600 dark:text-gray-400 italic">
+                      {language === "ko" ? "스피닝·튜닝 시 펴짐/늘어짐 저항. 얇을수록 늘어남 큼." : "Resistance to stretching/elongation during spinning/tuning. Greater elongation with thinner material."}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                      {language === "ko" ? "항복 모멘트:" : "Yield Moment:"}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400 font-mono text-[10px] mb-2">
+                      ~ σy h²
+                    </p>
+                    <p className="text-[10px] text-gray-600 dark:text-gray-400 italic">
+                      {language === "ko" ? "충격·국부 눌림에 대한 내성 증가." : "Increased resistance to impact and local indentation."}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                      {language === "ko" ? "좌굴 임계하중:" : "Buckling Critical Load:"}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400 font-mono text-[10px] mb-2">
+                      ∝ h²
+                    </p>
+                    <p className="text-[10px] text-gray-600 dark:text-gray-400 italic">
+                      {language === "ko" ? "압축·잔류응력에서 형상 안정성." : "Shape stability under compression and residual stress."}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                      {language === "ko" ? "고유진동수 ƒ:" : "Natural Frequency ƒ:"}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400 font-mono text-[10px] mb-2">
+                      ƒ ∝ h
+                    </p>
+                    <p className="text-[10px] text-gray-600 dark:text-gray-400 italic">
+                      {language === "ko" ? "같은 지름·경계조건이면 전반적 모드 주파수 상승." : "Overall mode frequency increase with same diameter and boundary conditions."}
+                    </p>
+                  </div>
+                </div>
+
+                {/* 요약 및 결론 */}
+                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  {/* 요약 */}
+                  <div className="mb-6">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                      {language === "ko" ? "요약" : "Summary"}
+                    </p>
+                    <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                      {language === "ko" 
+                        ? "1.2 mm 쉘은 1.0 mm 대비 전반적으로 '견고하고 안정적인 구조·기계적 특성'을 보인다."
+                        : "The 1.2 mm shell generally shows 'robust and stable structural·mechanical properties' compared to the 1.0 mm shell."
+                      }
+                    </p>
+                  </div>
+
+                  {/* 상세 특성 */}
+                  <div className="mb-6 space-y-3">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                      {language === "ko" ? "상세 특성" : "Detailed Characteristics"}
+                    </p>
+                    <ul className="space-y-3 text-xs text-gray-700 dark:text-gray-300">
+                      <li className="flex items-start gap-2">
+                        <span className="font-semibold text-gray-900 dark:text-gray-100 min-w-[140px]">
+                          {language === "ko" ? "굽힘강성 +73%:" : "Bending Stiffness +73%:"}
+                        </span>
+                        <span>
+                          {language === "ko" 
+                            ? "두께 세제곱에 비례하여 굽힘 저항이 크게 증가하여 쉘의 구조적 안정성이 향상된다."
+                            : "Proportional to the cube of thickness, bending resistance significantly increases, improving the shell's structural stability."
+                          }
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="font-semibold text-gray-900 dark:text-gray-100 min-w-[140px]">
+                          {language === "ko" ? "면밀도 +20%:" : "Area Density +20%:"}
+                        </span>
+                        <span>
+                          {language === "ko" 
+                            ? "단위면적당 질량이 증가하여 두께에 직접 비례하는 특성을 보인다."
+                            : "Mass per unit area increases, showing characteristics directly proportional to thickness."
+                          }
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="font-semibold text-gray-900 dark:text-gray-100 min-w-[140px]">
+                          {language === "ko" ? "막(인장)강성 +20%:" : "Membrane (Tensile) Stiffness +20%:"}
+                        </span>
+                        <span>
+                          {language === "ko" 
+                            ? "스피닝·튜닝 시 펴짐/늘어짐 저항이 증가하여 형상 유지 능력이 향상된다."
+                            : "Resistance to stretching/elongation during spinning/tuning increases, improving shape retention capability."
+                          }
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="font-semibold text-gray-900 dark:text-gray-100 min-w-[140px]">
+                          {language === "ko" ? "항복 모멘트 +44%:" : "Yield Moment +44%:"}
+                        </span>
+                        <span>
+                          {language === "ko" 
+                            ? "충격·국부 눌림에 대한 내성이 증가하여 강한 타격에도 형태 변형이 적다."
+                            : "Increased resistance to impact and local indentation results in less deformation even with strong impacts."
+                          }
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="font-semibold text-gray-900 dark:text-gray-100 min-w-[140px]">
+                          {language === "ko" ? "좌굴 임계하중 +44%:" : "Buckling Critical Load +44%:"}
+                        </span>
+                        <span>
+                          {language === "ko" 
+                            ? "압축·잔류응력에서 형상 안정성이 향상되어 좌굴·찌그러짐 내성이 증가한다."
+                            : "Shape stability under compression and residual stress improves, increasing buckling/dent resistance."
+                          }
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="font-semibold text-gray-900 dark:text-gray-100 min-w-[140px]">
+                          {language === "ko" ? "고유진동수 +20%:" : "Natural Frequency +20%:"}
+                        </span>
+                        <span>
+                          {language === "ko" 
+                            ? "같은 지름·경계조건이면 전반적 모드 주파수가 상승하여 공진 특성이 향상된다."
+                            : "With the same diameter and boundary conditions, overall mode frequency increases, improving resonance characteristics."
+                          }
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+            {/* 비교 시각 자료 */}
+            <div className="mt-8 space-y-6">
             {/* 정량적 지표 - 통합 막대 그래프 */}
             <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800">
               <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2 text-center">
@@ -581,6 +768,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
               </div>
             </div>
           </div>
+            </div>
+          )}
         </div>
       )}
 
