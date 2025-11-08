@@ -31,7 +31,11 @@ export const metadata: Metadata = {
     { media: '(prefers-color-scheme: dark)', color: '#171717' },
   ],
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/favicon.png', type: 'image/png' },
+      { url: '/favicon.ico', type: 'image/x-icon' },
+    ],
+    apple: '/favicon.png',
   },
   manifest: '/manifest.json',
   appleWebApp: {
