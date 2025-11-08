@@ -32,10 +32,13 @@ export const metadata: Metadata = {
   ],
   icons: {
     icon: [
-      { url: '/favicon.png', type: 'image/png' },
-      { url: '/favicon.ico', type: 'image/x-icon' },
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.png', type: 'image/png', sizes: '512x512' },
     ],
-    apple: '/favicon.png',
+    apple: [
+      { url: '/favicon.png', sizes: '512x512', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
   },
   manifest: '/manifest.json',
   appleWebApp: {
