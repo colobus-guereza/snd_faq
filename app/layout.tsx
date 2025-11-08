@@ -30,14 +30,14 @@ export const metadata: Metadata = {
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
     { media: '(prefers-color-scheme: dark)', color: '#171717' },
   ],
+  // Next.js App Router는 app/icon.png 또는 app/icon.ico를 자동으로 처리
+  // Vercel 배포 환경에서도 작동하도록 명시적 설정
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
       { url: '/favicon.png', type: 'image/png', sizes: '512x512' },
     ],
-    apple: [
-      { url: '/favicon.png', sizes: '512x512', type: 'image/png' },
-    ],
+    apple: '/favicon.png',
     shortcut: '/favicon.ico',
   },
   manifest: '/manifest.json',

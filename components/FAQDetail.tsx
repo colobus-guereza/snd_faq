@@ -5,6 +5,7 @@ import Image from "next/image";
 import { FAQ } from "@/types/faq";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import AcousticMaturityChart from "./AcousticMaturityChart";
 
 interface FAQDetailProps {
   faq: FAQ;
@@ -22,6 +23,9 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   
   // "핸드팬 제작과정" 질문(id: "18")은 카드 형태로 표시
   const isManufacturingPage = faq.id === "18";
+  
+  // "튜닝을 하면 소리가 더 좋아지는게 맞나요?" 질문(id: "32")은 그래프 표시
+  const isTuningSoundPage = faq.id === "32";
   
   // 영어일 경우 번역된 FAQ 데이터 사용
   const translatedFAQ = getFAQ(faq.id);
@@ -41,6 +45,12 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   
   // 제작과정 카드 접기/펼치기 상태 관리
   const [isManufacturingExpanded, setIsManufacturingExpanded] = useState(false);
+  
+  // 리튠비용 계산서 접기/펼치기 상태 관리
+  const [isQuoteExpanded, setIsQuoteExpanded] = useState(false);
+  
+  // "튜닝을 하면 소리가 더 좋아지는게 맞나요?" 질문(id: "32")의 상세 내용 접기/펼치기 상태 관리
+  const [isTuningDetailExpanded, setIsTuningDetailExpanded] = useState(false);
   
   // URL을 링크로 변환하는 함수
   const convertUrlsToLinks = (text: string) => {
@@ -93,6 +103,9 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
 
   // "레슨 안내드립니다." 질문(id: "6")은 뒤로가기 버튼 숨김
   const isLessonPage = faq.id === "6";
+  
+  // "튜닝 비용은 어떻게 책정되어 있나요?" 질문(id: "31")은 견적서 양식으로 표시
+  const isTuningCostPage = faq.id === "31";
 
   return (
     <div className="w-full">
@@ -232,7 +245,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
 
           {/* 차트 및 상세 내용 - 접기/펼치기 */}
           {isDetailExpanded && (
-            <div className="mt-6">
+            <div className="mt-6 -mx-4 sm:-mx-0">
               <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800">
                 {/* 차트 제목 */}
                 <div className="mb-6 text-center">
@@ -1077,7 +1090,385 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
       {/* 본문 텍스트 - displayContent가 있을 때만 표시 (제작과정 페이지 제외) */}
       {displayContent && !isManufacturingPage && (
         <div className="prose prose-sm max-w-none">
-          {isLessonPage ? (
+          {isTuningCostPage ? (
+            // 튜닝 비용 페이지는 견적서 양식으로 표시
+            <div className="space-y-6">
+              {(() => {
+                const paragraphs = displayContent.split("\n\n");
+                const basicInfo = [];
+                const exampleStartIndex = paragraphs.findIndex((p: string) => p.startsWith("ex)"));
+                
+                // 기본 정보 부분 (ex) 이전까지)
+                for (let i = 0; i < exampleStartIndex; i++) {
+                  basicInfo.push(paragraphs[i]);
+                }
+                
+                return (
+                  <>
+                    {/* 기본 요금 정보 */}
+                    <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                      {basicInfo.map((info: string, index: number) => (
+                        <p key={index} className="mb-4">
+                          {info.split("\n").map((line: string, lineIndex: number) => (
+                            <span key={lineIndex}>
+                              {line}
+                              {lineIndex < info.split("\n").length - 1 && <br />}
+                            </span>
+                          ))}
+                        </p>
+                      ))}
+                    </div>
+                    
+                    {/* 견적서 예시 */}
+                    {exampleStartIndex !== -1 && (
+                      <>
+                        <div className="mb-4">
+                          <button
+                            onClick={() => setIsQuoteExpanded(!isQuoteExpanded)}
+                            className="inline-flex items-center gap-2 px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                          >
+                            <span>
+                              {language === "ko" ? (isQuoteExpanded ? "접기" : "견적서보기") : (isQuoteExpanded ? "Close" : "View Quote")}
+                            </span>
+                            <svg
+                              className={`w-5 h-5 transition-transform ${isQuoteExpanded ? "rotate-180" : ""}`}
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
+                        </div>
+                        
+                        {isQuoteExpanded && (
+                          <div className="space-y-6">
+                            {/* D Kurd 9 계산서 */}
+                            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                              <div className="overflow-x-auto">
+                                <table className="w-full border-collapse border border-gray-300 dark:border-gray-700">
+                                  <thead>
+                                    {/* 제목 행 - 헤더 스타일 */}
+                                    <tr>
+                                      <th colSpan={4} className="border border-gray-300 dark:border-gray-700 px-4 py-4 text-center text-lg font-bold text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-800">
+                                        {language === "ko" ? "리튠비용 견적서" : "Retune Cost Quote"}
+                                      </th>
+                                    </tr>
+                                    {/* 음계 정보 행들 - 2x2 그리드 (라벨: 회색, 데이터: 흰색) */}
+                                    <tr>
+                                      <td colSpan={2} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800">
+                                        {language === "ko" ? "음계" : "Scale"}
+                                      </td>
+                                      <td colSpan={2} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm font-medium text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900">
+                                        D Kurd 9
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td colSpan={2} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800">
+                                        {language === "ko" ? "음 구성" : "Note Composition"}
+                                      </td>
+                                      <td colSpan={2} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900">
+                                        D3 / A Bb C4 D E F G A
+                                      </td>
+                                    </tr>
+                                    {/* 테이블 헤더 - 헤더 스타일 */}
+                                    <tr className="bg-gray-50 dark:bg-gray-800">
+                                      <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "구분" : "Item"}
+                                      </th>
+                                      <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "개수" : "Quantity"}
+                                      </th>
+                                      <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "단가" : "Unit Price"}
+                                      </th>
+                                      <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "합계" : "Total"}
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {/* 데이터 행들 - 데이터 스타일 (흰색) */}
+                                    <tr className="bg-white dark:bg-gray-900">
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "딩 사이즈 노트 (D3)" : "Ding Size Note (D3)"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
+                                        1
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "50,000원" : "50,000 KRW"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "50,000원" : "50,000 KRW"}
+                                      </td>
+                                    </tr>
+                                    <tr className="bg-white dark:bg-gray-900">
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "일반 사이즈 노트" : "Standard Size Notes"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
+                                        8
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "40,000원" : "40,000 KRW"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "320,000원" : "320,000 KRW"}
+                                      </td>
+                                    </tr>
+                                    {/* 소계 행 - 헤더 스타일 */}
+                                    <tr className="bg-gray-50 dark:bg-gray-800">
+                                      <td colSpan={3} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "소계" : "Subtotal"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "370,000원" : "370,000 KRW"}
+                                      </td>
+                                    </tr>
+                                    {/* 할인 행 - 데이터 스타일 (흰색) */}
+                                    <tr className="bg-white dark:bg-gray-900">
+                                      <td colSpan={3} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "전체리튠 할인 25%" : "Full Retune Discount 25%"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-red-600 dark:text-red-400 font-medium">
+                                        {language === "ko" ? "-92,500원" : "-92,500 KRW"}
+                                      </td>
+                                    </tr>
+                                    {/* 최종 금액 행 - 강조 스타일 (파란색) */}
+                                    <tr className="bg-blue-50 dark:bg-blue-900/20">
+                                      <td colSpan={3} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-bold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "최종 금액" : "Final Amount"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-bold text-blue-600 dark:text-blue-400">
+                                        {language === "ko" ? "277,500원" : "277,500 KRW"}
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+
+                            {/* D Kurd 10 계산서 */}
+                            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                              <div className="overflow-x-auto">
+                                <table className="w-full border-collapse border border-gray-300 dark:border-gray-700">
+                                  <thead>
+                                    {/* 제목 행 - 헤더 스타일 */}
+                                    <tr>
+                                      <th colSpan={4} className="border border-gray-300 dark:border-gray-700 px-4 py-4 text-center text-lg font-bold text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-800">
+                                        {language === "ko" ? "리튠비용 견적서" : "Retune Cost Quote"}
+                                      </th>
+                                    </tr>
+                                    {/* 음계 정보 행들 - 2x2 그리드 (라벨: 회색, 데이터: 흰색) */}
+                                    <tr>
+                                      <td colSpan={2} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800">
+                                        {language === "ko" ? "음계" : "Scale"}
+                                      </td>
+                                      <td colSpan={2} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm font-medium text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900">
+                                        D Kurd 10
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td colSpan={2} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800">
+                                        {language === "ko" ? "음 구성" : "Note Composition"}
+                                      </td>
+                                      <td colSpan={2} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900">
+                                        D3 / A Bb C4 D E F G A C5
+                                      </td>
+                                    </tr>
+                                    {/* 테이블 헤더 - 헤더 스타일 */}
+                                    <tr className="bg-gray-50 dark:bg-gray-800">
+                                      <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "구분" : "Item"}
+                                      </th>
+                                      <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "개수" : "Quantity"}
+                                      </th>
+                                      <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "단가" : "Unit Price"}
+                                      </th>
+                                      <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "합계" : "Total"}
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {/* 데이터 행들 - 데이터 스타일 (흰색) */}
+                                    <tr className="bg-white dark:bg-gray-900">
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "딩 사이즈 노트 (D3)" : "Ding Size Note (D3)"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
+                                        1
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "50,000원" : "50,000 KRW"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "50,000원" : "50,000 KRW"}
+                                      </td>
+                                    </tr>
+                                    <tr className="bg-white dark:bg-gray-900">
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "일반 사이즈 노트" : "Standard Size Notes"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
+                                        9
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "40,000원" : "40,000 KRW"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "360,000원" : "360,000 KRW"}
+                                      </td>
+                                    </tr>
+                                    {/* 소계 행 - 헤더 스타일 */}
+                                    <tr className="bg-gray-50 dark:bg-gray-800">
+                                      <td colSpan={3} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "소계" : "Subtotal"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "410,000원" : "410,000 KRW"}
+                                      </td>
+                                    </tr>
+                                    {/* 할인 행 - 데이터 스타일 (흰색) */}
+                                    <tr className="bg-white dark:bg-gray-900">
+                                      <td colSpan={3} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "전체리튠 할인 25%" : "Full Retune Discount 25%"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-red-600 dark:text-red-400 font-medium">
+                                        {language === "ko" ? "-102,500원" : "-102,500 KRW"}
+                                      </td>
+                                    </tr>
+                                    {/* 최종 금액 행 - 강조 스타일 (파란색) */}
+                                    <tr className="bg-blue-50 dark:bg-blue-900/20">
+                                      <td colSpan={3} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-bold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "최종 금액" : "Final Amount"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-bold text-blue-600 dark:text-blue-400">
+                                        {language === "ko" ? "307,500원" : "307,500 KRW"}
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+
+                            {/* D Kurd 12 계산서 */}
+                            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                              <div className="overflow-x-auto">
+                                <table className="w-full border-collapse border border-gray-300 dark:border-gray-700">
+                                  <thead>
+                                    {/* 제목 행 - 헤더 스타일 */}
+                                    <tr>
+                                      <th colSpan={4} className="border border-gray-300 dark:border-gray-700 px-4 py-4 text-center text-lg font-bold text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-800">
+                                        {language === "ko" ? "리튠비용 견적서" : "Retune Cost Quote"}
+                                      </th>
+                                    </tr>
+                                    {/* 음계 정보 행들 - 2x2 그리드 (라벨: 회색, 데이터: 흰색) */}
+                                    <tr>
+                                      <td colSpan={2} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800">
+                                        {language === "ko" ? "음계" : "Scale"}
+                                      </td>
+                                      <td colSpan={2} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm font-medium text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900">
+                                        D Kurd 12
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td colSpan={2} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800">
+                                        {language === "ko" ? "음 구성" : "Note Composition"}
+                                      </td>
+                                      <td colSpan={2} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900">
+                                        D3 / (E F) A Bb C4 D E F G A C5
+                                      </td>
+                                    </tr>
+                                    {/* 테이블 헤더 - 헤더 스타일 */}
+                                    <tr className="bg-gray-50 dark:bg-gray-800">
+                                      <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "구분" : "Item"}
+                                      </th>
+                                      <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "개수" : "Quantity"}
+                                      </th>
+                                      <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "단가" : "Unit Price"}
+                                      </th>
+                                      <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "합계" : "Total"}
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {/* 데이터 행들 - 데이터 스타일 (흰색) */}
+                                    <tr className="bg-white dark:bg-gray-900">
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "딩 사이즈 노트 (D3, E3, F3)" : "Ding Size Notes (D3, E3, F3)"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
+                                        3
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "50,000원" : "50,000 KRW"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "150,000원" : "150,000 KRW"}
+                                      </td>
+                                    </tr>
+                                    <tr className="bg-white dark:bg-gray-900">
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "일반 사이즈 노트" : "Standard Size Notes"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
+                                        9
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "40,000원" : "40,000 KRW"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "360,000원" : "360,000 KRW"}
+                                      </td>
+                                    </tr>
+                                    {/* 소계 행 - 헤더 스타일 */}
+                                    <tr className="bg-gray-50 dark:bg-gray-800">
+                                      <td colSpan={3} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "소계" : "Subtotal"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "510,000원" : "510,000 KRW"}
+                                      </td>
+                                    </tr>
+                                    {/* 할인 행 - 데이터 스타일 (흰색) */}
+                                    <tr className="bg-white dark:bg-gray-900">
+                                      <td colSpan={3} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-gray-700 dark:text-gray-300">
+                                        {language === "ko" ? "전체리튠 할인 25%" : "Full Retune Discount 25%"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm text-red-600 dark:text-red-400 font-medium">
+                                        {language === "ko" ? "-127,500원" : "-127,500 KRW"}
+                                      </td>
+                                    </tr>
+                                    {/* 최종 금액 행 - 강조 스타일 (파란색) */}
+                                    <tr className="bg-blue-50 dark:bg-blue-900/20">
+                                      <td colSpan={3} className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-bold text-gray-900 dark:text-gray-100">
+                                        {language === "ko" ? "최종 금액" : "Final Amount"}
+                                      </td>
+                                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-right text-sm font-bold text-blue-600 dark:text-blue-400">
+                                        {language === "ko" ? "382,500원" : "382,500 KRW"}
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </>
+                );
+              })()}
+            </div>
+          ) : isLessonPage ? (
             // 레슨 페이지는 카드 형태로 표시
             <div className="space-y-4">
               {(() => {
@@ -1360,6 +1751,50 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                 return cards;
               })()}
             </div>
+          ) : isTuningSoundPage ? (
+            // 튜닝 소리 페이지는 첫 번째 문단은 항상 표시, 나머지는 접기/펼치기
+            (() => {
+              const paragraphs = displayContent.split("\n\n");
+              const firstParagraph = paragraphs[0];
+              
+              return (
+                <>
+                  {/* 첫 번째 문단 - 항상 표시 */}
+                  <p className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                    {convertUrlsToLinks(firstParagraph)}
+                  </p>
+                  
+                  {/* 자세히보기 버튼 */}
+                  <button
+                    onClick={() => setIsTuningDetailExpanded(!isTuningDetailExpanded)}
+                    className="mt-4 flex items-center gap-2 text-sm text-[#14B8A6] hover:text-[#0d9488] transition-colors font-medium"
+                  >
+                    <span>{isTuningDetailExpanded ? t("간단히보기") : t("자세히보기")}</span>
+                    <svg
+                      className={`w-4 h-4 transition-transform duration-200 ${isTuningDetailExpanded ? 'rotate-180' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </button>
+                  
+                  {/* 상세 내용 - 접기/펼치기 */}
+                  {isTuningDetailExpanded && (
+                    <div className="mt-4">
+                      <AcousticMaturityChart />
+                    </div>
+                  )}
+                </>
+              );
+            })()
           ) : (
             // 일반 페이지는 기존 방식대로 표시
             displayContent.split("\n\n").map((paragraph: string, index: number) => (
