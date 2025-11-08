@@ -11,15 +11,15 @@
   "닫기": "Close",
   "문의와 제안": "Inquiry and Suggestion",
   "내용이 준비되지 않았습니다": "Content not available",
-  "질문 Top 10": "Most viewed",
-  "결제/배송": "Payment/Ship",
-  "튜닝/리튠": "Retune",
-  "수리 A/S": "A/S",
-  "관리법": "Maintenance",
+  "결제배송": "Payment/Ship",
+  "튜닝리튠": "Retune",
+  "파손수리": "A/S",
+  "관리보관": "Maintenance",
   "기술특징": "Technologies",
-  "레슨/교육": "Lessons",
-  "문의/제안": "Contact",
+  "교육레슨": "Lessons",
   "유튜브": "YouTube",
-  "인스타": "Instagram"
+  "인스타": "Instagram",
+  "자세히보기": "Show More",
+  "간단히보기": "Show Less"
 }
 

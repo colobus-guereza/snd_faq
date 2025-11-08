@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useEffect, useState, createContext, useContext, useMemo } from "react";
+import { useTheme } from "next-themes";
 import Header from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
 import CategoryMenu from "@/components/CategoryMenu";
@@ -34,7 +35,18 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState("");
-  const { t } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const toggleTheme = () => {
+    const currentTheme = resolvedTheme || theme || "light";
+    setTheme(currentTheme === "dark" ? "light" : "dark");
+  };
   
   // 메인 페이지인지 확인
   const isHomePage = pathname === "/";
@@ -42,19 +54,17 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
   // 카테고리 타입 검증 함수
   const getValidCategory = (categoryParam: string | null): Category => {
     const validCategories: Category[] = [
-      "질문 Top 10",
-      "결제/배송",
-      "튜닝/리튠",
-      "수리 A/S",
-      "관리법",
       "기술특징",
-      "레슨/교육",
-      "문의/제안",
+      "튜닝리튠",
+      "관리보관",
+      "파손수리",
+      "교육레슨",
+      "결제배송",
     ];
     if (categoryParam && validCategories.includes(categoryParam as Category)) {
       return categoryParam as Category;
     }
-    return "질문 Top 10";
+    return "기술특징";
   };
 
   // URL 쿼리 파라미터에서 초기 카테고리 설정
@@ -116,8 +126,8 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
 
   const handleTitleClick = () => {
     setSearchQuery("");
-    setSelectedCategory("질문 Top 10");
-    router.push("/?category=질문 Top 10");
+    setSelectedCategory("기술특징");
+    router.push("/?category=기술특징");
   };
 
   const handleSearchChange = (value: string) => {
@@ -175,6 +185,76 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <Header />
         <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          {/* 언어 선택 버튼 및 테마 토글 */}
+          {mounted && (
+            <div className="mb-4 flex justify-start items-center gap-4">
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  className={`text-sm transition-colors ${
+                    language === "ko"
+                      ? "font-bold text-gray-900 dark:text-gray-100"
+                      : "font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
+                  }`}
+                  onClick={() => setLanguage("ko")}
+                >
+                  한국어
+                </button>
+                <span className="text-sm text-gray-400 dark:text-gray-600">/</span>
+                <button
+                  type="button"
+                  className={`text-sm transition-colors ${
+                    language === "en"
+                      ? "font-bold text-gray-900 dark:text-gray-100"
+                      : "font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
+                  }`}
+                  onClick={() => setLanguage("en")}
+                >
+                  English
+                </button>
+              </div>
+              <button
+                type="button"
+                className="p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                onClick={toggleTheme}
+                aria-label={t("테마 전환")}
+              >
+                {(resolvedTheme || theme) === "dark" ? (
+                  // Sun icon (라이트 모드로 전환)
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                    />
+                  </svg>
+                ) : (
+                  // Moon icon (다크 모드로 전환)
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                    />
+                  </svg>
+                )}
+              </button>
+            </div>
+          )}
           <div className="mb-10 flex items-center gap-2">
             <h1 
               onClick={handleTitleClick}

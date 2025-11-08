@@ -20,7 +20,6 @@ export default function CategorySelectorMobile({
   const [copied, setCopied] = useState(false);
   const { t } = useLanguage();
 
-  // "문의/제안" 카테고리는 직접 링크가 있는 카테고리이므로 공유 아이콘 숨김
   const isDirectLinkCategory = categoryDirectLinkMap[selectedCategory] !== undefined;
 
   // 현재 카테고리의 질문 목록 페이지 URL 복사 함수
@@ -167,10 +166,10 @@ export default function CategorySelectorMobile({
                         onSelectCategory(category);
                         setIsOpen(false);
                       }}
-                      className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                      className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-[#14B8A6] dark:hover:text-[#14B8A6] hover:shadow-[0_1px_3px_rgba(20,184,166,0.3)] hover:scale-[1.01] ${
                         selectedCategory === category
                           ? "text-[#14B8A6] font-medium bg-gray-100 dark:bg-gray-800"
-                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                          : "text-gray-700 dark:text-gray-300"
                       }`}
                     >
                       {t(category)}

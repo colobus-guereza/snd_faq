@@ -56,13 +56,13 @@ export default function CategoryMenu({
           
           return (
             <li key={category}>
-              <div className="flex items-center">
+              <div className="flex items-center group px-4 py-2.5 -mx-4 rounded-lg transition-all duration-200 group-hover:bg-gray-50 dark:group-hover:bg-gray-800 group-hover:shadow-[0_1px_3px_rgba(20,184,166,0.3)] group-hover:scale-[1.01]">
                 <button
                   onClick={() => onSelectCategory(category)}
-                  className={`inline-flex items-center gap-1 text-left px-4 py-2.5 text-sm transition-colors ${
+                  className={`inline-flex items-center gap-1 text-left text-sm ${
                     isSelected
                       ? "text-[#14B8A6] font-medium"
-                      : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
+                      : "text-gray-700 dark:text-gray-300 group-hover:text-[#14B8A6] dark:group-hover:text-[#14B8A6]"
                   }`}
                 >
                   {t(category)}
@@ -70,7 +70,8 @@ export default function CategoryMenu({
                 {isSelected && (
                   <button
                     onClick={(e) => handleCategoryShare(e, category)}
-                    className="flex-shrink-0 p-0.5 -ml-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                    onMouseDown={(e) => e.stopPropagation()}
+                    className="flex-shrink-0 p-0.5 ml-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors relative z-10"
                     aria-label={`${t(category)} ${t("링크 공유하기")}`}
                     title={isCopied ? t("복사됨!") : `${t(category)} ${t("링크 공유하기")}`}
                   >
