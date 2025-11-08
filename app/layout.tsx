@@ -20,16 +20,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "자주 묻는 질문 | 고객센터",
   description: "자주 묻는 질문 FAQ 페이지",
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#171717' },
-  ],
   // Next.js App Router는 app/icon.png를 자동으로 파비콘으로 사용
   // 명시적으로 icon.png를 지정하여 확실하게 설정
   icons: {
@@ -42,6 +32,18 @@ export const metadata: Metadata = {
     statusBarStyle: 'default',
     title: 'FAQ',
   },
+};
+
+// Next.js 15에서는 viewport와 themeColor를 별도 export로 분리
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#171717' },
+  ],
 };
 
 export default function RootLayout({

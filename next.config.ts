@@ -13,10 +13,17 @@ const nextConfig: NextConfig = {
   // 압축 설정
   compress: true,
   
-  // 실험적 기능
-  experimental: {
-    optimizePackageImports: ['@mdx-js/react'],
-  },
+  // Turbopack 비활성화 (Next.js 16에서 기본적으로 사용되지만 오류 발생 시)
+  // 실험적 기능 - Turbopack 오류 방지를 위해 주석 처리
+  // experimental: {
+  //   optimizePackageImports: ['@mdx-js/react'],
+  // },
+  
+  // Turbopack 오류 해결을 위한 설정
+  // Vercel 환경 변수에서 TURBOPACK=0 설정 또는 아래 주석 해제
+  // webpack: (config, { isServer }) => {
+  //   return config;
+  // },
   
   // 빌드 최적화
   // swcMinify는 Next.js 16에서 기본적으로 활성화되어 있어 제거
