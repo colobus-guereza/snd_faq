@@ -36,14 +36,6 @@ export const faqs: FAQ[] = [
   },
   // 튜닝리튠
   {
-    id: "10",
-    title: "내 악기 튜닝 상태 점검을 어떻게 할 수 있나요?",
-    category: "튜닝리튠",
-    views: 400,
-    content: "",
-    tags: ["튜닝", "점검"],
-  },
-  {
     id: "27",
     title: "언제 리튠을 받으면 좋을까요?",
     category: "튜닝리튠",

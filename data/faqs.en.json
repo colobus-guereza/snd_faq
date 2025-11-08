@@ -32,14 +32,6 @@
     "tags": ["Payment", "Card"]
   },
   {
-    "id": "10",
-    "title": "How can I check my instrument's tuning status?",
-    "category": "Retune",
-    "views": 400,
-    "content": "",
-    "tags": ["Tuning", "Check"]
-  },
-  {
     "id": "27",
     "title": "When should I get retuning?",
     "category": "Retune",
