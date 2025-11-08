@@ -27,6 +27,10 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   // "튜닝을 하면 소리가 더 좋아지는게 맞나요?" 질문(id: "32")은 그래프 표시
   const isTuningSoundPage = faq.id === "32";
   
+  // 자세히보기/간단히보기 기능이 필요한 질문 ID 목록
+  const expandableContentPages = ["3", "32"];
+  const isExpandableContentPage = expandableContentPages.includes(faq.id);
+  
   // 영어일 경우 번역된 FAQ 데이터 사용
   const translatedFAQ = getFAQ(faq.id);
   
@@ -51,6 +55,9 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   
   // "튜닝을 하면 소리가 더 좋아지는게 맞나요?" 질문(id: "32")의 상세 내용 접기/펼치기 상태 관리
   const [isTuningDetailExpanded, setIsTuningDetailExpanded] = useState(false);
+  
+  // 자세히보기/간단히보기 기능이 있는 페이지의 상세 내용 접기/펼치기 상태 관리
+  const [isContentDetailExpanded, setIsContentDetailExpanded] = useState(false);
   
   // URL을 링크로 변환하는 함수
   const convertUrlsToLinks = (text: string) => {
@@ -1122,24 +1129,28 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                     {/* 견적서 예시 */}
                     {exampleStartIndex !== -1 && (
                       <>
-                        <div className="mb-4">
-                          <button
-                            onClick={() => setIsQuoteExpanded(!isQuoteExpanded)}
-                            className="inline-flex items-center gap-2 px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                        <button
+                          onClick={() => setIsQuoteExpanded(!isQuoteExpanded)}
+                          className="mt-4 flex items-center gap-2 text-sm text-[#14B8A6] hover:text-[#0d9488] transition-colors font-medium"
+                        >
+                          <span>
+                            {language === "ko" ? (isQuoteExpanded ? t("간단히보기") : "견적서보기") : (isQuoteExpanded ? t("간단히보기") : "View Quote")}
+                          </span>
+                          <svg
+                            className={`w-4 h-4 transition-transform duration-200 ${isQuoteExpanded ? 'rotate-180' : ''}`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
                           >
-                            <span>
-                              {language === "ko" ? (isQuoteExpanded ? "접기" : "견적서보기") : (isQuoteExpanded ? "Close" : "View Quote")}
-                            </span>
-                            <svg
-                              className={`w-5 h-5 transition-transform ${isQuoteExpanded ? "rotate-180" : ""}`}
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
-                          </button>
-                        </div>
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 9l-7 7-7-7"
+                            />
+                          </svg>
+                        </button>
                         
                         {isQuoteExpanded && (
                           <div className="space-y-6">
@@ -1790,6 +1801,254 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                   {isTuningDetailExpanded && (
                     <div className="mt-4">
                       <AcousticMaturityChart />
+                    </div>
+                  )}
+                </>
+              );
+            })()
+          ) : faq.id === "3" ? (
+            // 기술지원문서 스타일로 렌더링
+            (() => {
+              const paragraphs = displayContent.split("\n\n");
+              const firstParagraph = paragraphs[0];
+              const remainingContent = paragraphs.slice(1).join("\n\n");
+              
+              // 기술지원문서 구조 파싱
+              const parseTechnicalContent = (content: string) => {
+                const sections: Array<{ type: string; title?: string; items?: Array<{ label: string; text: string }>; text?: string }> = [];
+                const paragraphs = content.split("\n\n");
+                let currentSection: any = null;
+                
+                for (const para of paragraphs) {
+                  const trimmed = para.trim();
+                  if (!trimmed) continue;
+                  
+                  // 메인 제목
+                  if (trimmed.includes("세 가지가 주요 원인")) {
+                    if (currentSection) sections.push(currentSection);
+                    sections.push({ type: "title", text: trimmed });
+                    currentSection = null;
+                    continue;
+                  }
+                  
+                  // 섹션 제목 (1), 2), 3))
+                  if (/^\d+\)/.test(trimmed)) {
+                    if (currentSection) sections.push(currentSection);
+                    currentSection = { type: "section", title: trimmed, items: [] };
+                    continue;
+                  }
+                  
+                  // 용어 설명 섹션 제목
+                  if (trimmed.includes("용어 설명")) {
+                    if (currentSection) sections.push(currentSection);
+                    sections.push({ type: "summary-title", text: trimmed });
+                    currentSection = null;
+                    continue;
+                  }
+                  
+                  // 개념 정의 (피치 드리프트, 급성 피치 이탈)
+                  if (/^피치 드리프트|^급성 피치 이탈/.test(trimmed)) {
+                    if (currentSection) sections.push(currentSection);
+                    currentSection = { type: "concept", title: trimmed, items: [] };
+                    continue;
+                  }
+                  
+                  // 섹션 또는 개념의 항목 파싱
+                  if (currentSection) {
+                    const lines = trimmed.split("\n");
+                    for (const line of lines) {
+                      const lineTrimmed = line.trim();
+                      if (!lineTrimmed) continue;
+                      
+                      // 항목 라벨 (개념, 증상, 특징, 조치, 정의, 가역성, 관측)
+                      const labelMatch = lineTrimmed.match(/^([^:(]+)(\([^)]+\))?:\s*(.+)$/);
+                      if (labelMatch) {
+                        const label = labelMatch[1].trim();
+                        const text = labelMatch[3].trim();
+                        if (!currentSection.items) currentSection.items = [];
+                        currentSection.items.push({ label, text });
+                      } else {
+                        // 라벨이 없는 경우 마지막 항목에 추가
+                        if (currentSection.items && currentSection.items.length > 0) {
+                          const lastItem = currentSection.items[currentSection.items.length - 1];
+                          lastItem.text += " " + lineTrimmed;
+                        } else {
+                          // 첫 항목인 경우
+                          if (!currentSection.items) currentSection.items = [];
+                          currentSection.items.push({ label: "", text: lineTrimmed });
+                        }
+                      }
+                    }
+                  }
+                }
+                
+                if (currentSection) sections.push(currentSection);
+                
+                return sections;
+              };
+              
+              const sections = remainingContent ? parseTechnicalContent(remainingContent) : [];
+              
+              return (
+                <>
+                  {/* 첫 번째 문단 - 항상 표시 */}
+                  <p className="mb-6 text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                    {convertUrlsToLinks(firstParagraph)}
+                  </p>
+                  
+                  {/* 자세히보기 버튼 */}
+                  {sections.length > 0 && (
+                    <button
+                      onClick={() => setIsContentDetailExpanded(!isContentDetailExpanded)}
+                      className="mt-4 flex items-center gap-2 text-sm text-[#14B8A6] hover:text-[#0d9488] transition-colors font-medium"
+                    >
+                      <span>{isContentDetailExpanded ? t("간단히보기") : t("자세히보기")}</span>
+                      <svg
+                        className={`w-4 h-4 transition-transform duration-200 ${isContentDetailExpanded ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
+                  )}
+                  
+                  {/* 상세 내용 - 접기/펼치기 (스테인레스 페이지와 동일한 스타일) */}
+                  {isContentDetailExpanded && sections.length > 0 && (
+                    <div className="mt-6 -mx-4 sm:-mx-0">
+                      <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800">
+                        {sections.map((section, sectionIndex) => {
+                          if (section.type === "title") {
+                            return (
+                              <p key={sectionIndex} className="mb-6 text-base text-gray-700 dark:text-gray-300 leading-relaxed text-left whitespace-nowrap">
+                                {section.text}
+                              </p>
+                            );
+                          }
+                          
+                          if (section.type === "section" && section.title) {
+                            return (
+                              <div key={sectionIndex} className="mb-8">
+                                <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
+                                  {section.title}
+                                </h4>
+                                {section.items && section.items.length > 0 && (
+                                  <div className="space-y-3">
+                                    {section.items.map((item: any, itemIndex: number) => (
+                                      <div key={itemIndex} className="flex items-start gap-3">
+                                        {item.label && (
+                                          <div className="font-semibold text-gray-900 dark:text-gray-100 text-sm min-w-[80px] flex-shrink-0">
+                                            {item.label}:
+                                          </div>
+                                        )}
+                                        <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed flex-1">
+                                          {convertUrlsToLinks(item.text)}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          }
+                          
+                          if (section.type === "summary-title") {
+                            return (
+                              <div key={sectionIndex} className="mt-8 pt-6 border-t border-gray-300 dark:border-gray-600 mb-6">
+                                <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                                  {section.text}
+                                </h3>
+                              </div>
+                            );
+                          }
+                          
+                          if (section.type === "concept" && section.title) {
+                            return (
+                              <div key={sectionIndex} className="mb-8">
+                                <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
+                                  {section.title}
+                                </h4>
+                                {section.items && section.items.length > 0 && (
+                                  <div className="space-y-3">
+                                    {section.items.map((item: any, itemIndex: number) => (
+                                      <div key={itemIndex} className="flex items-start gap-3">
+                                        {item.label && (
+                                          <div className="font-semibold text-gray-900 dark:text-gray-100 text-sm min-w-[80px] flex-shrink-0">
+                                            {item.label}:
+                                          </div>
+                                        )}
+                                        <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed flex-1">
+                                          {convertUrlsToLinks(item.text)}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          }
+                          
+                          return null;
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </>
+              );
+            })()
+          ) : isExpandableContentPage ? (
+            // 자세히보기/간단히보기 기능이 있는 페이지는 첫 번째 문단은 항상 표시, 나머지는 접기/펼치기
+            (() => {
+              const paragraphs = displayContent.split("\n\n");
+              const firstParagraph = paragraphs[0];
+              const remainingParagraphs = paragraphs.slice(1);
+              
+              return (
+                <>
+                  {/* 첫 번째 문단 - 항상 표시 */}
+                  <p className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                    {convertUrlsToLinks(firstParagraph)}
+                  </p>
+                  
+                  {/* 자세히보기 버튼 */}
+                  {remainingParagraphs.length > 0 && (
+                    <button
+                      onClick={() => setIsContentDetailExpanded(!isContentDetailExpanded)}
+                      className="mt-4 flex items-center gap-2 text-sm text-[#14B8A6] hover:text-[#0d9488] transition-colors font-medium"
+                    >
+                      <span>{isContentDetailExpanded ? t("간단히보기") : t("자세히보기")}</span>
+                      <svg
+                        className={`w-4 h-4 transition-transform duration-200 ${isContentDetailExpanded ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
+                  )}
+                  
+                  {/* 나머지 문단 - 접기/펼치기 */}
+                  {isContentDetailExpanded && remainingParagraphs.length > 0 && (
+                    <div className="mt-4">
+                      {remainingParagraphs.map((paragraph: string, index: number) => (
+                        <p key={index} className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                          {convertUrlsToLinks(paragraph)}
+                        </p>
+                      ))}
                     </div>
                   )}
                 </>

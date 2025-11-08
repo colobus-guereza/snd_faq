@@ -178,6 +178,7 @@ export default function AcousticMaturityChart() {
                   if (payload?.isRetunePoint) {
                     return (
                       <circle
+                        key={`dot-${payload.t}`}
                         cx={cx}
                         cy={cy}
                         r={4}
@@ -187,7 +188,16 @@ export default function AcousticMaturityChart() {
                       />
                     );
                   }
-                  return <g />;
+                  // null을 반환할 수 없으므로 투명한 원을 반환
+                  return (
+                    <circle
+                      key={`dot-empty-${payload?.t || cx}`}
+                      cx={cx}
+                      cy={cy}
+                      r={0}
+                      fill="transparent"
+                    />
+                  );
                 }}
                 strokeWidth={2}
                 stroke="#f97316"

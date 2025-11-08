@@ -259,14 +259,15 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
             <h1 
               onClick={handleTitleClick}
               className="text-left text-4xl font-bold text-gray-900 dark:text-gray-100 cursor-pointer hover:text-[#14B8A6] transition-colors"
+              suppressHydrationWarning
             >
-              {t("자주묻는 질문")}
+              {mounted ? t("자주묻는 질문") : "자주묻는 질문"}
             </h1>
             <button
               onClick={handleShareClick}
               className="flex-shrink-0 p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              aria-label={t("링크 공유하기")}
-              title={copied ? t("복사됨!") : t("링크 공유하기")}
+              aria-label={mounted ? t("링크 공유하기") : "링크 공유하기"}
+              title={copied ? (mounted ? t("복사됨!") : "복사됨!") : (mounted ? t("링크 공유하기") : "링크 공유하기")}
             >
               {copied ? (
                 <svg

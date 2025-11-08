@@ -41,18 +41,18 @@
   },
   {
     "id": "27",
-    "title": "How often should I get tuning?",
+    "title": "When should I get retuning?",
     "category": "Retune",
     "views": 0,
-    "content": "",
-    "tags": ["Tuning", "Frequency"]
+    "content": "Handpans can gradually accumulate minor deformations during use, causing pitch and harmony to drift slightly. Regular retuning helps maintain the tuning state, allowing the instrument to maintain and express its inherent sound in optimal condition.\n\nRecommended Frequency (Usage Guide):\n\n· General/Educational/Practice Use: 6–12 months\n· Performance/Heavy Use: 3–6 months\n\nOf course, the variation in tuning state changes differs depending on frequency of use and maintenance environment. Therefore, it's important to develop your own maintenance habits, such as getting inspections and tuning before important performances or recordings.",
+    "tags": ["Tuning", "Retune", "Frequency"]
   },
   {
     "id": "3",
     "title": "My instrument sounds unstable and muffled compared to when I first got it.",
     "category": "Retune",
     "views": 850,
-    "content": "",
+    "content": "The sound of a handpan changes gradually over time, much like a human voice. Frequent use can cause 'pitch drift' where notes gradually go out of tune, and sudden temperature/humidity changes or impacts can cause 'detuning' where notes suddenly become misaligned. If physical damage like dents is added to this, the resonance can sound muffled and stuffy. In such cases, regular retuning, like car maintenance, can restore the pitch and bring back the clear, smooth sound from when you first got it. We recommend a cycle of 3–6 months for frequent practice and 6–12 months for general use.\n\nWhen your instrument sounds unstable and muffled compared to when you first got it, there are three main causes:\n\n1) Pitch Drift Due to Instrument Use\n\nConcept (Precision): Long-term trend where the frequency of each tone field gradually shifts due to residual stress redistribution and micro plastic deformation caused by performance and transport.\n\nSymptoms: Notes sound slightly flat or sharp. The harmony of fundamental, octave, and fifth becomes blurred, making the sound feel dull.\n\nCharacteristics: Gradual, cumulative change. Often does not recover immediately even with environmental stabilization. Can be realigned to target ratios (F₀·2F₀·3F₀) through regular retuning.\n\n2) Detuning Due to External Factors (Temperature, Humidity, Impact)\n\nConcept (Precision): Noticeable tuning deviation occurring in a short time due to rapid temperature/humidity changes, drops, strong impacts, or long-distance transport stress.\n\nSymptoms: Specific notes suddenly feel jarringly wobbly or \"sandy,\" with harmonic phase misalignment causing harsh sound.\n\nCharacteristics: Acute change is typical. If temperature is the only cause, reversible recovery may occur after returning to original temperature. If impact, adhesive failure, or dents are involved, irreversible damage is more likely, so early inspection is recommended.\n\n3) Vibration Interference Due to Damage\n\nConcept: Structural damage such as dents, creases, or adhesive failure interferes with resonance.\n\nSymptoms: Metallic noise at specific notes, \"buzz\" or \"wolf tones,\" sudden sustain reduction, sound feeling blocked depending on touch intensity.\n\nAction: Arbitrary straightening or tapping can cause secondary damage and is prohibited. Immediate professional inspection recommended.\n\nConcept Summary (For Document Bottom Reference)\n\nPitch/Tuning Drift\n\nDefinition: Low-speed, cumulative pitch shift occurring through use and time.\n\nReversibility: Often partially reversible but with irreversible components. May not fully recover with environmental stabilization alone.\n\nObservation: Gradual trend of Δcents increase over weeks to months.\n\nDetuning\n\nDefinition: Acute tuning deviation caused by rapid temperature/humidity changes or impact/transport stress.\n\nReversibility: Reversible if thermal cause only. Irreversible if structural damage is involved.\n\nObservation: Step-like deviation occurring within hours to days, with rapid cent increase or mode splitting observed in specific tone fields.",
     "tags": ["Tuning", "Sound"]
   },
   {
@@ -69,7 +69,7 @@
     "category": "Retune",
     "views": 0,
     "content": "Handpans can gradually accumulate minor deformations during use, causing pitch and harmony to drift slightly. When regular retuning corrects the tuning state, the sound becomes clear again, opens smoothly, and the resonance deepens stably. Like wine maturing properly, retuning helps the instrument maintain and express its inherent sound in optimal condition.",
-    "tags": ["Tuning", "Sound"]
+    "tags": ["Tuning", "Retune", "Sound"]
   },
   {
     "id": "11",
