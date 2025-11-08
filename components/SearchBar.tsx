@@ -43,6 +43,7 @@ export default function SearchBar({
           onKeyDown={onKeyDown}
           placeholder={t("검색어를 입력하세요")}
           className="w-full border-0 border-b border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 py-3.5 pl-8 pr-4 text-base text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-b-2 focus:border-blue-500 dark:focus:border-[#14B8A6]"
+          suppressHydrationWarning
         />
       </div>
     </div>

@@ -23,8 +23,12 @@ export const metadata: Metadata = {
   // Next.js App Router는 app/icon.png를 자동으로 파비콘으로 사용
   // 명시적으로 icon.png를 지정하여 확실하게 설정
   icons: {
-    icon: '/icon.png',
+    icon: [
+      { url: '/icon.png', type: 'image/png' },
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
+    ],
     apple: '/icon.png',
+    shortcut: '/icon.png',
   },
   manifest: '/manifest.json',
   appleWebApp: {
