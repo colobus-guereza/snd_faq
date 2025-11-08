@@ -2,7 +2,7 @@
   {
     "id": "2",
     "title": "How long does shipping take?",
-    "category": "Payment/Ship",
+    "category": "PaymentShip",
     "views": 980,
     "content": "For domestic shipping, we use Korea Post parcel service, which takes 1-2 days. For Jeju Island and remote areas, an additional 2-3 days may be required depending on distance.",
     "tags": ["Shipping", "Shipping Time"]
@@ -10,15 +10,15 @@
   {
     "id": "9",
     "title": "How can I check my shipment?",
-    "category": "Payment/Ship",
+    "category": "PaymentShip",
     "views": 450,
-    "content": "You can check your shipment on the Korea Post website's tracking page.\n\n· Link: https://service.epost.go.kr/iservice/usr/trace/usrtrc001k01.jsp",
+    "content": "You can enter the 'tracking number' you received on the Korea Post tracking page below to check the current shipping status.\n\n· Link: https://service.epost.go.kr/iservice/usr/trace/usrtrc001k01.jsp",
     "tags": ["Shipping", "Tracking"]
   },
   {
     "id": "8",
     "title": "Are electronic tax invoices or cash receipts issued?",
-    "category": "Payment/Ship",
+    "category": "PaymentShip",
     "views": 480,
     "content": "We can issue electronic tax invoices and cash receipts upon request at the time of purchase.",
     "tags": ["Payment", "Cancellation"]
@@ -26,7 +26,7 @@
   {
     "id": "1",
     "title": "What payment methods are available?",
-    "category": "Payment/Ship",
+    "category": "PaymentShip",
     "views": 1250,
     "content": "For bank transfers, we will provide the deposit account information. For card payments, we will send you a Naver Smart Store purchase link.",
     "tags": ["Payment", "Card"]
@@ -74,49 +74,33 @@
   {
     "id": "11",
     "title": "The instrument side cracked after being hit or dropped.",
-    "category": "A/S",
+    "category": "Repair",
     "views": 380,
-    "content": "",
-    "tags": ["Repair", "Damage"]
-  },
-  {
-    "id": "30",
-    "title": "The instrument side cracked after being hit or dropped.",
-    "category": "A/S",
-    "views": 0,
-    "content": "",
+    "content": "When the instrument side has separated, the tone fields (notes) near the separation do not produce sound when struck and do not resonate smoothly, making it difficult to function as an instrument. For restoration, the handpan shell's top and bottom plate adhesion must be removed, followed by initial tuning - re-adhesion - final tuning, and repair costs are incurred based on the amount of work required.\n\nRemoving the top and bottom plate adhesion is similar to creating a new instrument. Considering the time and cost required to disassemble and re-tune, if you also perform a 'note addition upgrade' on the bottom plate, such as adding a ding bass note, it can be a cost-effective choice for both restoring and improving instrument quality.",
     "tags": ["Repair", "Damage"]
   },
   {
     "id": "4",
     "title": "The instrument surface is peeling.",
-    "category": "A/S",
+    "category": "Repair",
     "views": 720,
-    "content": "",
-    "tags": ["Repair", "Surface"]
-  },
-  {
-    "id": "29",
-    "title": "The instrument surface is peeling.",
-    "category": "A/S",
-    "views": 0,
-    "content": "",
+    "content": "Handpans naturally form a protective layer (oxide film) on their surface in reaction to oxygen and moisture in the air during use. This layer is a natural defense barrier that protects the metal from rust and corrosion, and it repeatedly peels off and reforms partially depending on factors such as hand oils, moisture, temperature changes, and friction during use.\n\nFine powder or stains that come off on your hands are remnants of the oxide film formed during heat treatment, and this is not rust but a phenomenon that occurs during the natural surface stabilization process of the metal. Through this process, the surface color gradually becomes uniform, and initial scratches or heat treatment spots may become less noticeable or disappear.\n\nDepending on usage frequency, it takes 2-3 years for the surface to naturally peel off completely. However, if you find the partial peeling of the instrument surface visually uncomfortable during this process, there is also a method to artificially create a uniform appearance by shortening the time through full surface sanding (the process of grinding with fine sandpaper).",
     "tags": ["Repair", "Surface"]
   },
   {
     "id": "33",
     "title": "The instrument surface is dented due to external impact.",
-    "category": "A/S",
+    "category": "Repair",
     "views": 0,
-    "content": "",
+    "content": "If the instrument surface is dented due to external impact, please send us a video showing the instrument's condition or bring the instrument to our workshop. We will check the actual extent of damage and inform you whether repair is possible.",
     "tags": ["Repair", "Damage"]
   },
   {
     "id": "28",
     "title": "No sound comes out when I hit the tone field.",
-    "category": "A/S",
+    "category": "Repair",
     "views": 0,
-    "content": "",
+    "content": "If the tone field does not produce sound as clearly as before when struck, in most cases, the rim (the adhesive part at the edge of the handpan) near that tone field has likely separated. In this case, the handpan shell's top and bottom plate adhesion can be removed, and the sound can be restored to its original state through repair work involving initial tuning - re-adhesion - secondary tuning. This is a major damage case that occurs when the instrument is bumped or dropped while being carried, particularly at the edge area.\n\nAdditionally, unexpected damage can also occur when exposed to external factors such as prolonged direct sunlight, temperature, and humidity. In such cases, prompt professional support is necessary to maintain good instrument condition and sound quality.",
     "tags": ["Repair", "Sound"]
   },
   {
@@ -185,10 +169,10 @@
   },
   {
     "id": "18",
-    "title": "Manufacturing Process",
+    "title": "Handpan Manufacturing Process",
     "category": "Technologies",
     "views": 200,
-    "content": "Instrument manufacturing is completed through precise steps.\n\nStep 1: Design and Drawing - Accurately design the product specifications and dimensions and create drawings.\n\nStep 2: Material Preparation - Inspect selected materials and cut them to required sizes.\n\nStep 3: Forming - Create shell shapes using metal spinning or press manufacturing methods.\n\nStep 4: Surface Treatment - Perform desired surface finishing such as polishing, plating, and pattern treatment.\n\nStep 5: Precision Machining - Perform precision work such as hole drilling and screw threading.\n\nStep 6: Quality Inspection - Inspect dimensions, surface condition, and sound quality to verify quality.\n\nStep 7: Assembly and Tuning - Assemble components and adjust final sound quality through handpan tuning.\n\nStep 8: Final Inspection and Packaging - Perform final inspection on completed products and package them for shipment.\n\nWe provide the highest quality products through thorough quality control at each step.",
+    "content": "SND Handpan creates hemispherical shells from stainless steel (SUS430, 1.2 mm) through metal spinning, then completes them in the following sequence: precision pressing, heat treatment (400°C, 20 min), stretching hammering, first harmonics tuning, adhesive curing, rim processing, second harmonics tuning, and inspection. The core principle is fine-tuning tension and shape so that each tone field resonates with fundamental·octave·compound fifth (1:2:3 mode) in phase alignment, sounding as one.\n\n**1) Metal Spinning (Hemispherical Shell Manufacturing)**\n\nThe metal spinning process aims to secure hemispherical shells with minimized thickness deviation and eccentricity. The SUS430 blank is fixed to a chuck and rotated while flow forming is performed through multi-pass spinning rollers. Key indicators are thickness deviation ≤ ±0.05 mm, ovality ≤ 0.3 mm, and circumferential runout ≤ 0.4 mm. Excessive local deformation may cause orange peel, but this is suppressed through roller pass division and lubrication management.\n\n**2) Sanding (Surface Preparation)**\n\nThe sanding process aims to secure uniform matte texture and remove contamination. It also prevents contamination vaporization and carbonization before heat treatment. After uniform polishing with sponge sandpaper, industrial oil and particles are removed, and the surface is finished with a lint-free cloth. Surface cleanliness is maintained at visual grade 5 or above according to AATCC grade discrimination, and residual scratch Ra target values are set. If residual oil or dust remains, heat tint spots may occur after heat treatment, so clean handling is essential at each process step.\n\n**2-1) Bottom Plate Gu Forming**\n\nBottom plate Gu forming is a process where the center is opened with a hole saw, then the Gu flare angle and curvature are formed with a die press. Gu diameter tolerance is ±0.2 mm, flare angle tolerance is ±1°, and there must be no burrs or cracks. Internal volume and port impedance determine resonance bandwidth and low-frequency response.\n\n**3) Instrument Structure Design (Scale Layout Determination)**\n\nThe instrument structure design process aims to minimize resonance interference and secure balanced mass distribution. After determining the scale (normal/mutant), optimal positions are searched using tone field magnets, and locations are marked with a marker. Minimum spacing criteria between tone fields and standardized boundary distances from the rim are established. To avoid inter-tone mutual mode coupling, an array avoiding eigenmode overlap is important.\n\n**4) Pressing (30 ton)**\n\nThe pressing process aims to provide primary shape to tone fields and set the tension baseline. A 30-ton press is used to form shallow depressions while controlling stroke, load, and dwell time. Target curvature radius, up/down dome height tolerance, and springback prediction correction are adjusted. Over-forming may cause cracks and wrinkles, while insufficient forming requires excessive hammering. Therefore, operators need real-time feedback.\n\n**5) Heat Treatment (Stress Relief/Surface Stabilization)**\n\nThe heat treatment process maintains 400°C for 20 minutes, followed by water cooling, moisture removal, and body oil surface coating. The objectives are to relieve cold-working residual stress, linearize elastic response, and stabilize the oxide film. Strain recovery is improved and residual stress is reduced, which can be estimated through acoustic response changes. If contamination remains, heat tint spots may occur, so continuous management is required from post-heat cleaning, drying, and oil coating.\n\n**6) Shell Stretching (Hammering Uniformization)**\n\nThe shell stretching process aims to uniformize shell-wide tension and set the initial tension of tone fields. Through full-surface hammering, tension patches from pressing are released and aligned to a uniform tensile state in a 360° direction. Local rebound feel becomes uniform and membrane tension is equalized. This process secures the prerequisite for phase alignment and also sculpts the three-dimensional appearance.\n\n**7) First Harmonics Tuning (Mode 1:2:3 Matching)**\n\nThe first harmonics tuning process aims to match F₀, 2F₀, and 3F₀ of each tone field to the reference frequency. Tension and curvature are fine-adjusted through internal and external hammering while simultaneous feedback is received from tuner measurement and listening. Tuning error (F₀/2F₀/3F₀) is maintained within ±1.0Hz range, mode crosstalk is minimized, and sustain Q target values are achieved. Sound quality is enhanced through numerical matching as well as auditory optimization of clarity and resonance.\n\n**8) Adhesion/Curing (Top/Bottom Plate Bonding)**\n\nThe adhesion/curing process applies high-viscosity resin, performs pressure bonding, and manages curing time according to the environment.\n\n**9) Rim Processing**\n\nRim processing aims to secure safety, aesthetics, and durability. After removing residual resin, edges are rounded with grinding and sandpaper to create a smooth tactile feel that prevents finger injury during use.\n\n**10) Second Harmonics Tuning (Drift Correction)**\n\nThe second harmonics tuning process aims to correct frequency drift occurring after adhesion and stress redistribution. All notes are re-measured, fine hammering is performed, and phase alignment is reconfirmed. Final error (F₀/2F₀/3F₀) is maintained at ±1.0Hz, mode coherence is improved, and sustain consistency is enhanced.\n\n**11) Inspection/Stabilization**\n\nInspection and stabilization are observed within 7 days after completion. Pitch stability, phase alignment maintenance, appearance defects, surface condition, rim finish, and resonance balance are checked. Shipment occurs when criteria are met.",
     "tags": ["Manufacturing", "Process", "Procedure"]
   },
   {

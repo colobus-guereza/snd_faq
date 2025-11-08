@@ -1,0 +1,55 @@
+<!-- ============================================
+     FAQ 페이지 임베드 코드
+     배포 URL: https://sndfaq.vercel.app/
+     ============================================ -->
+
+<!-- 방법 1: 기본 iframe (고정 높이) - 가장 간단 -->
+<iframe 
+  src="https://sndfaq.vercel.app/" 
+  width="100%" 
+  height="1200" 
+  frameborder="0"
+  scrolling="yes"
+  style="border: none; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-height: 1200px;"
+  allowfullscreen>
+</iframe>
+
+<!-- ============================================ -->
+
+<!-- 방법 2: 반응형 iframe (자동 높이 조절) -->
+<div style="position: relative; width: 100%; padding-bottom: 150%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+  <iframe 
+    src="https://sndfaq.vercel.app/" 
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+    frameborder="0"
+    scrolling="yes"
+    allowfullscreen>
+  </iframe>
+</div>
+
+<!-- ============================================ -->
+
+<!-- 방법 3: 특정 카테고리만 표시 (예: 문의 카테고리) -->
+<iframe 
+  src="https://sndfaq.vercel.app/?category=문의" 
+  width="100%" 
+  height="1000" 
+  frameborder="0"
+  scrolling="yes"
+  style="border: none; border-radius: 8px; min-height: 1000px;"
+  allowfullscreen>
+</iframe>
+
+<!-- ============================================ -->
+
+<!-- 방법 4: 특정 질문만 표시 (예: 문의 페이지) -->
+<iframe 
+  src="https://sndfaq.vercel.app/faq/7" 
+  width="100%" 
+  height="800" 
+  frameborder="0"
+  scrolling="yes"
+  style="border: none; border-radius: 8px; min-height: 800px;"
+  allowfullscreen>
+</iframe>
+

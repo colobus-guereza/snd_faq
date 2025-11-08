@@ -42,18 +42,17 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
   // 카테고리 타입 검증 함수
   const getValidCategory = (categoryParam: string | null): Category => {
     const validCategories: Category[] = [
-      "질문 Top 10",
-      "결제/배송",
-      "튜닝/리튠",
-      "수리 A/S",
-      "관리보관",
       "기술특징",
-      "레슨/교육",
+      "튜닝리튠",
+      "관리보관",
+      "파손수리",
+      "교육레슨",
+      "결제배송",
     ];
     if (categoryParam && validCategories.includes(categoryParam as Category)) {
       return categoryParam as Category;
     }
-    return "질문 Top 10";
+    return "기술특징";
   };
 
   // URL 쿼리 파라미터에서 초기 카테고리 설정
@@ -115,8 +114,8 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
 
   const handleTitleClick = () => {
     setSearchQuery("");
-    setSelectedCategory("질문 Top 10");
-    router.push("/?category=질문 Top 10");
+    setSelectedCategory("기술특징");
+    router.push("/?category=기술특징");
   };
 
   const handleSearchChange = (value: string) => {

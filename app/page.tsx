@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Fuse from "fuse.js";
 import FAQList from "@/components/FAQList";
 import { useSearch } from "@/components/CommonLayout";
-import { faqs, top10QuestionIds } from "@/data/faqs";
+import { faqs } from "@/data/faqs";
 import { FAQ, Category } from "@/types/faq";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -17,18 +17,17 @@ export default function Home() {
   // 카테고리 타입 검증 함수
   const getValidCategory = (categoryParam: string | null): Category => {
     const validCategories: Category[] = [
-      "질문 Top 10",
-      "결제/배송",
-      "튜닝/리튠",
-      "수리 A/S",
-      "관리보관",
       "기술특징",
-      "레슨/교육",
+      "튜닝리튠",
+      "관리보관",
+      "파손수리",
+      "교육레슨",
+      "결제배송",
     ];
     if (categoryParam && validCategories.includes(categoryParam as Category)) {
       return categoryParam as Category;
     }
-    return "질문 Top 10";
+    return "기술특징";
   };
 
   // URL 쿼리 파라미터에서 초기 카테고리 설정
@@ -58,26 +57,13 @@ export default function Home() {
       result = searchResults.map((item) => item.item);
     } else {
       // 검색어가 없으면 카테고리별 필터링
-      if (selectedCategory === "질문 Top 10") {
-        // Top 10 질문 ID 리스트를 순서대로 필터링
-        result = top10QuestionIds
-          .map((id) => faqs.find((faq) => faq.id === id))
-          .filter((faq): faq is FAQ => faq !== undefined);
-        // 가나다순으로 정렬 (번역된 제목 기준)
-        result.sort((a, b) => {
-          const titleA = getFAQ(a.id)?.title || a.title;
-          const titleB = getFAQ(b.id)?.title || b.title;
-          return titleA.localeCompare(titleB, "ko");
-        });
-      } else {
-        result = faqs.filter((faq) => faq.category === selectedCategory);
-        // 가나다순으로 정렬 (번역된 제목 기준)
-        result.sort((a, b) => {
-          const titleA = getFAQ(a.id)?.title || a.title;
-          const titleB = getFAQ(b.id)?.title || b.title;
-          return titleA.localeCompare(titleB, "ko");
-        });
-      }
+      result = faqs.filter((faq) => faq.category === selectedCategory);
+      // 가나다순으로 정렬 (번역된 제목 기준)
+      result.sort((a, b) => {
+        const titleA = getFAQ(a.id)?.title || a.title;
+        const titleB = getFAQ(b.id)?.title || b.title;
+        return titleA.localeCompare(titleB, "ko");
+      });
     }
 
     // 태그 필터링 적용
