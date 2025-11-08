@@ -24,11 +24,12 @@ export const metadata: Metadata = {
   // 명시적으로 icon.png를 지정하여 확실하게 설정
   icons: {
     icon: [
+      { url: '/favicon.ico', sizes: 'any' },
       { url: '/icon.png', type: 'image/png' },
       { url: '/icon.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: '/icon.png',
-    shortcut: '/icon.png',
+    shortcut: '/favicon.ico',
   },
   manifest: '/manifest.json',
   appleWebApp: {
