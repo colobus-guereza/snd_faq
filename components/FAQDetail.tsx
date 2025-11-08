@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { FAQ } from "@/types/faq";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
