@@ -91,29 +91,34 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
     }
   };
 
+  // "레슨 안내드립니다." 질문(id: "6")은 뒤로가기 버튼 숨김
+  const isLessonPage = faq.id === "6";
+
   return (
     <div className="w-full">
-      <Link
-        href={backHref}
-        prefetch={true}
-        className="mb-6 inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-      >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-          <span className="text-sm font-medium">{t("질문 목록")}</span>
-        </Link>
+      {!isLessonPage && (
+        <Link
+          href={backHref}
+          prefetch={true}
+          className="mb-6 inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+        >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            <span className="text-sm font-medium">{t("질문 목록")}</span>
+          </Link>
+      )}
 
       <div className="mb-4 flex items-center gap-2">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -1072,11 +1077,214 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
       {/* 본문 텍스트 - displayContent가 있을 때만 표시 (제작과정 페이지 제외) */}
       {displayContent && !isManufacturingPage && (
         <div className="prose prose-sm max-w-none">
-          {displayContent.split("\n\n").map((paragraph: string, index: number) => (
-            <p key={index} className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-              {convertUrlsToLinks(paragraph)}
-            </p>
-          ))}
+          {isLessonPage ? (
+            // 레슨 페이지는 카드 형태로 표시
+            <div className="space-y-4">
+              {(() => {
+                const paragraphs = displayContent.split("\n\n");
+                const cards = [];
+                
+                for (let i = 0; i < paragraphs.length; i++) {
+                  const paragraph = paragraphs[i];
+                  
+                  // 1번 카드: 그룹수업
+                  if (paragraph.startsWith("1.")) {
+                    const content = paragraph.replace(/^1\.\s*/, "");
+                    const title = content.trim();
+                    // 다음 단락이 있고 "2."로 시작하지 않으면 본문으로 포함
+                    const description = (i + 1 < paragraphs.length && !paragraphs[i + 1].startsWith("2."))
+                      ? paragraphs[i + 1]
+                      : "";
+                    
+                    cards.push(
+                      <div key={`card-1`} className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                          {title}
+                        </h3>
+                        {description && (
+                          <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                            {description.split("\n").map((line: string, lineIndex: number) => {
+                              if (line.includes("저스트비 인스타그램")) {
+                                const parts = line.split("게시됩니다.");
+                                return (
+                                  <p key={lineIndex} className="mb-2 inline-flex items-center gap-1">
+                                    {parts[0]}게시됩니다.
+                                    <a
+                                      href="https://www.instagram.com/justbe_temple/"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 hover:opacity-80 transition-opacity"
+                                      aria-label="저스트비 인스타그램"
+                                    >
+                                      <svg
+                                        className="w-3 h-3 text-white"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                      </svg>
+                                    </a>
+                                    <button
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        const phoneNumber = "010-5387-0152";
+                                        // 모바일 기기 확인
+                                        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                                        if (isMobile) {
+                                          window.location.href = `tel:${phoneNumber}`;
+                                        } else {
+                                          // 웹에서는 클립보드에 복사
+                                          navigator.clipboard.writeText(phoneNumber).then(() => {
+                                            alert(`전화번호가 복사되었습니다: ${phoneNumber}`);
+                                          }).catch(() => {
+                                            alert(`전화번호: ${phoneNumber}`);
+                                          });
+                                        }
+                                      }}
+                                      className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-500 hover:opacity-80 transition-opacity cursor-pointer"
+                                      aria-label="전화하기"
+                                    >
+                                      <svg
+                                        className="w-3 h-3 text-white"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                                      </svg>
+                                    </button>
+                                    {parts[1]}
+                                  </p>
+                                );
+                              }
+                              return <p key={lineIndex} className="mb-2">{line}</p>;
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                    // 다음 단락을 본문으로 사용했으면 인덱스 건너뛰기
+                    if (description) i++;
+                  }
+                  
+                  // 2번 카드: 1:1 핸드팬 레슨
+                  else if (paragraph.startsWith("2.")) {
+                    const content = paragraph.replace(/^2\.\s*/, "");
+                    const title = content.trim();
+                    // 다음 단락들에서 선생님 정보 수집
+                    const teachers: string[] = [];
+                    for (let j = i + 1; j < paragraphs.length; j++) {
+                      if (paragraphs[j].startsWith("·") || paragraphs[j].startsWith("-")) {
+                        teachers.push(...paragraphs[j].split("\n").filter((line: string) => line.trim().startsWith("·") || line.trim().startsWith("-")));
+                      } else if (paragraphs[j].startsWith("2.") || paragraphs[j].startsWith("1.")) {
+                        break;
+                      }
+                    }
+                    
+                    // 선생님별 인스타그램 링크 매핑
+                    const teacherInstagramMap: { [key: string]: string } = {
+                      "이지은": "https://www.instagram.com/warmwaves_therapy/",
+                      "권민체": "https://www.instagram.com/mago__sound/",
+                      "안재민": "https://www.instagram.com/handpan__jmin/",
+                    };
+                    
+                    // 선생님별 전화번호 매핑
+                    const teacherPhoneMap: { [key: string]: string } = {
+                      "이지은": "010-4529-9038",
+                      "권민체": "010-4445-4689",
+                      "안재민": "010-7229-7450",
+                    };
+                    
+                    cards.push(
+                      <div key={`card-2`} className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                          {title}
+                        </h3>
+                        {teachers.length > 0 && (
+                          <ul className="space-y-2 text-gray-700 dark:text-gray-300">
+                            {teachers.map((teacher: string, teacherIndex: number) => {
+                              const trimmedTeacher = teacher.trim().replace(/^[·-]\s*/, "");
+                              // 선생님 이름 추출 (예: "[서대문] 이지은 선생님" -> "이지은")
+                              const nameMatch = trimmedTeacher.match(/\[.*?\]\s*([가-힣]+)\s*선생님/);
+                              const teacherName = nameMatch ? nameMatch[1] : "";
+                              const instagramUrl = teacherName ? teacherInstagramMap[teacherName] : null;
+                              const phoneNumber = teacherName ? teacherPhoneMap[teacherName] : null;
+                              
+                              return (
+                                <li key={teacherIndex} className="leading-relaxed flex items-center gap-1">
+                                  · {trimmedTeacher}
+                                  {instagramUrl && (
+                                    <>
+                                      <a
+                                        href={instagramUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 hover:opacity-80 transition-opacity"
+                                        aria-label={`${teacherName} 인스타그램`}
+                                      >
+                                        <svg
+                                          className="w-3 h-3 text-white"
+                                          fill="currentColor"
+                                          viewBox="0 0 24 24"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                        </svg>
+                                      </a>
+                                      {phoneNumber && (
+                                        <button
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            // 모바일 기기 확인
+                                            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                                            if (isMobile) {
+                                              window.location.href = `tel:${phoneNumber}`;
+                                            } else {
+                                              // 웹에서는 클립보드에 복사
+                                              navigator.clipboard.writeText(phoneNumber).then(() => {
+                                                alert(`전화번호가 복사되었습니다: ${phoneNumber}`);
+                                              }).catch(() => {
+                                                alert(`전화번호: ${phoneNumber}`);
+                                              });
+                                            }
+                                          }}
+                                          className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-500 hover:opacity-80 transition-opacity cursor-pointer"
+                                          aria-label={`${teacherName} 전화하기`}
+                                        >
+                                          <svg
+                                            className="w-3 h-3 text-white"
+                                            fill="currentColor"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                                          </svg>
+                                        </button>
+                                      )}
+                                    </>
+                                  )}
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        )}
+                      </div>
+                    );
+                  }
+                }
+                
+                return cards;
+              })()}
+            </div>
+          ) : (
+            // 일반 페이지는 기존 방식대로 표시
+            displayContent.split("\n\n").map((paragraph: string, index: number) => (
+              <p key={index} className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                {convertUrlsToLinks(paragraph)}
+              </p>
+            ))
+          )}
         </div>
       )}
 

@@ -192,35 +192,11 @@
     "tags": ["Tuning", "Handpan", "Sound Quality"]
   },
   {
-    "id": "13",
-    "title": "How much do lessons cost?",
-    "category": "Lessons",
-    "views": 320,
-    "content": "Lesson costs vary depending on lesson type and duration.\n\nPrivate lessons start at approximately 50,000 KRW per hour, and group lessons start at approximately 30,000 KRW. You can receive discounts by registering for regular lessons.\n\nThe first lesson is offered as a trial lesson, after which you can register for regular lessons. Lesson costs may vary further depending on instrument type and level.",
-    "tags": ["Lessons", "Cost"]
-  },
-  {
     "id": "6",
-    "title": "How do I sign up for lessons?",
+    "title": "Lesson Information",
     "category": "Lessons",
     "views": 580,
-    "content": "Lesson registration is available through our online booking system.\n\nBoth private and group lessons are available, with various lesson programs tailored to instrument type and level. Lesson schedules can be arranged in consultation with instructors, and both online and offline lessons are supported.\n\nLesson costs vary by lesson type and duration. The first lesson is offered as a trial lesson, after which you can register for regular lessons.",
+    "content": "1. [Hongdae] Group classes, first Sunday of every month, 2-6 PM\n\n· Class announcements are posted on Justbe Instagram.\n\n2. 1:1 Handpan Lessons\n\n· [Seodaemun] Teacher Lee Ji-eun\n· [Konkuk] Teacher Kwon Min-che\n· [Seongbuk] Teacher Ahn Jae-min",
     "tags": ["Lessons", "Registration"]
-  },
-  {
-    "id": "25",
-    "title": "How long do I need to learn?",
-    "category": "Lessons",
-    "views": 0,
-    "content": "Learning duration varies depending on individual practice time and goals.\n\nLearning basic playing typically takes 3-6 months, and reaching intermediate level takes about a year. Professional playing requires more time and practice.\n\nRegular lessons and consistent practice will help you improve faster. You can learn efficiently through personalized lesson programs tailored to each individual.",
-    "tags": ["Lessons", "Duration"]
-  },
-  {
-    "id": "24",
-    "title": "Where can I learn?",
-    "category": "Lessons",
-    "views": 0,
-    "content": "Instrument lessons are provided at partner lesson studios in various regions nationwide.\n\nLesson studios are located in major cities including Seoul, Busan, Daegu, and Incheon, and online lessons are also available. Lesson programs are prepared for all levels from beginners to professionals.\n\nLesson registration is available through online booking systems, and detailed lesson studio locations and programs can be found on our website.",
-    "tags": ["Lessons", "Education"]
   }
 ]
