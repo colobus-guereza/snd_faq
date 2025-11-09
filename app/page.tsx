@@ -98,12 +98,69 @@ export default function Home() {
     } else {
       // 검색어가 없으면 카테고리별 필터링
       result = faqs.filter((faq) => faq.category === selectedCategory);
-      // 가나다순으로 정렬 (번역된 제목 기준)
-      result.sort((a, b) => {
-        const titleA = getFAQ(a.id)?.title || a.title;
-        const titleB = getFAQ(b.id)?.title || b.title;
-        return titleA.localeCompare(titleB, "ko");
-      });
+      
+      // 교육레슨 카테고리는 특정 순서로 정렬
+      if (selectedCategory === "교육레슨") {
+        const orderMap: Record<string, number> = {
+          "6": 1,   // 레슨 안내드립니다.
+          "37": 2,  // 기초 테크닉
+          "36": 3,  // 핸드팬 리듬 훈련
+          "35": 4,  // 하모닉스 주법
+        };
+        result.sort((a, b) => {
+          const orderA = orderMap[a.id] || 999;
+          const orderB = orderMap[b.id] || 999;
+          return orderA - orderB;
+        });
+      } else if (selectedCategory === "튜닝리튠") {
+        // 튜닝리튠 카테고리는 특정 순서로 정렬
+        const orderMap: Record<string, number> = {
+          "3": 1,   // 악기 소리가 처음과 달리 불안하고 답답하게 들려요.
+          "34": 2,  // 특정 저음을 두드릴 때 의도치 않은 고음 혹은 소음이 함께 들려요.
+          "32": 3,  // 튜닝을 하면 소리가 더 좋아지는게 맞나요?
+          "27": 4,  // 언제 리튠을 받으면 좋을까요?
+          "31": 5,  // 튜닝 비용은 어떻게 책정되어 있나요?
+        };
+        result.sort((a, b) => {
+          const orderA = orderMap[a.id] || 999;
+          const orderB = orderMap[b.id] || 999;
+          return orderA - orderB;
+        });
+      } else if (selectedCategory === "관리보관") {
+        // 관리보관 카테고리는 특정 순서로 정렬
+        const orderMap: Record<string, number> = {
+          "12": 1,  // 악기 보관 방법이 궁금해요.
+          "5": 2,   // 악기 관리 방법을 알려주세요.
+        };
+        result.sort((a, b) => {
+          const orderA = orderMap[a.id] || 999;
+          const orderB = orderMap[b.id] || 999;
+          return orderA - orderB;
+        });
+      } else if (selectedCategory === "기술특징") {
+        // 기술특징 카테고리는 특정 순서로 정렬
+        const orderMap: Record<string, number> = {
+          "18": 1,  // 핸드팬 제작과정
+          "17": 2,  // DC04 VS 스테인레스
+          "14": 3,  // 스테인레스 두께 1.0mm과 1.2mm 특성 비교
+          "16": 4,  // 프레스 VS 메탈스피닝
+          "20": 5,  // 공명과 하모닉스
+          "19": 6,  // 핸드팬 튜닝
+          "21": 7,  // 핸드팬 음계 Scale
+        };
+        result.sort((a, b) => {
+          const orderA = orderMap[a.id] || 999;
+          const orderB = orderMap[b.id] || 999;
+          return orderA - orderB;
+        });
+      } else {
+        // 가나다순으로 정렬 (번역된 제목 기준)
+        result.sort((a, b) => {
+          const titleA = getFAQ(a.id)?.title || a.title;
+          const titleB = getFAQ(b.id)?.title || b.title;
+          return titleA.localeCompare(titleB, "ko");
+        });
+      }
     }
 
     // 태그 필터링 적용
@@ -113,12 +170,68 @@ export default function Home() {
         const tagsToCheck = translatedFAQ ? translatedFAQ.tags : faq.tags;
         return tagsToCheck && tagsToCheck.includes(selectedTag);
       });
-      // 태그 필터링 후에도 가나다순 정렬 유지
-      result.sort((a, b) => {
-        const titleA = getFAQ(a.id)?.title || a.title;
-        const titleB = getFAQ(b.id)?.title || b.title;
-        return titleA.localeCompare(titleB, "ko");
-      });
+      // 태그 필터링 후에도 정렬 유지
+      if (selectedCategory === "교육레슨") {
+        const orderMap: Record<string, number> = {
+          "6": 1,   // 레슨 안내드립니다.
+          "37": 2,  // 기초 테크닉
+          "36": 3,  // 핸드팬 리듬 훈련
+          "35": 4,  // 하모닉스 주법
+        };
+        result.sort((a, b) => {
+          const orderA = orderMap[a.id] || 999;
+          const orderB = orderMap[b.id] || 999;
+          return orderA - orderB;
+        });
+      } else if (selectedCategory === "튜닝리튠") {
+        // 튜닝리튠 카테고리는 특정 순서로 정렬
+        const orderMap: Record<string, number> = {
+          "3": 1,   // 악기 소리가 처음과 달리 불안하고 답답하게 들려요.
+          "34": 2,  // 특정 저음을 두드릴 때 의도치 않은 고음 혹은 소음이 함께 들려요.
+          "32": 3,  // 튜닝을 하면 소리가 더 좋아지는게 맞나요?
+          "27": 4,  // 언제 리튠을 받으면 좋을까요?
+          "31": 5,  // 튜닝 비용은 어떻게 책정되어 있나요?
+        };
+        result.sort((a, b) => {
+          const orderA = orderMap[a.id] || 999;
+          const orderB = orderMap[b.id] || 999;
+          return orderA - orderB;
+        });
+      } else if (selectedCategory === "관리보관") {
+        // 관리보관 카테고리는 특정 순서로 정렬
+        const orderMap: Record<string, number> = {
+          "12": 1,  // 악기 보관 방법이 궁금해요.
+          "5": 2,   // 악기 관리 방법을 알려주세요.
+        };
+        result.sort((a, b) => {
+          const orderA = orderMap[a.id] || 999;
+          const orderB = orderMap[b.id] || 999;
+          return orderA - orderB;
+        });
+      } else if (selectedCategory === "기술특징") {
+        // 기술특징 카테고리는 특정 순서로 정렬
+        const orderMap: Record<string, number> = {
+          "18": 1,  // 핸드팬 제작과정
+          "17": 2,  // DC04 VS 스테인레스
+          "14": 3,  // 스테인레스 두께 1.0mm과 1.2mm 특성 비교
+          "16": 4,  // 프레스 VS 메탈스피닝
+          "20": 5,  // 공명과 하모닉스
+          "19": 6,  // 핸드팬 튜닝
+          "21": 7,  // 핸드팬 음계 Scale
+        };
+        result.sort((a, b) => {
+          const orderA = orderMap[a.id] || 999;
+          const orderB = orderMap[b.id] || 999;
+          return orderA - orderB;
+        });
+      } else {
+        // 가나다순 정렬 (번역된 제목 기준)
+        result.sort((a, b) => {
+          const titleA = getFAQ(a.id)?.title || a.title;
+          const titleB = getFAQ(b.id)?.title || b.title;
+          return titleA.localeCompare(titleB, "ko");
+        });
+      }
     }
 
     return result;
