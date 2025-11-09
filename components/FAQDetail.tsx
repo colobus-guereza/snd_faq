@@ -3,7 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FAQ } from "@/types/faq";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
 import AcousticMaturityChart from "./AcousticMaturityChart";
 import TonefieldTensionDiagram from "./TonefieldTensionDiagram";
@@ -15,6 +16,14 @@ interface FAQDetailProps {
 
 export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   const { language, t, getFAQ } = useLanguage();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDarkMode = mounted && resolvedTheme === "dark";
   const backHref = returnCategory 
     ? `/?category=${encodeURIComponent(returnCategory)}`
     : "/";
@@ -2234,7 +2243,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                           stroke="currentColor"
                                           strokeWidth="1"
                                           strokeDasharray="4,4"
-                                          className="text-gray-300 dark:text-gray-700"
+                                          className="text-gray-400 dark:text-gray-700"
                                         />
                                         {/* 각 원 위에 숫자 표시 (12시 방향) */}
                                         {value > 0 && (
@@ -2266,7 +2275,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                         y2={endY}
                                         stroke="currentColor"
                                         strokeWidth="1"
-                                        className="text-gray-300 dark:text-gray-700"
+                                        className="text-gray-400 dark:text-gray-700"
                                       />
                                     );
                                   })}
@@ -2295,6 +2304,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                     const labelRadius = maxRadius + 45;
                                     const x = centerX + labelRadius * Math.cos(angle);
                                     const y = centerY + labelRadius * Math.sin(angle);
+                                    const labelColor = isDarkMode ? "#f3f4f6" : "#111827"; // 다크모드: gray-100, 라이트모드: gray-900
                                     return (
                                       <text
                                         key={index}
@@ -2302,7 +2312,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                         y={y}
                                         textAnchor="middle"
                                         dominantBaseline="middle"
-                                        className="text-sm fill-gray-700 dark:text-gray-300 font-medium"
+                                        fill={labelColor}
+                                        className="text-sm font-medium"
                                         style={{ fontSize: '13px', overflow: 'visible' }}
                                       >
                                         <tspan x={x} dy="0">{label}</tspan>
