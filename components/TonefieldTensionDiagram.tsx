@@ -100,6 +100,8 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
   const gridColorDark = "#374151"; // 다크 모드 그리드 색상
   const axisColorLight = "#9ca3af"; // 라이트 모드 축 색상
   const axisColorDark = "#6b7280"; // 다크 모드 축 색상
+  const labelColorLight = "#1f2937"; // 라이트 모드 라벨 색상 (진한 회색)
+  const labelColorDark = "#e5e7eb"; // 다크 모드 라벨 색상 (밝은 회색)
 
   return (
     <div className="w-full flex items-center justify-center p-2 sm:p-4 max-w-full overflow-hidden">
@@ -231,6 +233,107 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           strokeWidth="1.5"
           className="hidden dark:block"
         />
+
+        {/* 좌표축 라벨 - 작은 타원과 큰 타원 사이 중앙에 배치 */}
+        {/* 두 타원 사이의 중앙 위치 계산 */}
+        {/* 작은 타원 가장자리: adjustedCy ± dimpleRy, cx ± dimpleRx */}
+        {/* 큰 타원 가장자리: adjustedCy ± ry, cx ± rx */}
+        {/* 중앙 위치: (작은 타원 가장자리 + 큰 타원 가장자리) / 2 */}
+        {/* Y축 상단: Octav */}
+        <text
+          x={cx}
+          y={adjustedCy - (dimpleRy + ry) / 2}
+          textAnchor="middle"
+          fontSize="14"
+          fill={labelColorLight}
+          fontWeight="600"
+          className="dark:hidden"
+        >
+          Octav
+        </text>
+        <text
+          x={cx}
+          y={adjustedCy - (dimpleRy + ry) / 2}
+          textAnchor="middle"
+          fontSize="14"
+          fill={labelColorDark}
+          fontWeight="600"
+          className="hidden dark:block"
+        >
+          Octav
+        </text>
+
+        {/* Y축 하단: Tonic */}
+        <text
+          x={cx}
+          y={adjustedCy + (dimpleRy + ry) / 2}
+          textAnchor="middle"
+          fontSize="14"
+          fill={labelColorLight}
+          fontWeight="600"
+          className="dark:hidden"
+        >
+          Tonic
+        </text>
+        <text
+          x={cx}
+          y={adjustedCy + (dimpleRy + ry) / 2}
+          textAnchor="middle"
+          fontSize="14"
+          fill={labelColorDark}
+          fontWeight="600"
+          className="hidden dark:block"
+        >
+          Tonic
+        </text>
+
+        {/* X축 좌측: Fifth */}
+        <text
+          x={cx - (dimpleRx + rx) / 2}
+          y={adjustedCy + 5}
+          textAnchor="middle"
+          fontSize="14"
+          fill={labelColorLight}
+          fontWeight="600"
+          className="dark:hidden"
+        >
+          Fifth
+        </text>
+        <text
+          x={cx - (dimpleRx + rx) / 2}
+          y={adjustedCy + 5}
+          textAnchor="middle"
+          fontSize="14"
+          fill={labelColorDark}
+          fontWeight="600"
+          className="hidden dark:block"
+        >
+          Fifth
+        </text>
+
+        {/* X축 우측: Fifth */}
+        <text
+          x={cx + (dimpleRx + rx) / 2}
+          y={adjustedCy + 5}
+          textAnchor="middle"
+          fontSize="14"
+          fill={labelColorLight}
+          fontWeight="600"
+          className="dark:hidden"
+        >
+          Fifth
+        </text>
+        <text
+          x={cx + (dimpleRx + rx) / 2}
+          y={adjustedCy + 5}
+          textAnchor="middle"
+          fontSize="14"
+          fill={labelColorDark}
+          fontWeight="600"
+          className="hidden dark:block"
+        >
+          Fifth
+        </text>
 
         {/* 좌표축 눈금 표시 (숫자 라벨 없음) */}
         {/* X축 눈금 (중심 기준 좌우) */}

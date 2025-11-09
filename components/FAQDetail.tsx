@@ -2708,9 +2708,9 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                   )}
                   
                   {/* 나머지 문단 - 접기/펼치기 */}
-                  {isContentDetailExpanded && remainingParagraphs.length > 0 && (
+                  {isContentDetailExpanded && (
                     <div className="mt-4">
-                      {remainingParagraphs.map((paragraph: string, index: number) => (
+                      {remainingParagraphs.length > 0 && remainingParagraphs.map((paragraph: string, index: number) => (
                         <p key={index} className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
                           {convertUrlsToLinks(paragraph)}
                         </p>
