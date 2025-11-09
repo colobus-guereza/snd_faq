@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "자주 묻는 질문 | 고객센터",
+  title: "자주묻는질문",
   description: "자주 묻는 질문 FAQ 페이지",
   // Next.js App Router는 app/icon.png를 자동으로 파비콘으로 사용
   // 명시적으로 icon.png를 지정하여 확실하게 설정
