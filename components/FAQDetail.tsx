@@ -109,37 +109,41 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
     }
   };
 
-  // "레슨 안내드립니다." 질문(id: "6")은 뒤로가기 버튼 숨김
-  const isLessonPage = faq.id === "6";
-  
   // "튜닝 비용은 어떻게 책정되어 있나요?" 질문(id: "31")은 견적서 양식으로 표시
   const isTuningCostPage = faq.id === "31";
+  
+  // "하모닉스 피치 연주법" 질문(id: "35")은 YouTube 영상 표시
+  const isHarmonicsPage = faq.id === "35";
+  
+  // "핸드팬 리듬 훈련" 질문(id: "36")은 YouTube 재생목록 표시
+  const isRhythmTrainingPage = faq.id === "36";
+  
+  // "기초 테크닉" 질문(id: "37")은 YouTube 재생목록 표시
+  const isBasicTechniquePage = faq.id === "37";
 
   return (
     <div className="w-full">
-      {!isLessonPage && (
-        <Link
-          href={backHref}
-          prefetch={true}
-          className="mb-6 inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+      <Link
+        href={backHref}
+        prefetch={true}
+        className="mb-6 inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+      >
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-          <span className="text-sm font-medium">{t("질문 목록")}</span>
-        </Link>
-      )}
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+        <span className="text-sm font-medium">{t("질문 목록")}</span>
+      </Link>
 
       <div className="mb-4 flex items-center gap-2">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -1095,6 +1099,61 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
         </div>
       )}
 
+      {/* YouTube 영상 - 하모닉스 피치 연주법 페이지 */}
+      {isHarmonicsPage && (
+        <div className="mb-6 w-full">
+          <div className="relative w-full" style={{ paddingBottom: "56.25%" }}> {/* 16:9 비율 */}
+            <iframe
+              className="absolute top-0 left-0 w-full h-full rounded-lg"
+              src="https://www.youtube.com/embed/dp4vp_UuThA"
+              title="하모닉스 피치 연주법"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      )}
+
+      {/* YouTube 재생목록 - 핸드팬 리듬 훈련 페이지 */}
+      {isRhythmTrainingPage && (
+        <div className="mb-6 w-full">
+          <div className="relative w-full" style={{ paddingBottom: "56.25%" }}> {/* 16:9 비율 */}
+            <iframe
+              className="absolute top-0 left-0 w-full h-full rounded-lg"
+              src="https://www.youtube.com/embed/videoseries?list=PL4WnUbNHhe60m0lavGl2sKGMfrinGza-Q"
+              title="핸드팬 리듬 훈련"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+          <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+            {language === "en" 
+              ? "· Click the playlist button in the top right corner of the video to view all videos."
+              : "· 동영상 우측 상단 재생목록 버튼을 누르면 전체 동영상을 확인하실 수 있습니다."}
+          </p>
+        </div>
+      )}
+
+      {/* YouTube 재생목록 - 기초 테크닉 페이지 */}
+      {isBasicTechniquePage && (
+        <div className="mb-6 w-full">
+          <div className="relative w-full" style={{ paddingBottom: "56.25%" }}> {/* 16:9 비율 */}
+            <iframe
+              className="absolute top-0 left-0 w-full h-full rounded-lg"
+              src="https://www.youtube.com/embed/videoseries?list=PL4WnUbNHhe61QgyJ7JCQTfOwKwZrRkkQ8"
+              title="기초 테크닉"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+          <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+            {language === "en" 
+              ? "· Click the playlist button in the top right corner of the video to view all videos."
+              : "· 동영상 우측 상단 재생목록 버튼을 누르면 전체 동영상을 확인하실 수 있습니다."}
+          </p>
+        </div>
+      )}
+
       {/* 본문 텍스트 - displayContent가 있을 때만 표시 (제작과정 페이지 제외) */}
       {displayContent && !isManufacturingPage && (
         <div className="prose prose-sm max-w-none">
@@ -1480,7 +1539,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                 );
               })()}
             </div>
-          ) : isLessonPage ? (
+          ) : faq.id === "6" ? (
             // 레슨 페이지는 카드 형태로 표시
             <div className="space-y-4">
               {(() => {
@@ -1695,48 +1754,17 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                               const phoneNumber = teacherName ? teacherPhoneMap[teacherName] : null;
                               
                               return (
-                                <li key={teacherIndex} className="leading-relaxed flex items-center gap-1">
-                                  · {trimmedTeacher}
-                                  {instagramUrl && (
-                                    <>
-                                      <a
-                                        href={instagramUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 hover:opacity-80 transition-opacity"
-                                        aria-label={language === "en" ? `${teacherName} Instagram` : `${teacherName} 인스타그램`}
-                                      >
-                                        <svg
-                                          className="w-3 h-3 text-white"
-                                          fill="currentColor"
-                                          viewBox="0 0 24 24"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                                        </svg>
-                                      </a>
-                                      {phoneNumber && (
-                                        <button
-                                          onClick={(e) => {
-                                            e.preventDefault();
-                                            // 모바일 기기 확인
-                                            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-                                            if (isMobile) {
-                                              window.location.href = `tel:${phoneNumber}`;
-                                            } else {
-                                              // 웹에서는 클립보드에 복사
-                                              const message = language === "en" 
-                                                ? `Phone number copied: ${phoneNumber}`
-                                                : `전화번호가 복사되었습니다: ${phoneNumber}`;
-                                              navigator.clipboard.writeText(phoneNumber).then(() => {
-                                                alert(message);
-                                              }).catch(() => {
-                                                alert(language === "en" ? `Phone number: ${phoneNumber}` : `전화번호: ${phoneNumber}`);
-                                              });
-                                            }
-                                          }}
-                                          className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-500 hover:opacity-80 transition-opacity cursor-pointer"
-                                          aria-label={language === "en" ? `Call ${teacherName}` : `${teacherName} 전화하기`}
+                                <>
+                                  <li key={teacherIndex} className="leading-relaxed flex items-center gap-1">
+                                    · {trimmedTeacher}
+                                    {instagramUrl && (
+                                      <>
+                                        <a
+                                          href={instagramUrl}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 hover:opacity-80 transition-opacity"
+                                          aria-label={language === "en" ? `${teacherName} Instagram` : `${teacherName} 인스타그램`}
                                         >
                                           <svg
                                             className="w-3 h-3 text-white"
@@ -1744,13 +1772,53 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                             viewBox="0 0 24 24"
                                             xmlns="http://www.w3.org/2000/svg"
                                           >
-                                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                                           </svg>
-                                        </button>
-                                      )}
-                                    </>
+                                        </a>
+                                        {phoneNumber && (
+                                          <button
+                                            onClick={(e) => {
+                                              e.preventDefault();
+                                              // 모바일 기기 확인
+                                              const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                                              if (isMobile) {
+                                                window.location.href = `tel:${phoneNumber}`;
+                                              } else {
+                                                // 웹에서는 클립보드에 복사
+                                                const message = language === "en" 
+                                                  ? `Phone number copied: ${phoneNumber}`
+                                                  : `전화번호가 복사되었습니다: ${phoneNumber}`;
+                                                navigator.clipboard.writeText(phoneNumber).then(() => {
+                                                  alert(message);
+                                                }).catch(() => {
+                                                  alert(language === "en" ? `Phone number: ${phoneNumber}` : `전화번호: ${phoneNumber}`);
+                                                });
+                                              }
+                                            }}
+                                            className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-500 hover:opacity-80 transition-opacity cursor-pointer"
+                                            aria-label={language === "en" ? `Call ${teacherName}` : `${teacherName} 전화하기`}
+                                          >
+                                            <svg
+                                              className="w-3 h-3 text-white"
+                                              fill="currentColor"
+                                              viewBox="0 0 24 24"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                                            </svg>
+                                          </button>
+                                        )}
+                                      </>
+                                    )}
+                                  </li>
+                                  {teacherName === "안재민" && (
+                                    <li className="mt-2 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                                      {language === "en" 
+                                        ? "Each location has different curriculum and lesson fees, so we recommend consulting directly."
+                                        : "지점마다 커리큘럼과 레슨비용이 다르기 때문에, 직접 상담 받아보시길 권해드립니다."}
+                                    </li>
                                   )}
-                                </li>
+                                </>
                               );
                             })}
                           </ul>
@@ -2739,9 +2807,6 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
         </div>
       )}
 
-      {!displayContent && !isStainlessPage && (
-        <p className="text-gray-500 dark:text-gray-400">{t("내용이 준비되지 않았습니다.")}</p>
-      )}
     </div>
   );
 }
