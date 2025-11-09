@@ -6,6 +6,7 @@ import { FAQ } from "@/types/faq";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import AcousticMaturityChart from "./AcousticMaturityChart";
+import TonefieldTensionDiagram from "./TonefieldTensionDiagram";
 
 interface FAQDetailProps {
   faq: FAQ;
@@ -28,7 +29,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   const isTuningSoundPage = faq.id === "32";
   
   // 자세히보기/간단히보기 기능이 필요한 질문 ID 목록
-  const expandableContentPages = ["3", "32"];
+  const expandableContentPages = ["3", "32", "34", "19"];
   const isExpandableContentPage = expandableContentPages.includes(faq.id);
   
   // 영어일 경우 번역된 FAQ 데이터 사용
@@ -122,22 +123,22 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
           prefetch={true}
           className="mb-6 inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
         >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            <span className="text-sm font-medium">{t("질문 목록")}</span>
-          </Link>
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          <span className="text-sm font-medium">{t("질문 목록")}</span>
+        </Link>
       )}
 
       <div className="mb-4 flex items-center gap-2">
@@ -348,15 +349,15 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                     {value.toFixed(1)}
                                   </text>
                                 </g>
-                              );
-                            })}
+                        );
+                      })}
                             
                             {/* 축 라인 */}
                             {Array.from({ length: numAxes }).map((_, index) => {
                               const angle = (index * angleStep) - (Math.PI / 2);
                               const endX = centerX + maxRadius * Math.cos(angle);
                               const endY = centerY + maxRadius * Math.sin(angle);
-                              return (
+                        return (
                                 <line
                                   key={index}
                                   x1={centerX}
@@ -367,8 +368,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                   strokeWidth="1"
                                   className="text-gray-300 dark:text-gray-700"
                                 />
-                              );
-                            })}
+                        );
+                      })}
                             
                             {/* 1.0mm 폴리곤 (파란색, 테두리만) */}
                             <path
@@ -403,7 +404,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                   dominantBaseline="middle"
                                   className="text-[10px] fill-gray-700 dark:fill-gray-300"
                                 >
-                                  {label}
+                              {label}
                                 </text>
                               );
                             })}
@@ -669,15 +670,15 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                   {value.toFixed(1)}
                                 </text>
                               </g>
-                            );
-                          })}
+                      );
+                    })}
                           
                           {/* 축 라인 */}
                           {Array.from({ length: numAxes }).map((_, index) => {
                             const angle = (index * angleStep) - (Math.PI / 2);
                             const endX = centerX + maxRadius * Math.cos(angle);
                             const endY = centerY + maxRadius * Math.sin(angle);
-                            return (
+                      return (
                               <line
                                 key={index}
                                 x1={centerX}
@@ -688,8 +689,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                 strokeWidth="1"
                                 className="text-gray-300 dark:text-gray-700"
                               />
-                            );
-                          })}
+                      );
+                    })}
                           
                           {/* 1.0mm 폴리곤 (파란색, 테두리만) */}
                           <path
@@ -724,7 +725,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                 dominantBaseline="middle"
                                 className="text-[10px] fill-gray-700 dark:fill-gray-300"
                               >
-                                {label}
+                            {label}
                               </text>
                             );
                           })}
@@ -1118,12 +1119,12 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                         <p key={index} className="mb-4">
                           {info.split("\n").map((line: string, lineIndex: number) => (
                             <span key={lineIndex}>
-                              {line}
+                  {line}
                               {lineIndex < info.split("\n").length - 1 && <br />}
                             </span>
                           ))}
-                        </p>
-                      ))}
+                </p>
+              ))}
                     </div>
                     
                     {/* 견적서 예시 */}
@@ -1518,8 +1519,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                       {parts[0]}게시됩니다.
                                       <a
                                         href="https://www.instagram.com/justbe_temple/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                  target="_blank"
+                  rel="noopener noreferrer"
                                         className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 hover:opacity-80 transition-opacity"
                                         aria-label="저스트비 인스타그램"
                                       >
@@ -1573,8 +1574,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                         {beforeDot}
                                         <a
                                           href="https://www.instagram.com/justbe_temple/"
-                                          target="_blank"
-                                          rel="noopener noreferrer"
+                  target="_blank"
+                  rel="noopener noreferrer"
                                           className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 hover:opacity-80 transition-opacity"
                                           aria-label="Justbe Instagram"
                                         >
@@ -1624,7 +1625,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                               }
                               return <p key={lineIndex} className="mb-2">{line}</p>;
                             })}
-                          </div>
+            </div>
                         )}
                       </div>
                     );
@@ -2003,6 +2004,491 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                 </>
               );
             })()
+          ) : faq.id === "17" ? (
+            // id "17"는 기존 내용을 모두 표시하고, 그 아래에 별도의 자세히보기/간단히보기 영역 추가
+            <>
+              {/* 기존 내용 전체 표시 */}
+              {displayContent.split("\n\n").map((paragraph: string, index: number) => (
+                <p key={index} className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                  {convertUrlsToLinks(paragraph)}
+                </p>
+              ))}
+              
+              {/* 자세히보기/간단히보기 영역 */}
+              <div className="mt-6">
+                <button
+                  onClick={() => setIsContentDetailExpanded(!isContentDetailExpanded)}
+                  className="flex items-center gap-2 text-sm text-[#14B8A6] hover:text-[#0d9488] transition-colors font-medium"
+                >
+                  <span>{isContentDetailExpanded ? t("간단히보기") : t("자세히보기")}</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform duration-200 ${isContentDetailExpanded ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+                
+                {/* 접기/펼치기 내용 */}
+                {isContentDetailExpanded && (
+                  <div className="mt-6 space-y-6">
+                    {/* 소재 물성 비교 카드 */}
+                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                      <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                          소재 물성 비교
+                        </h4>
+                      </div>
+                      <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
+                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">DC04(저탄소 냉간압연강)</p>
+                          <p>탄성률(약 210기가파스칼), 0.2% 기준 항복강도(약 140–210메가파스칼), 인장강도(약 270–410메가파스칼)이며, 가공경화 민감도가 높아 표면 경계층의 마찰 특성이 쉽게 변합니다. 내식성이 부족하므로 산화·부식으로 미세 거칠기가 증가하고, 그 결과 내부 손실과 접촉 손실이 커져 장기 음향 품질에 부정적 영향을 줍니다.</p>
+                        </div>
+                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">SUS430(페라이트계 스테인리스)</p>
+                          <p>크롬 16–18%의 수동피막으로 내식성이 우수합니다. 탄성률(약 200기가파스칼), 0.2% 기준 항복강도(약 275–345메가파스칼), 인장강도(약 450–600메가파스칼)로 초기 강도와 좌굴 내성이 높아 형상 안정성과 응력 재분포에 대한 저항이 큽니다.</p>
+                        </div>
+                        <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                          <p className="mb-3"><strong className="font-semibold">비교 요약</strong></p>
+                          <p className="mb-4">형상이 같다면 DC04는 탄성률이 약간 높아 초기 고유진동수에 유리할 수 있습니다. 그러나 SUS430은 산화로 인한 감쇠 증가를 억제하고 표면 상태를 안정적으로 유지하여, 공진 품질계수(큐, Q)를 장기간 안정적으로 유지하는 데 유리합니다.</p>
+                          <p className="mb-2"><strong className="font-semibold">두께 영향</strong></p>
+                          <p>1.2밀리미터는 1.0밀리미터에 비해 굽힘 강성과 좌굴 저항이 의미 있게 증가합니다. 그 결과 피치 안정성과 디튠(급격한 음정 이탈) 내성이 향상되는 경향이 있습니다.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 완성악기 음향특성 비교 카드 */}
+                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                      <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                          완성악기 음향특성 비교
+                        </h4>
+                      </div>
+                      <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
+                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">DC04 핸드팬</p>
+                          <p>어택 즉응성이 높고 음색이 드라이하며, 서스테인은 중·단기로 형성되는 반면, 사용·환경 스트레스 축적 시 잔류응력 재배치와 표면 열화에 따라 위상정렬 불안 및 비팅 증가에 민감합니다.</p>
+                        </div>
+                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">SUS430 핸드팬</p>
+                          <p>내식성 기반의 표면 안정과 높은 강도로 유효 감쇠가 낮고, 기본음–옥타브(2F₀)–복합5도(3F₀) 정합이 장시간 유지되어 모드 분리도, 피치 안정성, 서스테인, 잔향 청결도가 우수합니다.</p>
+                        </div>
+                        <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                          <p><strong className="font-semibold">결론:</strong> 동등한 제작 정밀도와 조건을 가정하면, 장기 피치 드리프트 저감, 하모닉스 위상 정합의 지속성, 총체적 음향 품질 지표에서 SUS430(특히 1.2 mm 구성)이 상위 성능을 제공합니다.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 음향특성 비교 레이더 차트 */}
+                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                      <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 text-center">
+                          음향특성 비교
+                        </h4>
+                      </div>
+                      
+                      {/* 범례 */}
+                      <div className="flex justify-center mb-4">
+                        <div className="flex gap-4 text-xs">
+                          <div className="flex items-center gap-1.5">
+                            <div className="w-3 h-3 border-2 rounded" style={{ borderColor: 'rgb(59, 130, 246)', backgroundColor: 'transparent', opacity: 0.7 }}></div>
+                            <span className="text-gray-700 dark:text-gray-300">DC04</span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <div className="w-3 h-3 border-2 rounded" style={{ borderColor: 'rgb(249, 115, 22)', backgroundColor: 'transparent' }}></div>
+                            <span className="text-gray-700 dark:text-gray-300">SUS430</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 레이더 차트 영역 */}
+                      <div className="flex justify-center items-center py-6 overflow-visible">
+                        <div className="relative" style={{ width: '500px', height: '500px', overflow: 'visible' }}>
+                          <svg width="500" height="500" viewBox="0 0 500 500" className="w-full h-full" style={{ overflow: 'visible' }}>
+                            {(() => {
+                              const centerX = 250;
+                              const centerY = 250;
+                              const maxRadius = 200;
+                              const maxValue = 10;
+                              const numAxes = 6; // 6개 독립 파라미터
+                              const angleStep = (2 * Math.PI) / numAxes;
+
+                              // 데이터 정의 (0-10 스케일, 높을수록 좋음)
+                              // 순서: Pitch Stability Index, Harmonic Coherence Index, Sustain/Q Index, Noise Floor/Purity, Attack Response, Structural Robustness
+                              const dataDC04 = [6.5, 5.5, 5.5, 4, 7.5, 4.5]; // DC04 평균값
+                              const dataSUS430 = [8.5, 8.5, 8.5, 8.5, 7, 8.5]; // SUS430 평균값
+
+                              // 라벨 배열 (한글만 표시)
+                              const labels = [
+                                language === "ko" ? "피치 안정성 지수" : "Pitch Stability Index",
+                                language === "ko" ? "하모닉스 일관성 지수" : "Harmonic Coherence Index",
+                                language === "ko" ? "서스테인/Q 지수" : "Sustain/Q Index",
+                                language === "ko" ? "노이즈 바닥/순도" : "Noise Floor/Purity",
+                                language === "ko" ? "어택 응답" : "Attack Response",
+                                language === "ko" ? "구조 강건성" : "Structural Robustness"
+                              ];
+
+                              // 좌표 계산 함수
+                              const getPoint = (index: number, value: number) => {
+                                const angle = (index * angleStep) - (Math.PI / 2); // 시작을 위쪽으로
+                                const radius = (value / maxValue) * maxRadius;
+                                const x = centerX + radius * Math.cos(angle);
+                                const y = centerY + radius * Math.sin(angle);
+                                return { x, y };
+                              };
+
+                              // 폴리곤 경로 생성 함수
+                              const createPolygonPath = (data: number[]) => {
+                                const points = data.map((value, index) => getPoint(index, value));
+                                return points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ') + ' Z';
+                              };
+
+                              return (
+                                <>
+                                  {/* 그리드 라인 (동심원) */}
+                                  {[0, 2, 4, 6, 8, 10].map((value) => {
+                                    const radius = (value / maxValue) * maxRadius;
+                                    return (
+                                      <g key={value}>
+                                        <circle
+                                          cx={centerX}
+                                          cy={centerY}
+                                          r={radius}
+                                          fill="none"
+                                          stroke="currentColor"
+                                          strokeWidth="1"
+                                          strokeDasharray="4,4"
+                                          className="text-gray-300 dark:text-gray-700"
+                                        />
+                                        {/* 각 원 위에 숫자 표시 (12시 방향) */}
+                                        {value > 0 && (
+                                          <text
+                                            x={centerX}
+                                            y={centerY - radius - 8}
+                                            textAnchor="middle"
+                                            dominantBaseline="middle"
+                                            className="text-[9px] fill-gray-600 dark:fill-gray-400"
+                                          >
+                                            {value}
+                                          </text>
+                                        )}
+                                      </g>
+                                    );
+                                  })}
+
+                                  {/* 축 라인 */}
+                                  {Array.from({ length: numAxes }).map((_, index) => {
+                                    const angle = (index * angleStep) - (Math.PI / 2);
+                                    const endX = centerX + maxRadius * Math.cos(angle);
+                                    const endY = centerY + maxRadius * Math.sin(angle);
+                                    return (
+                                      <line
+                                        key={index}
+                                        x1={centerX}
+                                        y1={centerY}
+                                        x2={endX}
+                                        y2={endY}
+                                        stroke="currentColor"
+                                        strokeWidth="1"
+                                        className="text-gray-300 dark:text-gray-700"
+                                      />
+                                    );
+                                  })}
+
+                                  {/* DC04 폴리곤 (파란색, 테두리만) */}
+                                  <path
+                                    d={createPolygonPath(dataDC04)}
+                                    fill="none"
+                                    stroke="rgb(59, 130, 246)"
+                                    strokeWidth="2"
+                                    strokeOpacity="0.7"
+                                  />
+
+                                  {/* SUS430 폴리곤 (주황색, 테두리만) */}
+                                  <path
+                                    d={createPolygonPath(dataSUS430)}
+                                    fill="none"
+                                    stroke="rgb(249, 115, 22)"
+                                    strokeWidth="2"
+                                    strokeOpacity="1"
+                                  />
+
+                                  {/* 라벨 배치 */}
+                                  {labels.map((label, index) => {
+                                    const angle = (index * angleStep) - (Math.PI / 2);
+                                    const labelRadius = maxRadius + 45;
+                                    const x = centerX + labelRadius * Math.cos(angle);
+                                    const y = centerY + labelRadius * Math.sin(angle);
+                                    return (
+                                      <text
+                                        key={index}
+                                        x={x}
+                                        y={y}
+                                        textAnchor="middle"
+                                        dominantBaseline="middle"
+                                        className="text-sm fill-gray-700 dark:text-gray-300 font-medium"
+                                        style={{ fontSize: '13px', overflow: 'visible' }}
+                                      >
+                                        <tspan x={x} dy="0">{label}</tspan>
+                                      </text>
+                                    );
+                                  })}
+                                </>
+                              );
+                            })()}
+                          </svg>
+                        </div>
+                      </div>
+
+                      {/* 축 정의 표 */}
+                      <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-3 text-center">
+                          {language === "ko" ? "축 정의 및 측정 지표" : "Axis Definitions and Measurement Metrics"}
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                          <div className="bg-gray-50 dark:bg-gray-800/50 rounded p-3 border border-gray-200 dark:border-gray-700">
+                            <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                              {language === "ko" ? "피치 안정성 지수" : "Pitch Stability Index"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400 mb-2">
+                              {language === "ko" 
+                                ? "계산: 단기 튜닝 오프셋(cent RMS) + 가압/온습도 가변 하중에서의 오프셋 변동"
+                                : "Calculation: Short-term tuning offset (cent RMS) + offset variation under pressure/temp/humidity"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400">
+                              {language === "ko" 
+                                ? "의미: 같은 강도로 쳤을 때 원래 음높이로 돌아오는 정도. 영향: 주파수 변동 감소, 비팅/불협화음 방지, 장기 튜닝 안정성 유지에 기여"
+                                : "Meaning: How accurately a note returns to its original pitch when struck with the same intensity. Impact: Reduces frequency fluctuations, prevents beating/dissonance, contributes to long-term tuning stability"}
+                            </p>
+                          </div>
+                          <div className="bg-gray-50 dark:bg-gray-800/50 rounded p-3 border border-gray-200 dark:border-gray-700">
+                            <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                              {language === "ko" ? "하모닉스 일관성 지수" : "Harmonic Coherence Index"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400 mb-2">
+                              {language === "ko" 
+                                ? "계산: 기본음–옥타브(2F₀)–복합5도(3F₀) 주파수 오차(cent) + 위상 상관계수(ρ)"
+                                : "Calculation: F₀–2F₀–3F₀ frequency error (cent) + phase correlation coefficient (ρ)"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400">
+                              {language === "ko" 
+                                ? "의미: 세 배음이 흔들림 없이 하나로 겹치는지 여부. 영향: 위상·주파수 정합 증가 시 명확하고 풍성한 소리, 비팅 감소"
+                                : "Meaning: Whether the three harmonics overlap as one without shaking. Impact: Clear and rich sounds with increased phase/frequency alignment, reduced beating"}
+                            </p>
+                          </div>
+                          <div className="bg-gray-50 dark:bg-gray-800/50 rounded p-3 border border-gray-200 dark:border-gray-700">
+                            <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                              {language === "ko" ? "서스테인 지수" : "Sustain Index"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400 mb-2">
+                              {language === "ko" 
+                                ? "계산: 모달 감쇠 Q = f / Δf 또는 T30/T60로 측정한 정규화 값"
+                                : "Calculation: Normalized value measured by modal damping Q = f / Δf or T30/T60"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400">
+                              {language === "ko" 
+                                ? "의미: 친 소리가 깨끗하게 지속되는 시간. 영향: 잔향과 공간감 형성, 명상·녹음·합주에서 체감 품질 결정"
+                                : "Meaning: How long a struck sound sustains cleanly. Impact: Forms reverberation and spatial presence, determines perceived quality in meditation, recording, and ensemble playing"}
+                            </p>
+                          </div>
+                          <div className="bg-gray-50 dark:bg-gray-800/50 rounded p-3 border border-gray-200 dark:border-gray-700">
+                            <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                              {language === "ko" ? "노이즈 바닥 순도" : "Noise Floor Purity"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400 mb-2">
+                              {language === "ko" 
+                                ? "계산: 스펙트럼 노이즈바닥(dBFS)과 톤/노이즈 비율을 SNR로 변환하여 점수화"
+                                : "Calculation: Scored by converting spectral noise floor (dBFS) and tonal/noise ratio into SNR"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400">
+                              {language === "ko" 
+                                ? "의미: 배경 노이즈가 낮고 순수한 톤이 명확한 정도. 영향: 미세한 배음 전달 향상, 녹음 품질과 라이브 명확도 개선"
+                                : "Meaning: Degree to which background noise is low and pure tones are clear. Impact: Enhances transmission of subtle harmonics, improves recording quality and live clarity"}
+                            </p>
+                          </div>
+                          <div className="bg-gray-50 dark:bg-gray-800/50 rounded p-3 border border-gray-200 dark:border-gray-700">
+                            <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                              {language === "ko" ? "어택 응답" : "Attack Response"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400 mb-2">
+                              {language === "ko" 
+                                ? "계산: 파형의 10→90% 상승시간(t_rise)의 역수를 정규화하여 평가"
+                                : "Calculation: Evaluated by normalizing the inverse of 10→90% rise time (t_rise) of the waveform"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400">
+                              {language === "ko" 
+                                ? "의미: 키를 놓았을 때(또는 액션이 멈췄을 때) 소리가 즉각 멈추는 반응성. 영향: 타격 표현과 명확성에 영향, 연주 해상도 향상"
+                                : "Meaning: Responsiveness of a sound to stop immediately when a key is released (or action ceases). Impact: Influences percussive expression and articulation, increases performance resolution"}
+                            </p>
+                          </div>
+                          <div className="bg-gray-50 dark:bg-gray-800/50 rounded p-3 border border-gray-200 dark:border-gray-700">
+                            <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                              {language === "ko" ? "구조 강건성" : "Structural Robustness"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400 mb-2">
+                              {language === "ko" 
+                                ? "계산: 좌굴/왜곡 한계 하중(F_buck)과 환경 사이클 후 표면 거칠기 변화(ΔRa)를 결합한 내구성 지표"
+                                : "Calculation: Durability index combining buckling/distortion limit load (F_buck) and change in surface roughness (ΔRa) after environmental cycles"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400">
+                              {language === "ko" 
+                                ? "의미: 거친 사용에도 형태와 표면이 견딜 수 있는 강도. 영향: 형태·표면 안정성이 모든 음향 지표의 기초, 장기 피치·하모닉스 유지 보장"
+                                : "Meaning: Strength of shape and surface to withstand rough use. Impact: Shape and surface stability form the basis for all acoustic indicators, ensuring long-term pitch and harmonic maintenance"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : faq.id === "34" ? (
+            // id "34"는 기존 내용을 모두 표시하고, 그 아래에 별도의 자세히보기/간단히보기 영역 추가
+            <>
+              {/* 기존 내용 전체 표시 */}
+              {displayContent.split("\n\n").map((paragraph: string, index: number) => (
+                <p key={index} className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                  {convertUrlsToLinks(paragraph)}
+                </p>
+              ))}
+              
+              {/* 자세히보기/간단히보기 영역 */}
+              <div className="mt-6">
+                <button
+                  onClick={() => setIsContentDetailExpanded(!isContentDetailExpanded)}
+                  className="flex items-center gap-2 text-sm text-[#14B8A6] hover:text-[#0d9488] transition-colors font-medium"
+                >
+                  <span>{isContentDetailExpanded ? t("간단히보기") : t("자세히보기")}</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform duration-200 ${isContentDetailExpanded ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+                
+                {/* 접기/펼치기 내용 */}
+                {isContentDetailExpanded && (
+                  <div className="mt-6 space-y-6">
+                    {/* 현상 설명 카드 */}
+                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                      <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                          현상 설명 — '옥타브 공명'
+                        </h4>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">이름</p>
+                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                            옥타브 공명은 옥타브 관계의 노트가 동조 공명으로 함께 진동하는 현상입니다. 조율 정합이 정확할수록 더 뚜렷하게 나타납니다.
+                          </p>
+                        </div>
+                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">예시</p>
+                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                            D Kurd 10에서 C4를 연주하실 때 옥타브인 C5가 공명할 수 있습니다. C5에는 2F₀(옥타브), 3F₀(복합5도: 한 옥타브 + 완전5도) 성분이 포함되어 있어, C4를 타격하셔도 귀에는 C5의 고역 성분이 동반되어 들릴 수 있습니다. 이는 핸드팬의 본질인 하모닉스 정렬(1:2:3 비)이 잘 구현되었다는 정상 특성입니다.
+                          </p>
+                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed mt-2">
+                            또한 이 현상은 조율이 정확하게 이루어졌기 때문에 나타나는 현상으로, 조율 품질의 긍정적 지표로 보아 주시면 됩니다.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 새 악기에서 더 도드라져 들리는 이유 카드 */}
+                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                      <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                          새 악기에서 더 도드라져 들리는 이유
+                        </h4>
+                      </div>
+                      <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
+                        <div>
+                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">초기 상태</p>
+                          <p>새 악기는 기본음–옥타브–복합5도(1:2:3)의 모드 정렬이 매우 정확하고, 각 모드의 품질계수(Q)가 높아 스펙트럼 피크가 좁고 첨예합니다. 이 때문에 C5의 3F₀ 같은 고역 성분이 또렷하게 감지됩니다.</p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">사용에 따른 변화</p>
+                          <p>반복 타격과 시간 경과로 국부 잔류응력이 일부 완화되고, 접착·지지와 같은 경계 감쇠 조건이 변하면서 각 모드의 고유주파수·감쇠율이 미세 재분포될 수 있습니다. 그 결과 고역 피크의 첨예도(Q)가 다소 낮아져 고음의 각이 완만하게 들릴 수 있습니다. 이 과정에서 소리는 자연스럽게 부드러워지며, 동시에 하모닉스의 본질적 기능(에너지 분포와 위상 정합)이 더 균형 있게 체감되어 핸드팬 고유의 풍성한 공명감이 강화되는 경향을 보입니다.</p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">리튠의 역할</p>
+                          <p>정기 리튠을 통해 1:2:3 모드 비와 위상정렬을 점검·보정하여 유지해 드립니다. 그 결과 C4 발음 시 상위 고조파의 에너지 분포와 위상 일치도가 안정화되어, 청감상 배음 밀도와 지속시간이 증가하는 경향을 확인하실 수 있습니다.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 점검 방법 카드 */}
+                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                      <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                          이것이 정상인지 점검하는 간단한 방법
+                        </h4>
+                      </div>
+                      <div className="space-y-4">
+                        {/* 뮤트 테스트 */}
+                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                          <div className="flex items-center gap-2 mb-2">
+                            <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p className="font-semibold text-gray-900 dark:text-gray-100">뮤트 테스트</p>
+                          </div>
+                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed ml-7">
+                            C5 톤필드를 손가락으로 가볍게 접촉(뮤트)하신 상태에서 C4를 연주해 보십시오. 고역 동반음이 사라지면 정상적인 옥타브 공명으로 보시면 됩니다.
+                          </p>
+                        </div>
+
+                        {/* 다이내믹 테스트 */}
+                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                          <div className="flex items-center gap-2 mb-2">
+                            <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p className="font-semibold text-gray-900 dark:text-gray-100">다이내믹 테스트</p>
+                          </div>
+                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed ml-7">
+                            같은 타격 위치·각도를 유지하시고 아주 작게 → 보통 → 세게로 볼륨을 단계적으로 높여 보십시오. 볼륨 변화에 따라 고역 동반음이 자연스럽게 증감하면 정상 범주로 판단하실 수 있습니다.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 힌트 카드 */}
+                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                      <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                          힌트 — 다른 옥타브 공명도 들립니다
+                        </h4>
+                      </div>
+                      <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                          C4–C5 공명이 가장 두드러지지만, D3을 연주하실 때 D4가 공명하여 딩 D3의 댐핑감과 울림이 더 풍성하게 느껴지는 것도 동일한 옥타브 공명입니다. 악기와의 청감 학습이 진행되면, 처음에는 인지하지 못하셨던 다른 옥타브 쌍에서도 공명이 점차 또렷하게 들리실 수 있습니다. 이는 조율이 잘 되었기 때문에 나타나는 현상이며, 조율 품질을 가늠하는 긍정적 지표로 이해해 주시면 좋습니다.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
           ) : isExpandableContentPage ? (
             // 자세히보기/간단히보기 기능이 있는 페이지는 첫 번째 문단은 항상 표시, 나머지는 접기/펼치기
             (() => {
@@ -2049,6 +2535,14 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                           {convertUrlsToLinks(paragraph)}
                         </p>
                       ))}
+                      {/* FAQ ID "19"에만 그래프 추가 */}
+                      {faq.id === "19" && (
+                        <div className="mt-6 w-full overflow-hidden">
+                          <div className="w-full max-w-full">
+                            <TonefieldTensionDiagram width={720} height={480} color="#14B8A6" />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </>
