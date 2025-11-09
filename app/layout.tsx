@@ -6,6 +6,8 @@ import { ThemeInitializer } from "@/components/ThemeInitializer";
 import CommonLayout from "@/components/CommonLayout";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Suspense } from "react";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -61,6 +63,47 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Script
+          id="error-handler"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                // 페이지 로드 전에 오류 핸들러를 가장 먼저 등록
+                window.addEventListener('error', function(event) {
+                  var errorMessage = event.message || '';
+                  if (errorMessage.includes('className.split') || 
+                      errorMessage.includes('clickListener') ||
+                      errorMessage.includes('el.className.split')) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return false;
+                  }
+                }, true);
+                
+                // Promise rejection도 처리
+                window.addEventListener('unhandledrejection', function(event) {
+                  var reason = (event.reason && event.reason.message) || String(event.reason || '');
+                  if (reason.includes('className.split') || reason.includes('clickListener')) {
+                    event.preventDefault();
+                  }
+                });
+                
+                // console.error 필터링
+                var originalConsoleError = console.error;
+                console.error = function() {
+                  var errorString = Array.prototype.join.call(arguments, ' ');
+                  if (!errorString.includes('className.split') && 
+                      !errorString.includes('clickListener') &&
+                      !errorString.includes('el.className.split')) {
+                    originalConsoleError.apply(console, arguments);
+                  }
+                };
+              })();
+            `,
+          }}
+        />
+        <ErrorBoundary />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
           <ThemeInitializer />
           <LanguageProvider>

@@ -2489,6 +2489,186 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                 )}
               </div>
             </>
+          ) : faq.id === "21" ? (
+            // id "21"는 구조화된 카드 형태로 표시
+            <div className="space-y-6">
+              {/* 1. 음계(Scale)는 무엇일까요? */}
+              <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                  <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    1. 음계(Scale)는 무엇일까요?
+                  </h4>
+                </div>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  음계는 음악의 색 팔레트와 같습니다. 한 옥타브라는 캔버스 위에 어울리는 색(음)을 골라 놓고, 그 색을 섞어 그림을 그리듯 멜로디를 만듭니다. 계단을 오르내리듯 규칙적인 간격으로 음이 배치되므로, 어떤 음계로 시작하느냐에 따라 곡의 분위기와 감정선이 달라집니다.
+                </p>
+              </div>
+
+              {/* 2. 피아노 12음 vs. 핸드팬 5~8음의 선택 */}
+              <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                  <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    2. 피아노 12음 vs. 핸드팬 5~8음의 선택
+                  </h4>
+                </div>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  피아노는 한 옥타브에 12개의 반음이 있어 모든 색을 다 담은 큰 색연필 상자와 비슷합니다. 핸드팬은 그중 5~8개 핵심 색만 골라 담은 맞춤 팔레트에 가깝습니다. 중앙의 딩(Ding)은 태양처럼 중심을 잡아 주고, 주변 톤필드는 행성처럼 그 주위를 돌며 조화로운 울림을 만듭니다. 색이 적으면 선이 간결하고 명상적이며, 색이 많으면 표현 범위와 이야기 전개가 넓어집니다.
+                </p>
+              </div>
+
+              {/* 3. 음계가 만드는 분위기 */}
+              <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                  <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    3. 음계가 만드는 분위기
+                  </h4>
+                </div>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
+                  음계는 요리의 레시피와 같습니다.
+                </p>
+                <div className="space-y-2">
+                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                    <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">· 메이저(장조)</p>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">햇살 좋은 낮처럼 밝고 개방적입니다.</p>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                    <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">· 마이너(단조)</p>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">해 질 녘처럼 서정적이고 사색적입니다.</p>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                    <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">· 선법·민속계열</p>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">이국 향신료를 더한 맛처럼 독특한 색채와 긴장감을 줍니다.</p>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                    <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">· 펜타토닉(5음)</p>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">재료가 단순한 만큼 누구나 맛있게 내기 쉬운 기본 레시피입니다.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. 대중적 분류와 사용감 */}
+              <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                  <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    4. 대중적 분류와 사용감
+                  </h4>
+                </div>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
+                  일상에서 자주 쓰는 분류는 이렇습니다.
+                </p>
+                <div className="space-y-2">
+                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                    <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">· 메이저/마이너</p>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">대중음악과 영화음악의 기본 뼈대. 안정적 진행.</p>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                    <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">· 펜타토닉</p>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">즉흥 연주 친화적. 실수에 관대해 입문에 적합.</p>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                    <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">· 도리안·프리지안·리디안 등 선법</p>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">개성 강한 색채와 공간감.</p>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                    <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">· 하모닉/멜로딕 마이너 파생</p>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">중동·집시풍의 긴장과 해소를 선명히 부각.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 5. 핸드팬 업계에서의 음계 사용 특징 */}
+              <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                  <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    5. 핸드팬 업계에서의 음계 사용 특징
+                  </h4>
+                </div>
+                <div className="space-y-4">
+                  {/* 5-1 */}
+                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-5 border border-gray-200 dark:border-gray-700">
+                    <p className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">5-1. 동일 스케일이라도 음 개수에 따른 뉘앙스와 가격</p>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                      같은 음계 구조라도 <strong className="font-semibold">음 개수(9/12/14/18음 등)</strong>에 따라 보이싱 가능성, 보이스 리딩, 암시적 화성 정보량이 달라집니다.
+                    </p>
+                    <div className="space-y-2.5 mb-4">
+                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed"><strong className="font-semibold">· 적은 음 개수:</strong> 모달 컬러가 선명하고 드론적. 즉흥·명상 적합.</p>
+                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed"><strong className="font-semibold">· 많은 음 개수:</strong> 멜로딕 패턴과 패싱 음 운용 폭이 넓음.</p>
+                    </div>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                      음이 늘수록 레이아웃 설계와 튜닝 난이도, 공정 시간이 상승하여 프라이싱에 반영됩니다.
+                    </p>
+                  </div>
+
+                  {/* 5-2 */}
+                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-5 border border-gray-200 dark:border-gray-700">
+                    <p className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">5-2. 제작자별 네이밍 관행과 병행 표기</p>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                      핸드팬 업계에는 제작자별 네이밍 컨벤션이 존재합니다. 동일한 간격 구조(스케일)라도 제작자·브랜드가 고유 철학과 레이아웃 차이를 반영해 자체 명칭을 부여합니다. 이 관행 때문에 같은 음계가 서로 다른 이름으로 병행 표기되는 현상이 발생합니다. 예를 들어, 음악 일반론의 D minor 계열은 D Kurd, D major 계열은 D Ashakiran과 같이 불리며, 제작자에 따라 철자·접두어(키 범위, 레인지)·버전 표기가 달라질 수 있습니다.
+                    </p>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                      따라서 명칭만으로 판단하기보다는 다음 판별 기준을 우선 확인하시는 것이 정확합니다.
+                    </p>
+                    <div className="space-y-2.5 mb-4">
+                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed"><strong className="font-semibold">· 음 리스트:</strong> 키와 각 음(예: D / A C D E F G A C). 음 리스트가 주어지면 음정 간격 패턴(모드/선법 계통)은 자동으로 결정됩니다.</p>
+                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed"><strong className="font-semibold">· 악기 구조:</strong> 딩과 톤필드의 배치 순서.</p>
+                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed"><strong className="font-semibold">· 레인지/레지스터:</strong> Low/Medium/High 표기, 옥타브 위치.</p>
+                    </div>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                      이 세 가지가 일치하면 명칭이 달라도 사운드 성격과 연주 감각은 본질적으로 동일합니다. 반대로 명칭이 음 개수, 배열에 따라 연주 시 뉘앙스와 난이도, 가격이 달라집니다.
+                    </p>
+                  </div>
+
+                  {/* 5-3 */}
+                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-5 border border-gray-200 dark:border-gray-700">
+                    <p className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">5-3. 대표 스케일 포트폴리오</p>
+                    <div className="space-y-2.5 mb-4">
+                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed"><strong className="font-semibold">· 현대 트렌드:</strong> F# Low Pygmy, E Amara, D Aegean</p>
+                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed"><strong className="font-semibold">· 클래식 라인업:</strong> D Kurd, C# Annaziska, E Hijaz</p>
+                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed"><strong className="font-semibold">· 유니크 셀렉션:</strong> D Saladin, E La Sirena, C Harmonic minor, E Equinox</p>
+                    </div>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
+                      그 외에도 다양한 음계의 핸드팬들을 YouTube에서 직접 들어보실 수 있습니다.
+                    </p>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                      <strong className="font-semibold">예시:</strong> E Amara 18 handpan, D Kurd 9 handpan 등
+                    </p>
+                  </div>
+
+                  {/* 5-4 */}
+                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-5 border border-gray-200 dark:border-gray-700">
+                    <p className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">5-4. 구매 시 스케일 결정 가이드</p>
+                    <div className="space-y-5">
+                      <div>
+                        <p className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">1) 직접 플레이 테스트</p>
+                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                          음악 이론을 몰라도 전혀 문제없습니다. 여러 음계의 핸드팬을 직접 듣고 쳐 보시면서, 귀와 마음에 가장 울림을 주는 소리를 선택하시는 것이 가장 좋은 시작입니다. 핸드팬은 즉흥 연주 문화가 중심이어서, 대부분의 입문자가 이 방식으로 자신에게 맞는 스케일을 찾습니다.
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">2) 용도 기반 추천</p>
+                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                          구매 목적을 먼저 정리하시면 선택이 빨라집니다.
+                        </p>
+                        <div className="space-y-2.5">
+                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                            <strong className="font-semibold">· 웰니스·드론 중심:</strong> 단순하고 깊게 깔리는 사운드가 유리합니다. → 펜타토닉 스케일에 음 개수가 적은 악기들은 연주 난이도가 높지 않으면서도 충분한 무드를 연출할 수 있습니다.
+                          </p>
+                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                            <strong className="font-semibold">· 솔로 연주·작편·녹음:</strong> 다양한 음악적 활용도와 폭 넓은 표현을 위해 음 개수가 많은 악기가 유리합니다.
+                          </p>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">3) 레퍼런스 매칭</p>
+                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                          가장 쉬운 방법은 유튜브를 통해 다양한 연주를 들어보고 마음에 드는 영상을 제작자에게 전달해서, 해당 영상의 악기를 레퍼런스로 원하시는 악기를 찾아가는 것입니다.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           ) : isExpandableContentPage ? (
             // 자세히보기/간단히보기 기능이 있는 페이지는 첫 번째 문단은 항상 표시, 나머지는 접기/펼치기
             (() => {

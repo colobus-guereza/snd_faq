@@ -92,6 +92,14 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
   // Soft gradient id for the dimple shading
   const gid = "tonefield-dimple-grad";
   const gid2 = "tonefield-body-grad";
+  const gridId = "coordinate-grid";
+
+  // 그리드 설정
+  const gridSize = 40; // 그리드 간격 (픽셀)
+  const gridColorLight = "#e5e7eb"; // 라이트 모드 그리드 색상
+  const gridColorDark = "#374151"; // 다크 모드 그리드 색상
+  const axisColorLight = "#9ca3af"; // 라이트 모드 축 색상
+  const axisColorDark = "#6b7280"; // 다크 모드 축 색상
 
   return (
     <div className="w-full flex items-center justify-center p-2 sm:p-4 max-w-full overflow-hidden">
@@ -106,6 +114,39 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
         style={{ maxWidth: '100%', height: 'auto' }}
       >
         <defs>
+          {/* 그리드 패턴 정의 - 라이트 모드 */}
+          <pattern
+            id={`${gridId}-light`}
+            x="0"
+            y="0"
+            width={gridSize}
+            height={gridSize}
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d={`M ${gridSize} 0 L 0 0 0 ${gridSize}`}
+              fill="none"
+              stroke={gridColorLight}
+              strokeWidth="0.5"
+            />
+          </pattern>
+          {/* 그리드 패턴 정의 - 다크 모드 */}
+          <pattern
+            id={`${gridId}-dark`}
+            x="0"
+            y="0"
+            width={gridSize}
+            height={gridSize}
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d={`M ${gridSize} 0 L 0 0 0 ${gridSize}`}
+              fill="none"
+              stroke={gridColorDark}
+              strokeWidth="0.5"
+            />
+          </pattern>
+          
           {/* Outer radial gradient for the tonefield plate - 장력 표현 강화 */}
           <radialGradient id={gid2} cx="50%" cy="50%" r="100%">
             <stop offset="0%" stopColor="#cbd5e1" stopOpacity="0.4" />
@@ -130,6 +171,129 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           </filter>
         </defs>
 
+        {/* 좌표평면 배경 그리드 - 라이트 모드 */}
+        <rect
+          x="0"
+          y="0"
+          width={w}
+          height={h}
+          fill={`url(#${gridId}-light)`}
+          className="dark:hidden"
+        />
+        {/* 좌표평면 배경 그리드 - 다크 모드 */}
+        <rect
+          x="0"
+          y="0"
+          width={w}
+          height={h}
+          fill={`url(#${gridId}-dark)`}
+          className="hidden dark:block"
+        />
+
+        {/* 좌표축 (X축, Y축) */}
+        {/* X축 (수평선) - 라이트 모드 */}
+        <line
+          x1="0"
+          y1={adjustedCy}
+          x2={w}
+          y2={adjustedCy}
+          stroke={axisColorLight}
+          strokeWidth="1.5"
+          className="dark:hidden"
+        />
+        {/* X축 (수평선) - 다크 모드 */}
+        <line
+          x1="0"
+          y1={adjustedCy}
+          x2={w}
+          y2={adjustedCy}
+          stroke={axisColorDark}
+          strokeWidth="1.5"
+          className="hidden dark:block"
+        />
+        {/* Y축 (수직선) - 라이트 모드 */}
+        <line
+          x1={cx}
+          y1="0"
+          x2={cx}
+          y2={h}
+          stroke={axisColorLight}
+          strokeWidth="1.5"
+          className="dark:hidden"
+        />
+        {/* Y축 (수직선) - 다크 모드 */}
+        <line
+          x1={cx}
+          y1="0"
+          x2={cx}
+          y2={h}
+          stroke={axisColorDark}
+          strokeWidth="1.5"
+          className="hidden dark:block"
+        />
+
+        {/* 좌표축 눈금 표시 (숫자 라벨 없음) */}
+        {/* X축 눈금 (중심 기준 좌우) */}
+        {Array.from({ length: Math.floor(w / gridSize) + 1 }, (_, i) => {
+          const x = i * gridSize;
+          const offset = x - cx;
+          if (Math.abs(offset) < 0.1) return null; // 중앙선은 제외
+          return (
+            <g key={`x-tick-${i}`}>
+              {/* 라이트 모드 눈금 */}
+              <line
+                x1={x}
+                y1={adjustedCy - 4}
+                x2={x}
+                y2={adjustedCy + 4}
+                stroke={axisColorLight}
+                strokeWidth="1"
+                className="dark:hidden"
+              />
+              {/* 다크 모드 눈금 */}
+              <line
+                x1={x}
+                y1={adjustedCy - 4}
+                x2={x}
+                y2={adjustedCy + 4}
+                stroke={axisColorDark}
+                strokeWidth="1"
+                className="hidden dark:block"
+              />
+            </g>
+          );
+        })}
+
+        {/* Y축 눈금 (중심 기준 상하) */}
+        {Array.from({ length: Math.floor(h / gridSize) + 1 }, (_, i) => {
+          const y = i * gridSize;
+          const offset = adjustedCy - y;
+          if (Math.abs(offset) < 0.1) return null; // 중앙선은 제외
+          return (
+            <g key={`y-tick-${i}`}>
+              {/* 라이트 모드 눈금 */}
+              <line
+                x1={cx - 4}
+                y1={y}
+                x2={cx + 4}
+                y2={y}
+                stroke={axisColorLight}
+                strokeWidth="1"
+                className="dark:hidden"
+              />
+              {/* 다크 모드 눈금 */}
+              <line
+                x1={cx - 4}
+                y1={y}
+                x2={cx + 4}
+                y2={y}
+                stroke={axisColorDark}
+                strokeWidth="1"
+                className="hidden dark:block"
+              />
+            </g>
+          );
+        })}
 
         {/* Outer ellipse (tonefield body) */}
         <ellipse
