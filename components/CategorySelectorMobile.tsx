@@ -1,7 +1,7 @@
 "use client";
 
 import { Category } from "@/types/faq";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { categoryDirectLinkMap } from "@/data/faqs";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -18,7 +18,12 @@ export default function CategorySelectorMobile({
 }: CategorySelectorMobileProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { t } = useLanguage();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isDirectLinkCategory = categoryDirectLinkMap[selectedCategory] !== undefined;
 
@@ -60,7 +65,7 @@ export default function CategorySelectorMobile({
           onClick={() => setIsOpen(true)}
           className="flex items-center gap-2 text-base font-medium text-gray-900 dark:text-gray-100 hover:text-[#14B8A6] transition-colors"
         >
-          <span>{t(selectedCategory)}</span>
+          <span suppressHydrationWarning>{mounted ? t(selectedCategory) : selectedCategory}</span>
           <svg
             className="w-4 h-4"
             fill="none"
@@ -80,8 +85,8 @@ export default function CategorySelectorMobile({
           <button
             onClick={handleShareClick}
             className="flex-shrink-0 p-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-            aria-label={t("카테고리 링크 공유하기")}
-            title={copied ? t("복사됨!") : t("카테고리 링크 공유하기")}
+            aria-label={mounted ? t("카테고리 링크 공유하기") : "카테고리 링크 공유하기"}
+            title={copied ? (mounted ? t("복사됨!") : "복사됨!") : (mounted ? t("카테고리 링크 공유하기") : "카테고리 링크 공유하기")}
           >
             {copied ? (
               <svg
@@ -131,13 +136,13 @@ export default function CategorySelectorMobile({
           <div className="absolute inset-x-0 top-0 bg-white dark:bg-gray-900 shadow-lg max-h-[80vh] overflow-y-auto">
             {/* 헤더 */}
             <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 py-4 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                {t("카테고리 선택")}
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100" suppressHydrationWarning>
+                {mounted ? t("카테고리 선택") : "카테고리 선택"}
               </h2>
               <button
                 onClick={() => setIsOpen(false)}
                 className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
-                aria-label={t("닫기")}
+                aria-label={mounted ? t("닫기") : "닫기"}
               >
                 <svg
                   className="w-6 h-6"
@@ -172,7 +177,7 @@ export default function CategorySelectorMobile({
                           : "text-gray-700 dark:text-gray-300"
                       }`}
                     >
-                      {t(category)}
+                      <span suppressHydrationWarning>{mounted ? t(category) : category}</span>
                     </button>
                   </li>
                 ))}

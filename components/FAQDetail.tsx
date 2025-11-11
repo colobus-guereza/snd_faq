@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FAQ } from "@/types/faq";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
 import AcousticMaturityChart from "./AcousticMaturityChart";
@@ -88,7 +88,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
           </a>
         );
       }
-      return part;
+      return <span key={index}>{part}</span>;
     });
   };
 
@@ -103,7 +103,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
         setCopied(false);
       }, 2000);
     } catch (err) {
-      console.error("URL 복사 실패:", err);
+      console.error(language === "ko" ? "URL 복사 실패:" : "Failed to copy URL:", err);
       // 클립보드 API가 지원되지 않는 경우 대체 방법
       const textArea = document.createElement("textarea");
       textArea.value = window.location.href;
@@ -907,13 +907,13 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
             const steps = [
               { num: "1", title: language === "ko" ? "메탈스피닝" : "Metal Spinning", subtitle: language === "ko" ? "반구 쉘 제조" : "Shell" },
               { num: "2", title: language === "ko" ? "샌딩" : "Sanding", subtitle: language === "ko" ? "표면 준비" : "Surface" },
-              { num: "3", title: language === "ko" ? "악기구조설계" : "Instrument Structure Design", subtitle: language === "ko" ? "자석 피킹" : "Magnet" },
+              { num: "3", title: language === "ko" ? "악기구조설계" : "Structure Design", subtitle: language === "ko" ? "자석 피킹" : "Magnet" },
               { num: "4", title: language === "ko" ? "프레싱" : "Pressing", subtitle: language === "ko" ? "30 ton" : "30 ton" },
               { num: "5", title: language === "ko" ? "열처리" : "Heat Treat", subtitle: language === "ko" ? "응력완화" : "Stress" },
               { num: "6", title: language === "ko" ? "쉘스트레칭" : "Stretching", subtitle: language === "ko" ? "해머링" : "Hammer" },
               { num: "7", title: language === "ko" ? "1차튜닝" : "1st Tuning", subtitle: language === "ko" ? "하모닉스" : "Harmonics" },
               { num: "8", title: language === "ko" ? "접착·건조" : "Adhesion", subtitle: language === "ko" ? "상하판 결합" : "Bonding" },
-              { num: "9", title: language === "ko" ? "림가공" : "Rim", subtitle: language === "ko" ? "가공" : "Process" },
+              { num: "9", title: language === "ko" ? "림가공" : "Rim Machining", subtitle: language === "ko" ? "가공" : "Process" },
               { num: "10", title: language === "ko" ? "2차튜닝" : "2nd Tuning", subtitle: language === "ko" ? "드리프트 보정" : "Drift" },
               { num: "11", title: language === "ko" ? "검수" : "Inspection", subtitle: language === "ko" ? "안정화" : "Stabilize" },
               { num: "12", title: language === "ko" ? "완성" : "Complete", subtitle: "" },
@@ -1115,7 +1115,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
             <iframe
               className="absolute top-0 left-0 w-full h-full rounded-lg"
               src="https://www.youtube.com/embed/dp4vp_UuThA"
-              title="하모닉스 피치 연주법"
+              title={language === "ko" ? "하모닉스 피치 연주법" : "Harmonics Playing Technique"}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
@@ -1130,7 +1130,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
             <iframe
               className="absolute top-0 left-0 w-full h-full rounded-lg"
               src="https://www.youtube.com/embed/videoseries?list=PL4WnUbNHhe60m0lavGl2sKGMfrinGza-Q"
-              title="핸드팬 리듬 훈련"
+              title={language === "ko" ? "핸드팬 리듬 훈련" : "Handpan Rhythm Training"}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
@@ -1150,7 +1150,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
             <iframe
               className="absolute top-0 left-0 w-full h-full rounded-lg"
               src="https://www.youtube.com/embed/videoseries?list=PL4WnUbNHhe61QgyJ7JCQTfOwKwZrRkkQ8"
-              title="기초 테크닉"
+              title={language === "ko" ? "기초 테크닉" : "Basic Technique"}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
@@ -1203,7 +1203,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                           className="mt-4 flex items-center gap-2 text-sm text-[#14B8A6] hover:text-[#0d9488] transition-colors font-medium"
                         >
                           <span>
-                            {language === "ko" ? (isQuoteExpanded ? t("간단히보기") : "견적서보기") : (isQuoteExpanded ? t("간단히보기") : "View Quote")}
+                            {isQuoteExpanded ? t("간단히보기") : (language === "ko" ? "견적서보기" : "View Quote")}
                           </span>
                           <svg
                             className={`w-4 h-4 transition-transform duration-200 ${isQuoteExpanded ? 'rotate-180' : ''}`}
@@ -1590,7 +1590,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                                         className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 hover:opacity-80 transition-opacity"
-                                        aria-label="저스트비 인스타그램"
+                                        aria-label={language === "ko" ? "저스트비 인스타그램" : "Justbe Instagram"}
                                       >
                                         <svg
                                           className="w-3 h-3 text-white"
@@ -1606,18 +1606,18 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                           e.preventDefault();
                                           const phoneNumber = "010-5387-0152";
                                           const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-                                          if (isMobile) {
-                                            window.location.href = `tel:${phoneNumber}`;
-                                          } else {
-                                            navigator.clipboard.writeText(phoneNumber).then(() => {
-                                              alert(`전화번호가 복사되었습니다: ${phoneNumber}`);
-                                            }).catch(() => {
-                                              alert(`전화번호: ${phoneNumber}`);
-                                            });
-                                          }
+                                            if (isMobile) {
+                                              window.location.href = `tel:${phoneNumber}`;
+                                            } else {
+                                              navigator.clipboard.writeText(phoneNumber).then(() => {
+                                                alert(language === "ko" ? `전화번호가 복사되었습니다: ${phoneNumber}` : `Phone number copied: ${phoneNumber}`);
+                                              }).catch(() => {
+                                                alert(language === "ko" ? `전화번호: ${phoneNumber}` : `Phone number: ${phoneNumber}`);
+                                              });
+                                            }
                                         }}
                                         className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-500 hover:opacity-80 transition-opacity cursor-pointer"
-                                        aria-label="전화하기"
+                                        aria-label={language === "ko" ? "전화하기" : "Call"}
                                       >
                                         <svg
                                           className="w-3 h-3 text-white"
@@ -1665,14 +1665,14 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                               window.location.href = `tel:${phoneNumber}`;
                                             } else {
                                               navigator.clipboard.writeText(phoneNumber).then(() => {
-                                                alert(`Phone number copied: ${phoneNumber}`);
+                                                alert(language === "ko" ? `전화번호가 복사되었습니다: ${phoneNumber}` : `Phone number copied: ${phoneNumber}`);
                                               }).catch(() => {
-                                                alert(`Phone number: ${phoneNumber}`);
+                                                alert(language === "ko" ? `전화번호: ${phoneNumber}` : `Phone number: ${phoneNumber}`);
                                               });
                                             }
                                           }}
                                           className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-500 hover:opacity-80 transition-opacity cursor-pointer"
-                                          aria-label="Call"
+                                          aria-label={language === "ko" ? "전화하기" : "Call"}
                                         >
                                           <svg
                                             className="w-3 h-3 text-white"
@@ -1763,8 +1763,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                               const phoneNumber = teacherName ? teacherPhoneMap[teacherName] : null;
                               
                               return (
-                                <>
-                                  <li key={teacherIndex} className="leading-relaxed flex items-center gap-1">
+                                <React.Fragment key={teacherIndex}>
+                                  <li className="leading-relaxed flex items-center gap-1">
                                     · {trimmedTeacher}
                                     {instagramUrl && (
                                       <>
@@ -1827,7 +1827,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                         : "지점마다 커리큘럼과 레슨비용이 다르기 때문에, 직접 상담 받아보시길 권해드립니다."}
                                     </li>
                                   )}
-                                </>
+                                </React.Fragment>
                               );
                             })}
                           </ul>
@@ -2121,23 +2121,31 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                     <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
                       <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                          소재 물성 비교
+                          {language === "ko" ? "소재 물성 비교" : "Material Properties Comparison"}
                         </h4>
                       </div>
                       <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
                         <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">DC04(저탄소 냉간압연강)</p>
-                          <p>탄성률(약 210기가파스칼), 0.2% 기준 항복강도(약 140–210메가파스칼), 인장강도(약 270–410메가파스칼)이며, 가공경화 민감도가 높아 표면 경계층의 마찰 특성이 쉽게 변합니다. 내식성이 부족하므로 산화·부식으로 미세 거칠기가 증가하고, 그 결과 내부 손실과 접촉 손실이 커져 장기 음향 품질에 부정적 영향을 줍니다.</p>
+                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">{language === "ko" ? "DC04(저탄소 냉간압연강)" : "DC04 (Low Carbon Cold Rolled Steel)"}</p>
+                          <p>{language === "ko" 
+                            ? "탄성률(약 210기가파스칼), 0.2% 기준 항복강도(약 140–210메가파스칼), 인장강도(약 270–410메가파스칼)이며, 가공경화 민감도가 높아 표면 경계층의 마찰 특성이 쉽게 변합니다. 내식성이 부족하므로 산화·부식으로 미세 거칠기가 증가하고, 그 결과 내부 손실과 접촉 손실이 커져 장기 음향 품질에 부정적 영향을 줍니다."
+                            : "Elastic modulus (approximately 210 GPa), 0.2% yield strength (approximately 140–210 MPa), tensile strength (approximately 270–410 MPa). High work hardening sensitivity causes friction characteristics of surface boundary layers to change easily. Lack of corrosion resistance leads to increased micro roughness due to oxidation and corrosion, resulting in larger internal and contact losses that negatively affect long-term acoustic quality."}</p>
                         </div>
                         <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">SUS430(페라이트계 스테인리스)</p>
-                          <p>크롬 16–18%의 수동피막으로 내식성이 우수합니다. 탄성률(약 200기가파스칼), 0.2% 기준 항복강도(약 275–345메가파스칼), 인장강도(약 450–600메가파스칼)로 초기 강도와 좌굴 내성이 높아 형상 안정성과 응력 재분포에 대한 저항이 큽니다.</p>
+                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">{language === "ko" ? "SUS430(페라이트계 스테인리스)" : "SUS430 (Ferritic Stainless Steel)"}</p>
+                          <p>{language === "ko" 
+                            ? "크롬 16–18%의 수동피막으로 내식성이 우수합니다. 탄성률(약 200기가파스칼), 0.2% 기준 항복강도(약 275–345메가파스칼), 인장강도(약 450–600메가파스칼)로 초기 강도와 좌굴 내성이 높아 형상 안정성과 응력 재분포에 대한 저항이 큽니다."
+                            : "Excellent corrosion resistance due to passive film with 16–18% chromium. Elastic modulus (approximately 200 GPa), 0.2% yield strength (approximately 275–345 MPa), tensile strength (approximately 450–600 MPa). High initial strength and buckling resistance result in strong resistance to shape stability and stress redistribution."}</p>
                         </div>
                         <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-                          <p className="mb-3"><strong className="font-semibold">비교 요약</strong></p>
-                          <p className="mb-4">형상이 같다면 DC04는 탄성률이 약간 높아 초기 고유진동수에 유리할 수 있습니다. 그러나 SUS430은 산화로 인한 감쇠 증가를 억제하고 표면 상태를 안정적으로 유지하여, 공진 품질계수(큐, Q)를 장기간 안정적으로 유지하는 데 유리합니다.</p>
-                          <p className="mb-2"><strong className="font-semibold">두께 영향</strong></p>
-                          <p>1.2밀리미터는 1.0밀리미터에 비해 굽힘 강성과 좌굴 저항이 의미 있게 증가합니다. 그 결과 피치 안정성과 디튠(급격한 음정 이탈) 내성이 향상되는 경향이 있습니다.</p>
+                          <p className="mb-3"><strong className="font-semibold">{language === "ko" ? "비교 요약" : "Comparison Summary"}</strong></p>
+                          <p className="mb-4">{language === "ko" 
+                            ? "형상이 같다면 DC04는 탄성률이 약간 높아 초기 고유진동수에 유리할 수 있습니다. 그러나 SUS430은 산화로 인한 감쇠 증가를 억제하고 표면 상태를 안정적으로 유지하여, 공진 품질계수(큐, Q)를 장기간 안정적으로 유지하는 데 유리합니다."
+                            : "If the shape is the same, DC04 may have an advantage in initial natural frequency due to slightly higher elastic modulus. However, SUS430 suppresses damping increase due to oxidation and maintains surface condition stably, which is advantageous for maintaining resonance quality factor (Q) stably over a long period."}</p>
+                          <p className="mb-2"><strong className="font-semibold">{language === "ko" ? "두께 영향" : "Thickness Impact"}</strong></p>
+                          <p>{language === "ko" 
+                            ? "1.2밀리미터는 1.0밀리미터에 비해 굽힘 강성과 좌굴 저항이 의미 있게 증가합니다. 그 결과 피치 안정성과 디튠(급격한 음정 이탈) 내성이 향상되는 경향이 있습니다."
+                            : "1.2mm shows a significant increase in bending stiffness and buckling resistance compared to 1.0mm. As a result, pitch stability and detune (sudden pitch deviation) resistance tend to improve."}</p>
                         </div>
                       </div>
                     </div>
@@ -2146,20 +2154,26 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                     <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
                       <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                          완성악기 음향특성 비교
+                          {language === "ko" ? "완성악기 음향특성 비교" : "Completed Instrument Acoustic Characteristics Comparison"}
                         </h4>
                       </div>
                       <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
                         <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">DC04 핸드팬</p>
-                          <p>어택 즉응성이 높고 음색이 드라이하며, 서스테인은 중·단기로 형성되는 반면, 사용·환경 스트레스 축적 시 잔류응력 재배치와 표면 열화에 따라 위상정렬 불안 및 비팅 증가에 민감합니다.</p>
+                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">{language === "ko" ? "DC04 핸드팬" : "DC04 Handpan"}</p>
+                          <p>{language === "ko" 
+                            ? "어택 즉응성이 높고 음색이 드라이하며, 서스테인은 중·단기로 형성되는 반면, 사용·환경 스트레스 축적 시 잔류응력 재배치와 표면 열화에 따라 위상정렬 불안 및 비팅 증가에 민감합니다."
+                            : "High attack responsiveness and dry tone color, with sustain forming in medium to short term, while being sensitive to phase alignment instability and increased beating due to residual stress redistribution and surface degradation when usage and environmental stress accumulate."}</p>
                         </div>
                         <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">SUS430 핸드팬</p>
-                          <p>내식성 기반의 표면 안정과 높은 강도로 유효 감쇠가 낮고, 기본음–옥타브(2F₀)–복합5도(3F₀) 정합이 장시간 유지되어 모드 분리도, 피치 안정성, 서스테인, 잔향 청결도가 우수합니다.</p>
+                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">{language === "ko" ? "SUS430 핸드팬" : "SUS430 Handpan"}</p>
+                          <p>{language === "ko" 
+                            ? "내식성 기반의 표면 안정과 높은 강도로 유효 감쇠가 낮고, 기본음–옥타브(2F₀)–복합5도(3F₀) 정합이 장시간 유지되어 모드 분리도, 피치 안정성, 서스테인, 잔향 청결도가 우수합니다."
+                            : "Low effective damping due to corrosion-resistant surface stability and high strength, with fundamental–octave (2F₀)–compound fifth (3F₀) alignment maintained for extended periods, resulting in excellent mode separation, pitch stability, sustain, and reverb clarity."}</p>
                         </div>
                         <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-                          <p><strong className="font-semibold">결론:</strong> 동등한 제작 정밀도와 조건을 가정하면, 장기 피치 드리프트 저감, 하모닉스 위상 정합의 지속성, 총체적 음향 품질 지표에서 SUS430(특히 1.2 mm 구성)이 상위 성능을 제공합니다.</p>
+                          <p><strong className="font-semibold">{language === "ko" ? "결론:" : "Conclusion:"}</strong> {language === "ko" 
+                            ? "동등한 제작 정밀도와 조건을 가정하면, 장기 피치 드리프트 저감, 하모닉스 위상 정합의 지속성, 총체적 음향 품질 지표에서 SUS430(특히 1.2 mm 구성)이 상위 성능을 제공합니다."
+                            : "Assuming equal manufacturing precision and conditions, SUS430 (especially 1.2mm configuration) provides superior performance in long-term pitch drift reduction, harmonic phase alignment persistence, and overall acoustic quality indicators."}</p>
                         </div>
                       </div>
                     </div>
@@ -2168,7 +2182,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                     <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
                       <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 text-center">
-                          음향특성 비교
+                          {language === "ko" ? "음향특성 비교" : "Acoustic Characteristics Comparison"}
                         </h4>
                       </div>
                       

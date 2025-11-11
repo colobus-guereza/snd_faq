@@ -2,7 +2,7 @@
 
 import { Category } from "@/types/faq";
 import { categories } from "@/data/faqs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface CategoryMenuProps {
@@ -15,7 +15,12 @@ export default function CategoryMenu({
   onSelectCategory,
 }: CategoryMenuProps) {
   const [copiedCategory, setCopiedCategory] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const { t } = useLanguage();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // 카테고리 URL 복사 함수
   const handleCategoryShare = async (e: React.MouseEvent<HTMLButtonElement>, category: Category) => {
@@ -65,15 +70,15 @@ export default function CategoryMenu({
                       : "text-gray-700 dark:text-gray-300 group-hover:text-[#14B8A6] dark:group-hover:text-[#14B8A6]"
                   }`}
                 >
-                  {t(category)}
+                  <span suppressHydrationWarning>{mounted ? t(category) : category}</span>
                 </button>
                 {isSelected && (
                   <button
                     onClick={(e) => handleCategoryShare(e, category)}
                     onMouseDown={(e) => e.stopPropagation()}
                     className="flex-shrink-0 p-0.5 ml-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors relative z-10"
-                    aria-label={`${t(category)} ${t("링크 공유하기")}`}
-                    title={isCopied ? t("복사됨!") : `${t(category)} ${t("링크 공유하기")}`}
+                    aria-label={mounted ? `${t(category)} ${t("링크 공유하기")}` : `${category} 링크 공유하기`}
+                    title={isCopied ? (mounted ? t("복사됨!") : "복사됨!") : (mounted ? `${t(category)} ${t("링크 공유하기")}` : `${category} 링크 공유하기`)}
                   >
                     {isCopied ? (
                       <svg

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface SearchBarProps {
@@ -15,7 +16,12 @@ export default function SearchBar({
   onKeyDown,
   hasResults,
 }: SearchBarProps) {
+  const [mounted, setMounted] = useState(false);
   const { t } = useLanguage();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   return (
     <div className="w-full">
@@ -41,7 +47,7 @@ export default function SearchBar({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder={t("검색어를 입력하세요")}
+          placeholder={mounted ? t("검색어를 입력하세요") : "검색어를 입력하세요"}
           className="w-full border-0 border-b border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 py-3.5 pl-8 pr-4 text-base text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-b-2 focus:border-blue-500 dark:focus:border-[#14B8A6]"
           suppressHydrationWarning
         />

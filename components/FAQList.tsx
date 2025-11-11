@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { FAQ, Category } from "@/types/faq";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -10,12 +11,19 @@ interface FAQListProps {
 }
 
 export default function FAQList({ faqs, selectedCategory }: FAQListProps) {
+  const [mounted, setMounted] = useState(false);
   const { t, getFAQ } = useLanguage();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   if (faqs.length === 0) {
     return (
       <div className="w-full text-center py-12">
-        <p className="text-gray-500 dark:text-gray-400">{t("표시할 질문이 없습니다.")}</p>
+        <p className="text-gray-500 dark:text-gray-400" suppressHydrationWarning>
+          {mounted ? t("표시할 질문이 없습니다.") : "표시할 질문이 없습니다."}
+        </p>
       </div>
     );
   }

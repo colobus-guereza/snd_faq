@@ -104,7 +104,7 @@ export default function RootLayout({
           }}
         />
         <ErrorBoundary />
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} forcedTheme="light">
           <ThemeInitializer />
           <LanguageProvider>
             <Suspense fallback={<div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">Loading...</div>}>

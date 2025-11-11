@@ -1,0 +1,127 @@
+<!-- ============================================
+     WordPress 임베드 코드
+     배포 URL: https://sndfaq.vercel.app/
+     ============================================ -->
+
+<!-- 방법 1: 기본 iframe (고정 높이) - 가장 간단하고 권장 -->
+<iframe 
+  src="https://sndfaq.vercel.app/" 
+  width="100%" 
+  height="1200" 
+  frameborder="0"
+  scrolling="yes"
+  style="border: none; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-height: 1200px;"
+  allowfullscreen>
+</iframe>
+
+<!-- ============================================ -->
+
+<!-- 방법 2: 반응형 iframe (자동 높이 조절) - 모바일 최적화 -->
+<div style="position: relative; width: 100%; padding-bottom: 150%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+  <iframe 
+    src="https://sndfaq.vercel.app/" 
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+    frameborder="0"
+    scrolling="yes"
+    allowfullscreen>
+  </iframe>
+</div>
+
+<!-- ============================================ -->
+
+<!-- 방법 3: 특정 카테고리만 표시 -->
+<!-- 기술특징 카테고리 -->
+<iframe 
+  src="https://sndfaq.vercel.app/?category=기술특징" 
+  width="100%" 
+  height="1200" 
+  frameborder="0"
+  scrolling="yes"
+  style="border: none; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-height: 1200px;"
+  allowfullscreen>
+</iframe>
+
+<!-- 튜닝리튠 카테고리 -->
+<iframe 
+  src="https://sndfaq.vercel.app/?category=튜닝리튠" 
+  width="100%" 
+  height="1200" 
+  frameborder="0"
+  scrolling="yes"
+  style="border: none; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-height: 1200px;"
+  allowfullscreen>
+</iframe>
+
+<!-- 관리보관 카테고리 -->
+<iframe 
+  src="https://sndfaq.vercel.app/?category=관리보관" 
+  width="100%" 
+  height="1000" 
+  frameborder="0"
+  scrolling="yes"
+  style="border: none; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-height: 1000px;"
+  allowfullscreen>
+</iframe>
+
+<!-- 파손수리 카테고리 -->
+<iframe 
+  src="https://sndfaq.vercel.app/?category=파손수리" 
+  width="100%" 
+  height="1000" 
+  frameborder="0"
+  scrolling="yes"
+  style="border: none; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-height: 1000px;"
+  allowfullscreen>
+</iframe>
+
+<!-- 교육레슨 카테고리 -->
+<iframe 
+  src="https://sndfaq.vercel.app/?category=교육레슨" 
+  width="100%" 
+  height="1000" 
+  frameborder="0"
+  scrolling="yes"
+  style="border: none; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-height: 1000px;"
+  allowfullscreen>
+</iframe>
+
+<!-- 결제배송 카테고리 -->
+<iframe 
+  src="https://sndfaq.vercel.app/?category=결제배송" 
+  width="100%" 
+  height="1000" 
+  frameborder="0"
+  scrolling="yes"
+  style="border: none; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-height: 1000px;"
+  allowfullscreen>
+</iframe>
+
+<!-- ============================================ -->
+
+<!-- 방법 4: 특정 질문만 표시 (예: ID 18 - 핸드팬 제작과정) -->
+<iframe 
+  src="https://sndfaq.vercel.app/faq/18?category=기술특징" 
+  width="100%" 
+  height="1400" 
+  frameborder="0"
+  scrolling="yes"
+  style="border: none; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-height: 1400px;"
+  allowfullscreen>
+</iframe>
+
+<!-- ============================================ -->
+
+<!-- 방법 5: 최적화된 반응형 iframe (모바일 대응) -->
+<div style="width: 100%; max-width: 1200px; margin: 0 auto;">
+  <div style="position: relative; padding-bottom: 150%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <iframe 
+      src="https://sndfaq.vercel.app/" 
+      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+      frameborder="0"
+      scrolling="yes"
+      allowfullscreen
+      loading="lazy">
+    </iframe>
+  </div>
+</div>
+

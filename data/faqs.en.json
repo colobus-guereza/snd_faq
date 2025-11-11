@@ -116,7 +116,7 @@
     "title": "Resonance and Harmonics",
     "category": "Technologies",
     "views": 160,
-    "content": "Resonance and harmonics are key elements that determine an instrument's sound quality.\n\nResonance is the natural reverberation that occurs when an instrument vibrates. Good resonance creates rich and deep sound quality and enhances playing feel. Shell thickness, shape, material, and other factors affect resonance characteristics.\n\nHarmonics are overtones added to the fundamental tone, determining the richness and depth of sound. Natural harmonics make the sound even richer and more beautiful.\n\nDuring manufacturing, we precisely adjust shell shape and thickness to optimize resonance and harmonics. Particularly during handpan tuning, we understand each instrument's unique resonance characteristics and adjust harmonics to achieve the best sound quality.\n\nGood resonance and harmonics create living music, not just simple sound.",
+    "content": "Resonance and harmonics are core principles that determine an instrument's sound quality and timbre.\n\nResonance refers to a state where energy efficiently concentrates on a specific natural frequency (mode) among many vibrations, causing the amplitude to increase. When the timing is right, that mode resonates particularly loudly and for a long time. All resonance is vibration, but not all vibration is resonance. In handpans, when the small touch energy from fingertips is injected into the shell's natural mode, the sound spreads widely and the sustain lengthens. Even with the same striking force, richer and more stable resonance is produced, enhancing both playing feel and timbral depth.\n\nHarmonics are overtones that naturally overlap with the fundamental tone. Handpans are precisely tuned so that the fundamental F₀ resonates together with the octave 2F₀ and compound fifth 3F₀. These three frequencies combine as one to create a clear and solid single tone, and when harmonized with the stainless steel shell's resonance, the handpan's unique clear and mystical 'harmonic tone' is completed.",
     "tags": ["Resonance", "Harmonics", "Sound Quality"]
   },
   {
@@ -137,11 +137,11 @@
   },
   {
     "id": "17",
-    "title": "Differences Between Stainless Steel, Embossed Steel, and DC04",
+    "title": "DC04 VS Stainless Steel",
     "category": "Technologies",
     "views": 220,
-    "content": "Each material has unique characteristics that affect sound quality and durability.\n\nStainless Steel has excellent corrosion resistance, rarely rusts, and has very good durability. The sound is bright and clear, with good responsiveness and excellent tone consistency. It's easy to maintain and can be used for a long time, making it economical in the long run.\n\nEmbossed Steel has a patterned surface that is visually unique and adds subtle changes to the sound. The pattern increases surface strength and adds depth to the sound. It has high aesthetic value and provides a sophisticated appearance.\n\nDC04 is a cold-rolled steel plate that provides standardized strength and workability. The sound is balanced, manufacturing costs are reasonable, and it's easy to work with. It's a standard material widely used in general instrument manufacturing.\n\nYou can choose products that match the characteristics of each material.",
-    "tags": ["Material", "Stainless Steel", "Embossed Steel", "DC04"]
+    "content": "In the early days of handpans, general steel plates like DC04 were mainly used, but now stainless steel (SUS430, etc.) has become the industry standard. To use an analogy, DC04 has a sound that's clear and distinct like a rhythm instrument, while stainless steel is closer to the reverberation of a concert hall where the resonance spreads long and fills the space. Maintenance also differs. DC04 is sensitive to moisture and sweat like leather shoes, requiring more care, while stainless steel is rust-resistant like waterproof sneakers, maintaining stable surface and condition for a long time.\n\nThe important point is that this is not simply a matter of preference but an upward evolution in quality. Stainless steel, thanks to its corrosion resistance and rigidity, allows harmonic resonance (fundamental, octave, fifth) to overlap more clearly, has longer sustain, and experiences less pitch drift over use and time. As a result, with the same manufacturing quality, stainless steel instruments are evaluated as higher quality. They are advantageous not only for performances that emphasize reverberation like meditation and healing, but also for recording, ensemble playing, and long-term use. In summary, while there may be differences in usage, stainless steel has established itself as a superior material in overall acoustic quality, durability, and maintenance convenience.",
+    "tags": ["Material", "Stainless Steel", "DC04"]
   },
   {
     "id": "26",
@@ -153,7 +153,7 @@
   },
   {
     "id": "21",
-    "title": "Scale",
+    "title": "Handpan Scale",
     "category": "Technologies",
     "views": 140,
     "content": "Scale is an important element that determines an instrument's range and playing characteristics.\n\nScale refers to the total length and range of notes of an instrument. Depending on scale length, note pitch, tension, and playing feel vary. Longer scales provide higher tension and brighter sound, while shorter scales provide lower tension and softer sound.\n\nAppropriate scale selection is determined based on the player's hand size and playing style. Shorter scales may be comfortable for players with smaller hands, while longer scales may be suitable for players who want strong tension and bright sound.\n\nWe offer various scale options for different products so players can choose products that meet their needs. Understanding the characteristics of each scale and choosing the one that suits you will allow you to enjoy more satisfying playing.",
@@ -180,7 +180,7 @@
     "title": "Handpan Tuning",
     "category": "Technologies",
     "views": 180,
-    "content": "Handpan tuning is the process of fine-tuning an instrument's sound quality by hand by an expert.\n\nHandpan tuning involves understanding each instrument's unique characteristics and creating optimal sound quality. It fine-tunes subtle sound quality differences that cannot be achieved through mechanical processing alone.\n\nDuring the tuning process, thickness, shape, surface condition, and other aspects are meticulously adjusted to achieve the desired sound. Particularly, resonance characteristics and harmonics are adjusted to create rich and deep sound quality.\n\nEach instrument has unique characteristics, and optimal performance can be achieved through individual tuning. Handpan tuning is an important process that upgrades from standardized products to premium products.",
+    "content": "Handpan tuning is a process where an expert fine-tunes the tension of individual notes through manual hammering to create optimal timbre. By meticulously refining the thickness, shape, and surface condition of tone fields with a hammer, resonance characteristics and harmonics are aligned to achieve rich and deep sound. Therefore, the final sound quality of an instrument is essentially determined by tuning expertise.\n\nSpecifically, the vibration mode and tension of elliptical tone fields are precisely controlled through hammering to match tonic:octave:compound fifth (1:2:3 harmonic structure) and achieve clear and smooth harmonic resonance. The reference frequency is maintained within ±1.0 Hz, and tension is uniformly and firmly distributed in a 360° direction to stabilize phase alignment. This configuration reduces pitch drift and increases resilience, simultaneously improving long-term tuning stability and sound quality.",
     "tags": ["Tuning", "Handpan", "Sound Quality"]
   },
   {
@@ -190,5 +190,37 @@
     "views": 580,
     "content": "1. [Hongdae] Group classes, first Sunday of every month, 2-6 PM\n\n· Class announcements are posted on Justbe Instagram.\n\n2. 1:1 Handpan Lessons\n\n· [Seodaemun] Teacher Lee Ji-eun\n· [Konkuk] Teacher Kwon Min-che\n· [Seongbuk] Teacher Ahn Jae-min",
     "tags": ["Lessons", "Group Classes", "1:1 Lessons", "Hongdae"]
+  },
+  {
+    "id": "34",
+    "title": "When I strike a specific low note, unintended high notes or noise are heard together.",
+    "category": "Retune",
+    "views": 0,
+    "content": "Just as striking a large bell causes nearby small bells to ring together, when striking a specific low note, nearby high notes may follow slightly. This is a natural resonance phenomenon, similar to how other strings vibrate together when pressing the pedal on a piano.\n\nSince handpans are instruments that create richness by resonating multiple harmonics together, hearing unfamiliar high tones momentarily is not a defect but part of the resonance.\n\nNew instruments have modes (vibration patterns) 'set' very clearly with a hammer, so high harmonics can sound clear and sharp. As you use a new instrument, the tension gradually relaxes and the sound matures, the harmonics become smoother to match the tone, and with regular retuning, a fine luster is added to the low notes.",
+    "tags": ["Tuning", "Noise", "Low Note"]
+  },
+  {
+    "id": "35",
+    "title": "Harmonics Playing Technique",
+    "category": "Lessons",
+    "views": 0,
+    "content": "",
+    "tags": ["Playing Technique", "Harmonics", "Pitch"]
+  },
+  {
+    "id": "36",
+    "title": "Handpan Rhythm Training",
+    "category": "Lessons",
+    "views": 0,
+    "content": "",
+    "tags": ["Playing Technique", "Rhythm", "Training"]
+  },
+  {
+    "id": "37",
+    "title": "Basic Technique",
+    "category": "Lessons",
+    "views": 0,
+    "content": "",
+    "tags": ["Playing Technique", "Basic", "Technique"]
   }
 ]
