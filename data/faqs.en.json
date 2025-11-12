@@ -113,10 +113,10 @@
   },
   {
     "id": "20",
-    "title": "Resonance and Harmonics",
+    "title": "Harmonics: The Principle of Handpan Timbre",
     "category": "Technologies",
     "views": 160,
-    "content": "Resonance and harmonics are core principles that determine an instrument's sound quality and timbre.\n\nResonance refers to a state where energy efficiently concentrates on a specific natural frequency (mode) among many vibrations, causing the amplitude to increase. When the timing is right, that mode resonates particularly loudly and for a long time. All resonance is vibration, but not all vibration is resonance. In handpans, when the small touch energy from fingertips is injected into the shell's natural mode, the sound spreads widely and the sustain lengthens. Even with the same striking force, richer and more stable resonance is produced, enhancing both playing feel and timbral depth.\n\nHarmonics are overtones that naturally overlap with the fundamental tone. Handpans are precisely tuned so that the fundamental F₀ resonates together with the octave 2F₀ and compound fifth 3F₀. These three frequencies combine as one to create a clear and solid single tone, and when harmonized with the stainless steel shell's resonance, the handpan's unique clear and mystical 'harmonic tone' is completed.",
+    "content": "The deep and rich resonance of a handpan is formed because three harmonic modes—the fundamental (F₀), octave (2F₀), and compound fifth (3F₀)—coexist within a single note at a frequency ratio of 1:2:3, and they are phase-coupled to achieve mode synthesis.\n\nThe diagram below shows the process by which three frequencies, despite having different periods, are periodically aligned in phase and perceived as a single timbre. Thanks to this harmonic structure and phase coupling, the handpan, unlike a simple metal percussion instrument, produces clear and deep resonance and richness like a chord, even with a single note.",
     "tags": ["Resonance", "Harmonics", "Sound Quality"]
   },
   {

@@ -8,6 +8,7 @@ import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
 import AcousticMaturityChart from "./AcousticMaturityChart";
 import TonefieldTensionDiagram from "./TonefieldTensionDiagram";
+import Harmonics123Plot from "./Harmonics123Plot";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 interface FAQDetailProps {
@@ -39,7 +40,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   const isTuningSoundPage = faq.id === "32";
   
   // 자세히보기/간단히보기 기능이 필요한 질문 ID 목록
-  const expandableContentPages = ["3", "32", "34", "19"];
+  const expandableContentPages = ["3", "32", "34", "19", "20"];
   const isExpandableContentPage = expandableContentPages.includes(faq.id);
   
   // 영어일 경우 번역된 FAQ 데이터 사용
@@ -225,7 +226,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
             </p>
             <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
               {language === "ko"
-                ? "1.2mm 쉘은 더 두꺼운 구조로 인해 음향·기능적 성능에서도 차이를 보입니다. 음정 안정성이 약 58% 향상되어 온도나 타격 변화에도 음정이 덜 흔들리며, 소리가 더 선명하고 집중된 공진 특성을 보입니다. 강한 타격에도 형태 변형이 적어 왜곡 저항이 약 44% 향상되지만, 반면 가볍게 울리는 구동 용이성은 약 17% 낮아집니다. 요약하면 정확도·내구성·집중감이 필요한 연주에 유리한 \"프로페셔널 톤\" 성향입니다."
+                ? "1.2mm 쉘은 더 두꺼운 구조로 인해 음향·기능적 성능에서도 차이를 보입니다. 음정 안정성이 약 58% 향상되어 온도나 타격 변화에도 음정이 덜 흔들리며, 소리가 더 선명하고 집중된 공진 특성을 보입니다. 강한 타격에도 형태 변형이 적어 왜곡 저항이 약 44% 향상되지만, 반면 가볍게 울리는 구동 용이성은 약 17% 낮아집니다. 요약하면 정확도·내구성·집중감이 필요한 연주에 유리한 '프로페셔널 톤' 성향입니다."
                 : "The 1.2mm shell, due to its thicker structure, shows differences in acoustic and functional performance. Pitch stability improves by approximately 58%, making the pitch less affected by temperature or impact changes, and the sound shows clearer and more focused resonance characteristics. Distortion resistance improves by approximately 44% with less deformation even under strong impacts, but ease of driving (resonating with light touch) decreases by approximately 17%. In summary, it favors a \"Professional Tone\" suitable for performances requiring accuracy, durability, and concentration."
               }
             </p>
@@ -272,11 +273,20 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                 {/* 차트 제목 */}
                 <div className="mb-6 text-center">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    {language === "ko" ? "쉘 구조·기계적 특성 비교" : "Shell Structure·Mechanical Properties Comparison"}
+                    {language === "ko" ? "쉘 구조·기계적 특성 비교 개념도" : "Conceptual Diagram for Shell Structure Mechanical Property Comparison"}
                   </h3>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 text-center mt-2 mb-6">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 text-center mt-2 mb-4">
                     {language === "ko" ? "상대값 (1.0mm 기준)" : "Relative Value (Based on 1.0mm)"}
                   </p>
+                  
+                  {/* 참고 주석 */}
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3 border border-yellow-200 dark:border-yellow-800 mb-6 text-left">
+                    <p className="text-[10px] text-gray-700 dark:text-gray-300 leading-relaxed">
+                      {language === "ko" 
+                        ? "※ 본 비교는 동일 재질 조건(ρ, E 불변)에서 두께 변화(1.0 mm → 1.2 mm)에 따른 상대적 구조·기계 특성 변화를 재료역학 이론식(D = Eh³/[12(1-v²)] 등)을 기준으로 추정한 개념도입니다. 실제 수치는 쉘 곡률·열처리·응력상태에 따라 달라질 수 있습니다."
+                        : "※ This comparison is a conceptual diagram estimated based on material mechanics theoretical formulas (D = Eh³/[12(1-v²)], etc.) for relative structural and mechanical property changes due to thickness variation (1.0 mm → 1.2 mm) under identical material conditions (ρ, E constant). Actual values may vary depending on shell curvature, heat treatment, and stress state."}
+                    </p>
+                  </div>
                 </div>
 
                 {/* 범례 */}
@@ -312,10 +322,10 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                         
                         // 라벨 배열
                         const labels = [
-                          language === "ko" ? "굽힘강성 D" : "Bending Stiffness D",
-                          language === "ko" ? "면밀도 ρA" : "Area Density ρA",
+                          language === "ko" ? "판 굽힘강성 D" : "Plate Bending Stiffness D",
+                          language === "ko" ? "단위면적 질량 ρA" : "Areal Density ρA",
                           language === "ko" ? "막(인장)강성" : "Membrane Stiffness",
-                          language === "ko" ? "항복 모멘트" : "Yield Moment",
+                          language === "ko" ? "항복 모멘트 용량 My" : "Yield Moment Capacity My",
                           language === "ko" ? "좌굴 임계하중" : "Buckling Load",
                           language === "ko" ? "고유진동수 ƒ" : "Natural Freq. ƒ"
                         ];
@@ -433,7 +443,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                 <div className="mt-6 grid grid-cols-2 gap-4 text-xs">
                   <div>
                     <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
-                      {language === "ko" ? "굽힘강성 D:" : "Bending Stiffness D:"}
+                      {language === "ko" ? "판 굽힘강성 D:" : "Plate Bending Stiffness D:"}
                     </p>
                     <p className="text-gray-600 dark:text-gray-400 font-mono text-[10px] mb-2">
                       D = Eh³ / 12(1 - ν²)
@@ -444,7 +454,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
-                      {language === "ko" ? "면밀도 ρA:" : "Area Density ρA:"}
+                      {language === "ko" ? "단위면적 질량 ρA:" : "Areal Density ρA:"}
                     </p>
                     <p className="text-gray-600 dark:text-gray-400 font-mono text-[10px] mb-2">
                       ρA = ρh
@@ -466,7 +476,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
-                      {language === "ko" ? "항복 모멘트:" : "Yield Moment:"}
+                      {language === "ko" ? "항복 모멘트 용량 My:" : "Yield Moment Capacity My:"}
                     </p>
                     <p className="text-gray-600 dark:text-gray-400 font-mono text-[10px] mb-2">
                       ~ σy h²
@@ -596,11 +606,20 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
             {/* 정량적 지표 - 통합 막대 그래프 */}
             <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800">
               <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2 text-center">
-                {language === "ko" ? "구조·기계적 특성에 따른 음향·기능적 성능 지표 비교" : "Acoustic·Functional Performance Index Comparison Based on Structural·Mechanical Properties"}
+                {language === "ko" ? "쉘 두께에 따른 구조·음향 특성 비교 개념도" : "Conceptual Diagram for Comparing Structural and Acoustic Characteristics by Shell Thickness"}
               </h4>
-              <p className="text-xs text-gray-600 dark:text-gray-400 text-center mb-6">
+              <p className="text-xs text-gray-600 dark:text-gray-400 text-center mb-4">
                 {language === "ko" ? "상대값 (1.0mm 기준)" : "Relative Value (Based on 1.0mm)"}
               </p>
+              
+              {/* 참고 주석 */}
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3 border border-yellow-200 dark:border-yellow-800 mb-6 text-left">
+                <p className="text-[10px] text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {language === "ko" 
+                    ? "※ 본 비교는 동일 재질 조건(탄성률 E, 밀도 ρ 불변)에서 두께 변화(1.0 → 1.2mm)에 따른 구조·기계·음향 특성을 재료역학 식(D ∝ Eh³, f ∝ √(D/ph))을 기준으로 추정한 개념도로, 실제 수치는 쉘 곡률, 응력 상태, 열처리 조건에 따라 달라질 수 있습니다."
+                    : "※ This comparison is a conceptual diagram estimated based on material mechanics equations (D ∝ Eh³, f ∝ √(D/ph)) for structural, mechanical, and acoustic characteristics due to thickness change (1.0 → 1.2mm) under identical material conditions (elastic modulus E, density ρ constant). Actual values may vary depending on shell curvature, stress state, and heat treatment conditions."}
+                </p>
+              </div>
 
               {/* 범례 */}
               <div className="flex justify-center mb-4">
@@ -638,7 +657,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                         language === "ko" ? "피치 안정성" : "Pitch Stability",
                         language === "ko" ? "공진 특성" : "Resonance",
                         language === "ko" ? "구동 용이성" : "Ease of Driving",
-                        language === "ko" ? "왜곡 저항" : "Distortion Resistance"
+                        language === "ko" ? "좌굴/형상 변형 저항" : "Buckling/Shape Deformation Resistance"
                       ];
                       
                       // 좌표 계산 함수
@@ -787,7 +806,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
-                    {language === "ko" ? "왜곡 저항:" : "Distortion Resistance:"}
+                    {language === "ko" ? "좌굴/형상 변형 저항:" : "Buckling/Shape Deformation Resistance:"}
                   </p>
                   <p className="text-gray-600 dark:text-gray-400 font-mono text-[10px] mb-2">
                     {language === "ko" ? "항복 모멘트 ∝ h²" : "Yield Moment ∝ h²"}
@@ -807,8 +826,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                   </p>
                   <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
                     {language === "ko" 
-                      ? "1.2 mm 쉘은 1.0 mm 대비 전반적으로 '견고하고 명료한 구조 음향 특성'을 보인다."
-                      : "The 1.2 mm shell generally shows 'robust and clear structural acoustic characteristics' compared to the 1.0 mm shell."
+                      ? "1.2 mm 쉘은 1.0 mm 대비 전반적으로 더 강하고 안정적인 구조 특성을 보이며, 공진 주파수 안정성, 왜곡 저항, 음압 제어가 향상되고, 구동 반응성은 약간 감소하는 경향을 보입니다."
+                      : "The 1.2 mm shell generally exhibits stronger and more stable structural characteristics compared to the 1.0 mm shell, with improved resonant frequency stability, distortion resistance, and sound pressure control, while driving responsiveness tends to decrease slightly."
                     }
                   </p>
                 </div>
@@ -825,9 +844,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                       </span>
                       <span>
                         {language === "ko" 
-                          ? "굽힘강성과 좌굴내성이 높아, 온도·타격·시간 변화에도 음정이 안정적이다."
-                          : "Due to high bending stiffness and buckling resistance, the pitch remains stable even with changes in temperature, impact, and time."
-                        }
+                          ? "판 굽힘강성 증가로 외력/온도/습도 변화에도 주파수 변동이 작음"
+                          : "Due to increased plate bending stiffness, frequency variation is small even with external forces/temperature/humidity changes"}
                       </span>
                     </li>
                     <li className="flex items-start gap-2">
@@ -836,20 +854,18 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                       </span>
                       <span>
                         {language === "ko" 
-                          ? "두께 증가로 공진 모드 주파수가 상승, 음색이 더 선명하고 집중된다."
-                          : "Increased thickness raises the resonant mode frequency, making the timbre clearer and more focused."
-                        }
+                          ? "공진 주파수 및 공진 품질(Q) 유지 향상"
+                          : "Improved resonant frequency and resonance quality (Q) retention"}
                       </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="font-semibold text-gray-900 dark:text-gray-100 min-w-[140px]">
-                        {language === "ko" ? "왜곡 저항 +44%:" : "Distortion Resistance +44%:"}
+                        {language === "ko" ? "좌굴/형상 변형 저항 +44%:" : "Buckling/Shape Deformation Resistance +44%:"}
                       </span>
                       <span>
                         {language === "ko" 
-                          ? "항복모멘트 증가로 강한 어택에서도 형태 변형이 적다."
-                          : "Increased yield moment results in less deformation even with strong attacks."
-                        }
+                          ? "항복 모멘트 증가로 형상 변형 및 잔류 변형 감소"
+                          : "Reduced shape distortion and residual deformation due to increased yield moment"}
                       </span>
                     </li>
                     <li className="flex items-start gap-2">
@@ -858,9 +874,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                       </span>
                       <span>
                         {language === "ko" 
-                          ? "면밀도 증가로 같은 에너지에서 진폭이 약간 줄며, 반응성은 낮지만 포커스가 향상된다."
-                          : "Increased surface density slightly reduces amplitude with the same energy; responsiveness is lower, but focus is improved."
-                        }
+                          ? "질량 증가로 에너지 효율 약간 감소 및 반응 속도 둔화"
+                          : "Slightly reduced energy efficiency and slowed response speed due to increased mass"}
                       </span>
                     </li>
                   </ul>
@@ -876,7 +891,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                       <span className="font-semibold text-gray-900 dark:text-gray-100 min-w-[60px]">1.2 mm:</span>
                       <span className="text-gray-700 dark:text-gray-300">
                         {language === "ko" 
-                          ? "정확도·내구성·포커스 중심의 \"프로페셔널 톤\""
+                          ? "정확도·내구성·포커스 중심의 '프로페셔널 톤'"
                           : "Accuracy, durability, focus-centric \"Professional Tone\""
                         }
                       </span>
@@ -885,8 +900,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                       <span className="font-semibold text-gray-900 dark:text-gray-100 min-w-[60px]">1.0 mm:</span>
                       <span className="text-gray-700 dark:text-gray-300">
                         {language === "ko" 
-                          ? "감응성·부드러움 중심의 \"표현력 톤\""
-                          : "Responsiveness, softness-centric \"Expressive Tone\""
+                          ? "감응성·반응성 중심의 '익스프레시브 톤'"
+                          : "Responsiveness, sensitivity-centric 'Expressive Tone'"
                         }
                       </span>
                     </div>
@@ -2253,7 +2268,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                   domain={[0, 10]}
                                   tick={{ fill: resolvedTheme === 'dark' ? '#d1d5db' : '#374151', fontSize: 12 }}
                                   label={{ 
-                                    value: language === "ko" ? "점수 (10점 만점)" : "Score (out of 10)", 
+                                    value: language === "ko" ? "점수" : "Score", 
                                     angle: -90, 
                                     position: 'insideLeft',
                                     style: { fill: resolvedTheme === 'dark' ? '#d1d5db' : '#374151' }
@@ -2991,6 +3006,77 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
             (() => {
               const paragraphs = displayContent.split("\n\n");
               const firstParagraph = paragraphs[0];
+              
+              // FAQ ID 20의 경우 특별 처리: 첫 3개 문단은 본문 상단에 표시, 도표는 자세히보기 영역에 표시
+              if (faq.id === "20") {
+                const secondParagraph = paragraphs[1] || "";
+                const thirdParagraph = paragraphs[2] || "";
+                const remainingParagraphs = paragraphs.slice(3);
+                
+                return (
+                  <>
+                    {/* 첫 번째 문단 - 항상 표시 */}
+                    <p className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                      {convertUrlsToLinks(firstParagraph)}
+                    </p>
+                    
+                    {/* 두 번째 문단 - 본문 상단에 표시 */}
+                    {secondParagraph && (
+                      <p className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                        {convertUrlsToLinks(secondParagraph)}
+                      </p>
+                    )}
+                    
+                    {/* 세 번째 문단 - 본문 상단에 표시 */}
+                    {thirdParagraph && (
+                      <p className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                        {convertUrlsToLinks(thirdParagraph)}
+                      </p>
+                    )}
+                    
+                    {/* 자세히보기 버튼 - 도표가 있으므로 항상 표시 */}
+                    <button
+                      onClick={() => setIsContentDetailExpanded(!isContentDetailExpanded)}
+                      className="mt-4 flex items-center gap-2 text-sm text-[#14B8A6] hover:text-[#0d9488] transition-colors font-medium"
+                    >
+                      <span>{isContentDetailExpanded ? t("간단히보기") : t("자세히보기")}</span>
+                      <svg
+                        className={`w-4 h-4 transition-transform duration-200 ${isContentDetailExpanded ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
+                    
+                    {/* 자세히보기 영역 - 도표만 표시 */}
+                    {isContentDetailExpanded && (
+                      <div className="mt-4">
+                        {/* 하모닉스 그래프 */}
+                        <div className="mb-6">
+                          <Harmonics123Plot />
+                        </div>
+                        
+                        {/* 나머지 문단 */}
+                        {remainingParagraphs.length > 0 && remainingParagraphs.map((paragraph: string, index: number) => (
+                          <p key={index} className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                            {convertUrlsToLinks(paragraph)}
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                );
+              }
+              
+              // 다른 expandableContentPage는 기존 로직 유지
               const remainingParagraphs = paragraphs.slice(1);
               
               return (
@@ -3047,11 +3133,26 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
             })()
           ) : (
             // 일반 페이지는 기존 방식대로 표시
-            displayContent.split("\n\n").map((paragraph: string, index: number) => (
-              <p key={index} className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                {convertUrlsToLinks(paragraph)}
-              </p>
-            ))
+            displayContent.split("\n\n").map((paragraph: string, index: number) => {
+              // FAQ ID 20의 경우 하모닉스 설명 단락 아래에 그래프 삽입
+              const isHarmonicsParagraph = faq.id === "20" && (
+                paragraph.includes("하모닉스(Harmonics)는 기본 음에 자연스럽게 겹쳐 들리는 배음을 말합니다") ||
+                paragraph.includes("Harmonics are overtones that naturally overlap with the fundamental tone")
+              );
+              
+              return (
+                <React.Fragment key={index}>
+                  <p className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                    {convertUrlsToLinks(paragraph)}
+                  </p>
+                  {isHarmonicsParagraph && (
+                    <div className="mb-6 mt-4">
+                      <Harmonics123Plot />
+                    </div>
+                  )}
+                </React.Fragment>
+              );
+            })
           )}
         </div>
       )}
