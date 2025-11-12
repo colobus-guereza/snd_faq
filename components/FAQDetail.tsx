@@ -8,6 +8,7 @@ import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
 import AcousticMaturityChart from "./AcousticMaturityChart";
 import TonefieldTensionDiagram from "./TonefieldTensionDiagram";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 interface FAQDetailProps {
   faq: FAQ;
@@ -200,7 +201,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
 
       {displayTags && displayTags.length > 0 && (
         <div className="mb-8 flex flex-wrap gap-2">
-          {displayTags.map((tag: string, index: number) => (
+          {displayTags.slice(0, 3).map((tag: string, index: number) => (
             <span
               key={index}
               className="rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-300"
@@ -2132,17 +2133,178 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                       </div>
                       <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
                         <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">{language === "ko" ? "DC04(저탄소 냉간압연강)" : "DC04 (Low Carbon Cold Rolled Steel)"}</p>
+                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">{language === "ko" ? "DC04 (저탄소 냉간압연강)" : "DC04 (Low Carbon Cold Rolled Steel)"}</p>
+                          <p className="mb-2">{language === "ko" 
+                            ? "탄성률 약 210 GPa, 0.2 % 기준 항복강도 140 ~ 210 MPa, 인장강도 270 ~ 370 MPa 수준입니다."
+                            : "Elastic modulus approximately 210 GPa, 0.2% yield strength 140 ~ 210 MPa, tensile strength 270 ~ 370 MPa."}</p>
+                          <p className="mb-2">{language === "ko" 
+                            ? "심가공용 연강으로 성형성이 뛰어나지만, 무피막 재질이라 내식성이 낮고 산화·부식에 취약합니다."
+                            : "Deep drawing steel with excellent formability, but as an uncoated material, it has low corrosion resistance and is vulnerable to oxidation and corrosion."}</p>
                           <p>{language === "ko" 
-                            ? "탄성률(약 210기가파스칼), 0.2% 기준 항복강도(약 140–210메가파스칼), 인장강도(약 270–410메가파스칼)이며, 가공경화 민감도가 높아 표면 경계층의 마찰 특성이 쉽게 변합니다. 내식성이 부족하므로 산화·부식으로 미세 거칠기가 증가하고, 그 결과 내부 손실과 접촉 손실이 커져 장기 음향 품질에 부정적 영향을 줍니다."
-                            : "Elastic modulus (approximately 210 GPa), 0.2% yield strength (approximately 140–210 MPa), tensile strength (approximately 270–410 MPa). High work hardening sensitivity causes friction characteristics of surface boundary layers to change easily. Lack of corrosion resistance leads to increased micro roughness due to oxidation and corrosion, resulting in larger internal and contact losses that negatively affect long-term acoustic quality."}</p>
+                            ? "가공 후 표면 마찰 특성이 쉽게 변하고, 산화로 인한 미세 거칠기 증가가 내부 손실과 접촉 손실을 유발해 장기 음향 품질에 부정적인 영향을 줍니다."
+                            : "Surface friction characteristics change easily after processing, and increased micro roughness due to oxidation causes internal and contact losses, negatively affecting long-term acoustic quality."}</p>
                         </div>
                         <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">{language === "ko" ? "SUS430(페라이트계 스테인리스)" : "SUS430 (Ferritic Stainless Steel)"}</p>
+                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">{language === "ko" ? "SUS430 (페라이트계 스테인리스강)" : "SUS430 (Ferritic Stainless Steel)"}</p>
+                          <p className="mb-2">{language === "ko" 
+                            ? "**Cr 16 ~ 18 %**의 수동피막으로 내식성이 우수합니다."
+                            : "Excellent corrosion resistance due to passive film with **Cr 16 ~ 18 %**."}</p>
+                          <p className="mb-2">{language === "ko" 
+                            ? "탄성률 약 200 GPa, 0.2 % 기준 항복강도 ≥ 205 ~ 345 MPa, 인장강도 450 ~ 630 MPa로 초기 강도와 좌굴 내성이 높으며, 형상 안정성·응력 재분포 저항이 큽니다."
+                            : "Elastic modulus approximately 200 GPa, 0.2% yield strength ≥ 205 ~ 345 MPa, tensile strength 450 ~ 630 MPa. High initial strength and buckling resistance, with strong resistance to shape stability and stress redistribution."}</p>
                           <p>{language === "ko" 
-                            ? "크롬 16–18%의 수동피막으로 내식성이 우수합니다. 탄성률(약 200기가파스칼), 0.2% 기준 항복강도(약 275–345메가파스칼), 인장강도(약 450–600메가파스칼)로 초기 강도와 좌굴 내성이 높아 형상 안정성과 응력 재분포에 대한 저항이 큽니다."
-                            : "Excellent corrosion resistance due to passive film with 16–18% chromium. Elastic modulus (approximately 200 GPa), 0.2% yield strength (approximately 275–345 MPa), tensile strength (approximately 450–600 MPa). High initial strength and buckling resistance result in strong resistance to shape stability and stress redistribution."}</p>
+                            ? "따라서 장기 사용 시 표면 안정성과 공명 유지력이 DC04보다 우수합니다."
+                            : "Therefore, surface stability and resonance maintenance are superior to DC04 during long-term use."}</p>
                         </div>
+                        
+                        {/* 소재 물성 비교 그래프 */}
+                        <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                          <div className="w-full h-80 mb-6">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <BarChart
+                                data={[
+                                  {
+                                    property: language === "ko" ? "탄성률\n(GPa)" : "Elastic Modulus\n(GPa)",
+                                    DC04: 210,
+                                    SUS430: 200,
+                                  },
+                                  {
+                                    property: language === "ko" ? "항복강도\n(MPa)" : "Yield Strength\n(MPa)",
+                                    DC04: 175, // 평균값 (140-210)
+                                    SUS430: 310, // 평균값 (275-345)
+                                  },
+                                  {
+                                    property: language === "ko" ? "인장강도\n(MPa)" : "Tensile Strength\n(MPa)",
+                                    DC04: 340, // 평균값 (270-410)
+                                    SUS430: 525, // 평균값 (450-600)
+                                  },
+                                ]}
+                                margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+                              >
+                                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                                <XAxis 
+                                  dataKey="property" 
+                                  tick={{ fill: resolvedTheme === 'dark' ? '#d1d5db' : '#374151', fontSize: 12 }}
+                                  angle={0}
+                                  textAnchor="middle"
+                                  height={60}
+                                />
+                                <YAxis 
+                                  tick={{ fill: resolvedTheme === 'dark' ? '#d1d5db' : '#374151', fontSize: 12 }}
+                                  label={{ 
+                                    value: language === "ko" ? "수치" : "Value", 
+                                    angle: -90, 
+                                    position: 'insideLeft',
+                                    style: { fill: resolvedTheme === 'dark' ? '#d1d5db' : '#374151' }
+                                  }}
+                                />
+                                <Tooltip 
+                                  contentStyle={{ 
+                                    backgroundColor: resolvedTheme === 'dark' ? '#1f2937' : '#ffffff',
+                                    border: `1px solid ${resolvedTheme === 'dark' ? '#374151' : '#e5e7eb'}`,
+                                    borderRadius: '8px',
+                                    color: resolvedTheme === 'dark' ? '#d1d5db' : '#374151'
+                                  }}
+                                />
+                                <Legend 
+                                  wrapperStyle={{ paddingTop: '20px' }}
+                                />
+                                <Bar dataKey="DC04" fill="#3b82f6" name="DC04" />
+                                <Bar dataKey="SUS430" fill="#f97316" name="SUS430" />
+                              </BarChart>
+                            </ResponsiveContainer>
+                          </div>
+                          
+                          {/* 장기 음향 품질 영향 요인 비교 */}
+                          <div className="w-full h-80">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <BarChart
+                                data={[
+                                  {
+                                    factor: language === "ko" ? "가공경화\n민감도" : "Work Hardening\nSensitivity",
+                                    DC04: 8, // 높음 (부정적)
+                                    SUS430: 3, // 낮음 (긍정적)
+                                    impact: language === "ko" ? "높을수록 부정적" : "Higher is negative",
+                                  },
+                                  {
+                                    factor: language === "ko" ? "내식성" : "Corrosion\nResistance",
+                                    DC04: 2, // 낮음 (부정적)
+                                    SUS430: 9, // 높음 (긍정적)
+                                    impact: language === "ko" ? "높을수록 긍정적" : "Higher is positive",
+                                  },
+                                  {
+                                    factor: language === "ko" ? "미세 거칠기\n안정성" : "Micro Roughness\nStability",
+                                    DC04: 3, // 불안정 (부정적)
+                                    SUS430: 9, // 안정적 (긍정적)
+                                    impact: language === "ko" ? "높을수록 긍정적" : "Higher is positive",
+                                  },
+                                ]}
+                                margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+                              >
+                                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                                <XAxis 
+                                  dataKey="factor" 
+                                  tick={{ fill: resolvedTheme === 'dark' ? '#d1d5db' : '#374151', fontSize: 12 }}
+                                  angle={0}
+                                  textAnchor="middle"
+                                  height={60}
+                                />
+                                <YAxis 
+                                  domain={[0, 10]}
+                                  tick={{ fill: resolvedTheme === 'dark' ? '#d1d5db' : '#374151', fontSize: 12 }}
+                                  label={{ 
+                                    value: language === "ko" ? "점수 (10점 만점)" : "Score (out of 10)", 
+                                    angle: -90, 
+                                    position: 'insideLeft',
+                                    style: { fill: resolvedTheme === 'dark' ? '#d1d5db' : '#374151' }
+                                  }}
+                                />
+                                <Tooltip 
+                                  contentStyle={{ 
+                                    backgroundColor: resolvedTheme === 'dark' ? '#1f2937' : '#ffffff',
+                                    border: `1px solid ${resolvedTheme === 'dark' ? '#374151' : '#e5e7eb'}`,
+                                    borderRadius: '8px',
+                                    color: resolvedTheme === 'dark' ? '#d1d5db' : '#374151'
+                                  }}
+                                  formatter={(value: number, name: string) => {
+                                    const labels: { [key: string]: string } = {
+                                      DC04: language === "ko" ? "DC04" : "DC04",
+                                      SUS430: language === "ko" ? "SUS430" : "SUS430",
+                                    };
+                                    return [`${value}/10`, labels[name] || name];
+                                  }}
+                                />
+                                <Legend 
+                                  wrapperStyle={{ paddingTop: '20px' }}
+                                />
+                                <Bar dataKey="DC04" fill="#ef4444" name="DC04" />
+                                <Bar dataKey="SUS430" fill="#10b981" name="SUS430" />
+                              </BarChart>
+                            </ResponsiveContainer>
+                          </div>
+                          
+                          {/* 참고 문구 */}
+                          <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                            <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-3 text-center">
+                              {language === "ko" ? "참고" : "Note"}
+                            </p>
+                            <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4 border border-yellow-200 dark:border-yellow-800">
+                              <ul className="space-y-2 text-xs text-gray-700 dark:text-gray-300 list-disc list-inside">
+                                <li>
+                                  {language === "ko" 
+                                    ? "가공경화 민감도는 높을수록 부정적이며, 내식성과 미세 거칠기 안정성은 높을수록 긍정적입니다."
+                                    : "Higher work hardening sensitivity is negative, while higher corrosion resistance and micro roughness stability are positive."}
+                                </li>
+                                <li>
+                                  {language === "ko" 
+                                    ? "위 도표들의 수치는 대표적 재료 물성값을 기반으로 한 평균 추정치입니다."
+                                    : "The values in the charts above are average estimates based on representative material property values."}
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                        
                         <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
                           <p className="mb-3"><strong className="font-semibold">{language === "ko" ? "비교 요약" : "Comparison Summary"}</strong></p>
                           <p className="mb-4">{language === "ko" 
@@ -2188,7 +2350,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                     <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
                       <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 text-center">
-                          {language === "ko" ? "음향특성 비교" : "Acoustic Characteristics Comparison"}
+                          {language === "ko" ? "음향특성 비교 개념도" : "Acoustic Characteristics Comparison Diagram"}
                         </h4>
                       </div>
                       
@@ -2358,14 +2520,19 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                               {language === "ko" ? "피치 안정성 지수" : "Pitch Stability Index"}
                             </p>
                             <p className="text-gray-600 dark:text-gray-400 mb-2">
-                              {language === "ko" 
-                                ? "계산: 단기 튜닝 오프셋(cent RMS) + 가압/온습도 가변 하중에서의 오프셋 변동"
-                                : "Calculation: Short-term tuning offset (cent RMS) + offset variation under pressure/temp/humidity"}
+                              <span className="font-medium">{language === "ko" ? "계산:" : "Calculation:"}</span> {language === "ko" 
+                                ? "단기 튜닝 오프셋(cent RMS) + 가압/온습도 가변 하중에서의 오프셋 변동(cent RMS)"
+                                : "Short-term tuning offset (cent RMS) + offset variation (cent RMS) under variable pressure/temperature/humidity loads"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400 mb-2">
+                              <span className="font-medium">{language === "ko" ? "의미:" : "Meaning:"}</span> {language === "ko" 
+                                ? "같은 강도로 쳤을 때 원래 음높이로 돌아오는 정도"
+                                : "The degree to which the instrument stably returns to the target pitch at the same strike intensity"}
                             </p>
                             <p className="text-gray-600 dark:text-gray-400">
-                              {language === "ko" 
-                                ? "의미: 같은 강도로 쳤을 때 원래 음높이로 돌아오는 정도. 영향: 주파수 변동 감소, 비팅/불협화음 방지, 장기 튜닝 안정성 유지에 기여"
-                                : "Meaning: How accurately a note returns to its original pitch when struck with the same intensity. Impact: Reduces frequency fluctuations, prevents beating/dissonance, contributes to long-term tuning stability"}
+                              <span className="font-medium">{language === "ko" ? "영향:" : "Impact:"}</span> {language === "ko" 
+                                ? "주파수 변동 감소, 비팅/불협화음 방지, 장기 튜닝 안정성 유지에 기여"
+                                : "Contributes to reduced frequency fluctuation/beating and long-term tuning stability"}
                             </p>
                           </div>
                           <div className="bg-gray-50 dark:bg-gray-800/50 rounded p-3 border border-gray-200 dark:border-gray-700">
@@ -2373,14 +2540,19 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                               {language === "ko" ? "하모닉스 일관성 지수" : "Harmonic Coherence Index"}
                             </p>
                             <p className="text-gray-600 dark:text-gray-400 mb-2">
-                              {language === "ko" 
-                                ? "계산: 기본음–옥타브(2F₀)–복합5도(3F₀) 주파수 오차(cent) + 위상 상관계수(ρ)"
-                                : "Calculation: F₀–2F₀–3F₀ frequency error (cent) + phase correlation coefficient (ρ)"}
+                              <span className="font-medium">{language === "ko" ? "계산:" : "Calculation:"}</span> {language === "ko" 
+                                ? "기본음–옥타브(2F₀)–복합5도(3F₀) 주파수 오차(cent) + 위상 상관계수 ρ (대역통과 필터링된 신호 간 상관)"
+                                : "Fundamental tone-octave (2F₀)−compound fifth (3F₀) frequency error (cent) + phase correlation coefficient ρ (correlation between band-pass filtered signals)"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400 mb-2">
+                              <span className="font-medium">{language === "ko" ? "의미:" : "Meaning:"}</span> {language === "ko" 
+                                ? "F₀, 2F₀, 3F₀가 위상과 주파수 측면에서 겹쳐서 하나의 음색으로 합성되는 정도"
+                                : "The degree to which F₀, 2F₀, and 3F₀ overlap in terms of phase and frequency, resulting in a single timbre"}
                             </p>
                             <p className="text-gray-600 dark:text-gray-400">
-                              {language === "ko" 
-                                ? "의미: 세 배음이 흔들림 없이 하나로 겹치는지 여부. 영향: 위상·주파수 정합 증가 시 명확하고 풍성한 소리, 비팅 감소"
-                                : "Meaning: Whether the three harmonics overlap as one without shaking. Impact: Clear and rich sounds with increased phase/frequency alignment, reduced beating"}
+                              <span className="font-medium">{language === "ko" ? "영향:" : "Impact:"}</span> {language === "ko" 
+                                ? "위상/주파수 정합 증가(↑) → 명확성/풍성함 증가(↑), 비팅 감소(↓)"
+                                : "Increased phase/frequency alignment (↑) leads to increased clarity/richness (↑) and decreased beating (↓)"}
                             </p>
                           </div>
                           <div className="bg-gray-50 dark:bg-gray-800/50 rounded p-3 border border-gray-200 dark:border-gray-700">
@@ -2388,14 +2560,19 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                               {language === "ko" ? "서스테인 지수" : "Sustain Index"}
                             </p>
                             <p className="text-gray-600 dark:text-gray-400 mb-2">
-                              {language === "ko" 
-                                ? "계산: 모달 감쇠 Q = f / Δf 또는 T30/T60로 측정한 정규화 값"
-                                : "Calculation: Normalized value measured by modal damping Q = f / Δf or T30/T60"}
+                              <span className="font-medium">{language === "ko" ? "계산:" : "Calculation:"}</span> {language === "ko" 
+                                ? "Q = F₀ / △f(−3 dB bandwidth) 또는 T30/T60 측정값의 정규화"
+                                : "Normalization of Q = F₀ / △f(−3 dB bandwidth) or T30/T60 measurement values"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400 mb-2">
+                              <span className="font-medium">{language === "ko" ? "의미:" : "Meaning:"}</span> {language === "ko" 
+                                ? "공명이 얼마나 길고 깨끗하게 지속되는지"
+                                : "How long and cleanly the resonance sustains"}
                             </p>
                             <p className="text-gray-600 dark:text-gray-400">
-                              {language === "ko" 
-                                ? "의미: 친 소리가 깨끗하게 지속되는 시간. 영향: 잔향과 공간감 형성, 명상·녹음·합주에서 체감 품질 결정"
-                                : "Meaning: How long a struck sound sustains cleanly. Impact: Forms reverberation and spatial presence, determines perceived quality in meditation, recording, and ensemble playing"}
+                              <span className="font-medium">{language === "ko" ? "영향:" : "Impact:"}</span> {language === "ko" 
+                                ? "잔향/공간감 형성, 녹음/합주에서 체감 품질 결정"
+                                : "Determines reverberation/spatial presence and perceived quality in recording/ensemble playing"}
                             </p>
                           </div>
                           <div className="bg-gray-50 dark:bg-gray-800/50 rounded p-3 border border-gray-200 dark:border-gray-700">
@@ -2403,14 +2580,19 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                               {language === "ko" ? "노이즈 바닥 순도" : "Noise Floor Purity"}
                             </p>
                             <p className="text-gray-600 dark:text-gray-400 mb-2">
-                              {language === "ko" 
-                                ? "계산: 스펙트럼 노이즈바닥(dBFS)과 톤/노이즈 비율을 SNR로 변환하여 점수화"
-                                : "Calculation: Scored by converting spectral noise floor (dBFS) and tonal/noise ratio into SNR"}
+                              <span className="font-medium">{language === "ko" ? "계산:" : "Calculation:"}</span> {language === "ko" 
+                                ? "스펙트럼 노이즈 바닥(dBFS)과 톤/노이즈 비율(SNR) (고조파 성분 대역 대 인접 노이즈 대역)의 정규화"
+                                : "Normalization of spectral noise floor (dBFS) and tone/noise ratio (SNR) (harmonic component band vs. adjacent noise band)"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400 mb-2">
+                              <span className="font-medium">{language === "ko" ? "의미:" : "Meaning:"}</span> {language === "ko" 
+                                ? "배경 노이즈가 낮고 주파수 성분이 명확한 정도"
+                                : "The degree to which background noise is low and frequency components are distinct"}
                             </p>
                             <p className="text-gray-600 dark:text-gray-400">
-                              {language === "ko" 
-                                ? "의미: 배경 노이즈가 낮고 순수한 톤이 명확한 정도. 영향: 미세한 배음 전달 향상, 녹음 품질과 라이브 명확도 개선"
-                                : "Meaning: Degree to which background noise is low and pure tones are clear. Impact: Enhances transmission of subtle harmonics, improves recording quality and live clarity"}
+                              <span className="font-medium">{language === "ko" ? "영향:" : "Impact:"}</span> {language === "ko" 
+                                ? "미세한 배음 전달 향상, 녹음 명확도, 라이브 투명도 향상"
+                                : "Enhances subtle overtone transmission, recording clarity, and live transparency"}
                             </p>
                           </div>
                           <div className="bg-gray-50 dark:bg-gray-800/50 rounded p-3 border border-gray-200 dark:border-gray-700">
@@ -2418,14 +2600,19 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                               {language === "ko" ? "어택 응답" : "Attack Response"}
                             </p>
                             <p className="text-gray-600 dark:text-gray-400 mb-2">
-                              {language === "ko" 
-                                ? "계산: 파형의 10→90% 상승시간(t_rise)의 역수를 정규화하여 평가"
-                                : "Calculation: Evaluated by normalizing the inverse of 10→90% rise time (t_rise) of the waveform"}
+                              <span className="font-medium">{language === "ko" ? "계산:" : "Calculation:"}</span> {language === "ko" 
+                                ? "파형 10→90% 상승시간(t_rise)의 역수의 정규화"
+                                : "Normalization of the inverse of the waveform 10→90% rise time (t_rise)"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400 mb-2">
+                              <span className="font-medium">{language === "ko" ? "의미:" : "Meaning:"}</span> {language === "ko" 
+                                ? "소리 시작 속도와 과도 명확도"
+                                : "Sound onset speed and transient clarity"}
                             </p>
                             <p className="text-gray-600 dark:text-gray-400">
-                              {language === "ko" 
-                                ? "의미: 키를 놓았을 때(또는 액션이 멈췄을 때) 소리가 즉각 멈추는 반응성. 영향: 타격 표현과 명확성에 영향, 연주 해상도 향상"
-                                : "Meaning: Responsiveness of a sound to stop immediately when a key is released (or action ceases). Impact: Influences percussive expression and articulation, increases performance resolution"}
+                              <span className="font-medium">{language === "ko" ? "영향:" : "Impact:"}</span> {language === "ko" 
+                                ? "타격 표현과 명확성 해상도에 영향"
+                                : "Affects strike expressiveness and articulation resolution"}
                             </p>
                           </div>
                           <div className="bg-gray-50 dark:bg-gray-800/50 rounded p-3 border border-gray-200 dark:border-gray-700">
@@ -2433,16 +2620,47 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                               {language === "ko" ? "구조 강건성" : "Structural Robustness"}
                             </p>
                             <p className="text-gray-600 dark:text-gray-400 mb-2">
-                              {language === "ko" 
-                                ? "계산: 좌굴/왜곡 한계 하중(F_buck)과 환경 사이클 후 표면 거칠기 변화(ΔRa)를 결합한 내구성 지표"
-                                : "Calculation: Durability index combining buckling/distortion limit load (F_buck) and change in surface roughness (ΔRa) after environmental cycles"}
+                              <span className="font-medium">{language === "ko" ? "계산:" : "Calculation:"}</span> {language === "ko" 
+                                ? "좌굴/변형 한계 하중(F_buck) + 환경 사이클 후 표면 거칠기 변화(△Ra)를 결합한 내구성 지표"
+                                : "Durability index combining buckling/deformation limit load (F_buck) + surface roughness change (△Ra) after environmental cycles"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400 mb-2">
+                              <span className="font-medium">{language === "ko" ? "의미:" : "Meaning:"}</span> {language === "ko" 
+                                ? "반복 사용과 환경 변화에 대한 형태와 표면 안정성"
+                                : "Shape and surface stability against repeated use and environmental changes"}
                             </p>
                             <p className="text-gray-600 dark:text-gray-400">
-                              {language === "ko" 
-                                ? "의미: 거친 사용에도 형태와 표면이 견딜 수 있는 강도. 영향: 형태·표면 안정성이 모든 음향 지표의 기초, 장기 피치·하모닉스 유지 보장"
-                                : "Meaning: Strength of shape and surface to withstand rough use. Impact: Shape and surface stability form the basis for all acoustic indicators, ensuring long-term pitch and harmonic maintenance"}
+                              <span className="font-medium">{language === "ko" ? "영향:" : "Impact:"}</span> {language === "ko" 
+                                ? "장기 피치와 하모닉스 유지의 기초"
+                                : "Foundation for long-term pitch and harmonics maintenance"}
                             </p>
                           </div>
+                        </div>
+                      </div>
+                      
+                      {/* 참고 문구 */}
+                      <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-3 text-center">
+                          {language === "ko" ? "참고" : "Note"}
+                        </p>
+                        <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4 border border-yellow-200 dark:border-yellow-800">
+                          <ul className="space-y-2 text-xs text-gray-700 dark:text-gray-300 list-disc list-inside">
+                            <li>
+                              {language === "ko" 
+                                ? "이 개념도는 대표적 재료 물성값(예: 탄성률, 강도)과 표준 음향 측정 방법을 기반으로 한 상대적 비교를 위한 개략 도식입니다."
+                                : "This conceptual diagram is a schematic for relative comparison based on representative material properties (e.g., elastic modulus, strength) and standard acoustic measurement methods."}
+                            </li>
+                            <li>
+                              {language === "ko" 
+                                ? "지표는 동일 조건(마이크, 거리, 타격 강도, 온습도, 위치)에서 무차원 정규화 점수로 계산됩니다."
+                                : "The index is calculated as a unitless normalized score under identical conditions (microphone, distance, strike intensity, temperature/humidity, position)."}
+                            </li>
+                            <li>
+                              {language === "ko" 
+                                ? "절대적 성능을 보장하지 않으며, 형상, 가공, 튜닝, 표면 상태에 따라 값이 달라질 수 있습니다."
+                                : "Absolute performance is not guaranteed, and values may vary depending on shape, processing, tuning, and surface condition."}
+                            </li>
+                          </ul>
                         </div>
                       </div>
                     </div>

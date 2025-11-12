@@ -37,3 +37,20 @@ body {
   font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
+
+/* Next.js 포털 요소 보호 - 외부 스크립트의 잘못된 접근 방지 */
+nextjs-portal {
+  pointer-events: none !important;
+  user-select: none !important;
+  touch-action: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+/* 포털 내부 콘텐츠는 정상적으로 작동하도록 허용 */
+nextjs-portal > * {
+  pointer-events: auto !important;
+  user-select: auto !important;
+  touch-action: auto !important;
+}
