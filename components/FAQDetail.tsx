@@ -9,6 +9,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import AcousticMaturityChart from "./AcousticMaturityChart";
 import TonefieldTensionDiagram from "./TonefieldTensionDiagram";
 import Harmonics123Plot from "./Harmonics123Plot";
+import OctaveResonancePlot from "./OctaveResonancePlot";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 interface FAQDetailProps {
@@ -2745,6 +2746,11 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                       </div>
                     </div>
 
+                    {/* 옥타브 공명 시각화 그래프 */}
+                    <div className="mb-6">
+                      <OctaveResonancePlot />
+                    </div>
+
                     {/* 새 악기에서 더 도드라져 들리는 이유 카드 */}
                     <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
                       <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
@@ -2755,15 +2761,15 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                       <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
                         <div>
                           <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">초기 상태</p>
-                          <p>새 악기는 기본음–옥타브–복합5도(1:2:3)의 모드 정렬이 매우 정확하고, 각 모드의 품질계수(Q)가 높아 스펙트럼 피크가 좁고 첨예합니다. 이 때문에 C5의 3F₀ 같은 고역 성분이 또렷하게 감지됩니다.</p>
+                          <p>새 악기는 기본음–옥타브–복합5도(1:2:3) 비율이 정밀하게 맞아 있으며, 각 모드의 Q값이 높아 에너지가 오래 유지됩니다. 이는 C4-C5의 위상이 주기적으로 결속되어 진폭이 커지는 도표의 이상적 상태에 해당하며, 옥타브·복합5도의 결속이 강해져 고역 성분이 또렷하게 들립니다.</p>
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">사용에 따른 변화</p>
-                          <p>반복 타격과 시간 경과로 국부 잔류응력이 일부 완화되고, 접착·지지와 같은 경계 감쇠 조건이 변하면서 각 모드의 고유주파수·감쇠율이 미세 재분포될 수 있습니다. 그 결과 고역 피크의 첨예도(Q)가 다소 낮아져 고음의 각이 완만하게 들릴 수 있습니다. 이 과정에서 소리는 자연스럽게 부드러워지며, 동시에 하모닉스의 본질적 기능(에너지 분포와 위상 정합)이 더 균형 있게 체감되어 핸드팬 고유의 풍성한 공명감이 강화되는 경향을 보입니다.</p>
+                          <p>시간이 지나며 금속 내부 응력 완화와 표면 변화로 미세한 위상 오차가 생기면 결속 구간이 느슨해집니다. 이때 공명은 부드러워지지만, 하모닉스의 에너지 분포가 고르게 되어 전체 울림이 안정된 방향으로 성숙합니다.</p>
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">리튠의 역할</p>
-                          <p>정기 리튠을 통해 1:2:3 모드 비와 위상정렬을 점검·보정하여 유지해 드립니다. 그 결과 C4 발음 시 상위 고조파의 에너지 분포와 위상 일치도가 안정화되어, 청감상 배음 밀도와 지속시간이 증가하는 경향을 확인하실 수 있습니다.</p>
+                          <p>정기 리튠은 1:2:3 모드 비율과 위상 정렬을 회복시켜 위 도표의 주기적 결속 상태를 유지하게 합니다. 그 결과 음의 청감상 밀도와 지속시간이 회복되어 새 악기와 같은 명료한 공명감을 되살립니다.</p>
                         </div>
                       </div>
                     </div>
