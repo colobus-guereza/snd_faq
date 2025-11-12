@@ -16,25 +16,19 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("ko");
+  // 항상 한국어로 고정
+  const [language] = useState<Language>("ko");
   const [mounted, setMounted] = useState(false);
 
   // 브라우저에서만 실행
   useEffect(() => {
     setMounted(true);
-    // 로컬 스토리지에서 언어 설정 불러오기
-    const savedLang = localStorage.getItem("language") as Language;
-    if (savedLang && (savedLang === "ko" || savedLang === "en")) {
-      setLanguageState(savedLang);
-    }
+    // 언어는 항상 한국어로 고정되므로 localStorage에서 읽지 않음
   }, []);
 
-  // 언어 설정 함수 (로컬 스토리지에 저장)
+  // 언어 설정 함수 (사용하지 않음 - 항상 한국어 고정)
   const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("language", lang);
-    }
+    // 언어는 항상 한국어로 고정되므로 변경하지 않음
   };
 
   // UI 텍스트 번역

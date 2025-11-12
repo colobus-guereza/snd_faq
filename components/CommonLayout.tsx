@@ -34,7 +34,7 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState("");
-  const { language, setLanguage, t } = useLanguage();
+  const { t } = useLanguage();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -178,36 +178,6 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <Header />
         <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          {/* 언어 선택 버튼 */}
-          {mounted && (
-            <div className="mb-4 flex justify-start items-center gap-4">
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  className={`text-sm transition-colors ${
-                    language === "ko"
-                      ? "font-bold text-gray-900"
-                      : "font-medium text-gray-700 hover:text-gray-900"
-                  }`}
-                  onClick={() => setLanguage("ko")}
-                >
-                  한국어
-                </button>
-                <span className="text-sm text-gray-400">/</span>
-                <button
-                  type="button"
-                  className={`text-sm transition-colors ${
-                    language === "en"
-                      ? "font-bold text-gray-900"
-                      : "font-medium text-gray-700 hover:text-gray-900"
-                  }`}
-                  onClick={() => setLanguage("en")}
-                >
-                  English
-                </button>
-              </div>
-            </div>
-          )}
           <div className="mb-10 flex items-center gap-2">
             <h1 
               onClick={handleTitleClick}

@@ -1009,12 +1009,18 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
             );
           })()}
           
-          {/* 소개 문단 (카드가 아닌 일반 텍스트) */}
-          {displayContent.split("\n\n").slice(0, 1).map((paragraph: string, index: number) => (
-            <p key={index} className="mb-6 text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-              {convertUrlsToLinks(paragraph)}
-            </p>
-          ))}
+          {/* 소개 문단 (카드가 아닌 일반 텍스트) - 첫 두 문단 표시 */}
+          {displayContent.split("\n\n").slice(0, 2).map((paragraph: string, index: number) => {
+            // 단계 제목(**숫자)로 시작하는 문단은 제외
+            if (paragraph.match(/^\*\*\d+(?:-\d+)?\)/)) {
+              return null;
+            }
+            return (
+              <p key={index} className="mb-6 text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                {convertUrlsToLinks(paragraph)}
+              </p>
+            );
+          })}
           
           {/* 자세히보기 버튼 */}
           <button
@@ -1917,7 +1923,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                   }
                   
                   // 용어 설명 섹션 제목
-                  if (trimmed.includes("용어 설명")) {
+                  if (trimmed.includes("용어 설명") || trimmed.includes("Terminology")) {
                     if (currentSection) sections.push(currentSection);
                     sections.push({ type: "summary-title", text: trimmed });
                     currentSection = null;
@@ -1925,7 +1931,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                   }
                   
                   // 개념 정의 (피치 드리프트, 급성 피치 이탈)
-                  if (/^피치 드리프트|^급성 피치 이탈/.test(trimmed)) {
+                  if (/^피치 드리프트|^급성 피치 이탈|^Pitch Drift|^Acute Pitch Shift/.test(trimmed)) {
                     if (currentSection) sections.push(currentSection);
                     currentSection = { type: "concept", title: trimmed, items: [] };
                     continue;
