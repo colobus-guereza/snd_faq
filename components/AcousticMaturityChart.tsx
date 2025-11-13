@@ -275,7 +275,7 @@ export default function AcousticMaturityChart() {
 
         {/* 권장 주기 */}
         <div>
-          <h4 className="font-medium mb-2 text-gray-900 dark:text-gray-100">권장 주기(운용 가이드)</h4>
+          <h4 className="font-medium mb-2 text-gray-900 dark:text-gray-100">권장 주기</h4>
           <ul className="list-disc list-inside space-y-1 text-sm text-gray-700 dark:text-gray-300 ml-2">
             <li><strong>일반/교육·연습 위주:</strong> 6–12개월.</li>
             <li><strong>공연·헤비 유즈:</strong> 3–6개월.</li>
