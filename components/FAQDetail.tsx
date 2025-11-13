@@ -41,6 +41,9 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   // "DC04 VS 스테인레스" 질문(id: "17")은 카드 형태로 표시
   const isDC04Page = faq.id === "17";
   
+  // "프레스 VS 메탈스피닝" 질문(id: "16")은 카드 형태로 표시
+  const isPressSpinningPage = faq.id === "16";
+  
   // "튜닝을 하면 소리가 더 좋아지는게 맞나요?" 질문(id: "32")은 그래프 표시
   const isTuningSoundPage = faq.id === "32";
   
@@ -131,11 +134,56 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   // "하모닉스 피치 연주법" 질문(id: "35")은 YouTube 영상 표시
   const isHarmonicsPage = faq.id === "35";
   
-  // "핸드팬 리듬 훈련" 질문(id: "36")은 YouTube 재생목록 표시
+  // "필수 훈련 리듬" 질문(id: "36")은 YouTube 재생목록 표시
   const isRhythmTrainingPage = faq.id === "36";
   
-  // "기초 테크닉" 질문(id: "37")은 YouTube 재생목록 표시
+  // "딩 연주법" 질문(id: "37")은 YouTube 재생목록 표시
   const isBasicTechniquePage = faq.id === "37";
+  
+  // "스네어 연주법" 질문(id: "38")은 YouTube 재생목록 표시
+  const isSnarePage = faq.id === "38";
+  
+  // "리듬 쪼개기" 질문(id: "39")은 YouTube 재생목록 표시
+  const isRhythmBreakdownPage = faq.id === "39";
+  
+  // "마디 수 세기" 질문(id: "40")은 YouTube 재생목록 표시
+  const isMeasureCountingPage = faq.id === "40";
+  
+  // "악기 표면이 벗겨져요." 질문(id: "4")은 카드 형태로 표시
+  const isSurfacePeelingPage = faq.id === "4";
+  
+  // "외부충격에 의해 악기 표면이 움푹 파였어요." 질문(id: "33")은 카드 형태로 표시
+  const isDentedSurfacePage = faq.id === "33";
+  
+  // "부딪치거나 떨어뜨려서 악기 옆면이 벌어졌어요." 질문(id: "11")은 카드 형태로 표시
+  const isSideOpenedPage = faq.id === "11";
+  
+  // "톤필드를 두드려도 소리가 나지 않아요." 질문(id: "28")은 카드 형태로 표시
+  const isNoSoundPage = faq.id === "28";
+  
+  // "배송 기간은 얼마나 걸리나요?" 질문(id: "2")은 카드 형태로 표시
+  const isShippingPeriodPage = faq.id === "2";
+  
+  // "배송조회 방법이 궁금합니다." 질문(id: "9")은 카드 형태로 표시
+  const isShippingTrackingPage = faq.id === "9";
+  
+  // "전자세금계산서나 현금영수증 발행되나요?" 질문(id: "8")은 카드 형태로 표시
+  const isReceiptPage = faq.id === "8";
+  
+  // "악기 보관 방법이 궁금해요." 질문(id: "12")은 카드 형태로 표시
+  const isStorageMethodPage = faq.id === "12";
+  
+  // "악기 관리 방법을 알려주세요." 질문(id: "5")은 카드 형태로 표시
+  const isMaintenanceMethodPage = faq.id === "5";
+  
+  // "악기 소리가 처음과 달리 불안하고 답답하게 들려요." 질문(id: "3")은 카드 형태로 표시
+  const isUnstableSoundPage = faq.id === "3";
+  
+  // "특정 저음을 두드릴 때 의도치 않은 고음 혹은 소음이 함께 들려요." 질문(id: "34")은 카드 형태로 표시
+  const isLowNoteNoisePage = faq.id === "34";
+  
+  // "언제 리튠을 받으면 좋을까요?" 질문(id: "27")은 카드 2개 형태로 표시
+  const isRetunePeriodPage = faq.id === "27";
 
   return (
     <div className="w-full">
@@ -220,33 +268,26 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
 
       {/* 1.2mm 스테인레스 질문 페이지 도표 - 항상 표시 */}
       {isStainlessPage && (
-        <div className="prose prose-sm max-w-none mb-8">
-          {/* 요약문 - 일반 소비자용 설명 */}
-          <div className="mb-6">
-            <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
-              {language === "ko" 
-                ? "핸드팬의 쉘 두께는 악기의 '뼈대'와 같습니다. 두꺼울수록 더 단단하고 견고해지지만, 동시에 더 무거워집니다."
-                : "The shell thickness of a handpan is like the 'skeleton' of the instrument. The thicker it is, the sturdier and more robust it becomes, but also heavier."
-              }
-            </p>
-            <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
-              {language === "ko"
-                ? "1.2mm 쉘은 더 두꺼운 구조로 인해 음향·기능적 성능에서도 차이를 보입니다. 음정 안정성이 약 58% 향상되어 온도나 타격 변화에도 음정이 덜 흔들리며, 소리가 더 선명하고 집중된 공진 특성을 보입니다. 강한 타격에도 형태 변형이 적어 왜곡 저항이 약 44% 향상되지만, 반면 가볍게 울리는 구동 용이성은 약 17% 낮아집니다. 요약하면 정확도·내구성·집중감이 필요한 연주에 유리한 '프로페셔널 톤' 성향입니다."
-                : "The 1.2mm shell, due to its thicker structure, shows differences in acoustic and functional performance. Pitch stability improves by approximately 58%, making the pitch less affected by temperature or impact changes, and the sound shows clearer and more focused resonance characteristics. Distortion resistance improves by approximately 44% with less deformation even under strong impacts, but ease of driving (resonating with light touch) decreases by approximately 17%. In summary, it favors a \"Professional Tone\" suitable for performances requiring accuracy, durability, and concentration."
-              }
-            </p>
-            <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
-              {language === "ko"
-                ? "반면 1.0mm 쉘은 가볍게 잘 울리는 편이라 작은 힘으로도 반응이 빠릅니다. 다만 두께가 얇아 강한 타격이나 외부 변화에 형상·피치가 상대적으로 민감합니다."
-                : "On the other hand, the 1.0mm shell resonates easily and responds quickly even to small force. However, its thinner thickness makes it relatively sensitive to strong impacts or external changes in shape and pitch."
-              }
-            </p>
-            <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-              {language === "ko"
-                ? "아래 도표는 1.0mm와 1.2mm 쉘의 구조적 특성을 비교한 것으로, 두께 차이에 따라 악기의 강도, 안정성, 반응성 등이 어떻게 달라지는지 보여줍니다."
-                : "The chart below compares the structural properties of 1.0mm and 1.2mm shells, showing how strength, stability, and responsiveness differ based on thickness."
-              }
-            </p>
+        <div className="mb-8">
+          {/* 나머지 내용 - 카드 형태로 표시 */}
+          <div className="space-y-6 mb-6">
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+              <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                {language === "ko"
+                  ? "1.2mm 쉘은 더 두꺼운 구조로 인해 음향·기능적 성능에서도 차이를 보입니다. 음정 안정성이 약 58% 향상되어 온도나 타격 변화에도 음정이 덜 흔들리며, 소리가 더 선명하고 집중된 공진 특성을 보입니다. 강한 타격에도 형태 변형이 적어 왜곡 저항이 약 44% 향상되지만, 반면 가볍게 울리는 구동 용이성은 약 17% 낮아집니다. 요약하면 정확도·내구성·집중감이 필요한 연주에 유리한 '프로페셔널 톤' 성향입니다."
+                  : "The 1.2mm shell, due to its thicker structure, shows differences in acoustic and functional performance. Pitch stability improves by approximately 58%, making the pitch less affected by temperature or impact changes, and the sound shows clearer and more focused resonance characteristics. Distortion resistance improves by approximately 44% with less deformation even under strong impacts, but ease of driving (resonating with light touch) decreases by approximately 17%. In summary, it favors a \"Professional Tone\" suitable for performances requiring accuracy, durability, and concentration."
+                }
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+              <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                {language === "ko"
+                  ? "반면 1.0mm 쉘은 가볍게 잘 울리는 편이라 작은 힘으로도 반응이 빠릅니다. 다만 두께가 얇아 강한 타격이나 외부 변화에 형상·피치가 상대적으로 민감합니다.\n\n아래 도표는 1.0mm와 1.2mm 쉘의 구조적 특성을 비교한 것으로, 두께 차이에 따라 악기의 강도, 안정성, 반응성 등이 어떻게 달라지는지 보여줍니다."
+                  : "On the other hand, the 1.0mm shell resonates easily and responds quickly even to small force. However, its thinner thickness makes it relatively sensitive to strong impacts or external changes in shape and pitch.\n\nThe chart below compares the structural properties of 1.0mm and 1.2mm shells, showing how strength, stability, and responsiveness differ based on thickness."
+                }
+              </div>
+            </div>
           </div>
 
           {/* 자세히보기 버튼 */}
@@ -273,8 +314,10 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
 
           {/* 차트 및 상세 내용 - 접기/펼치기 */}
           {isDetailExpanded && (
-            <div className="mt-6 -mx-4 sm:-mx-0">
-              <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800">
+            <div className="mt-6">
+              {/* 차트 및 상세 내용 */}
+              <div className="-mx-4 sm:-mx-0">
+                <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800">
                 {/* 차트 제목 */}
                 <div className="mb-6 text-center">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -606,19 +649,19 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                 </div>
               </div>
 
-            {/* 비교 시각 자료 */}
-            <div className="mt-8 space-y-6">
-            {/* 정량적 지표 - 통합 막대 그래프 */}
-            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800">
-              <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2 text-center">
-                {language === "ko" ? "쉘 두께에 따른 구조·음향 특성 비교 개념도" : "Conceptual Diagram for Comparing Structural and Acoustic Characteristics by Shell Thickness"}
-              </h4>
-              <p className="text-xs text-gray-600 dark:text-gray-400 text-center mb-4">
-                {language === "ko" ? "상대값 (1.0mm 기준)" : "Relative Value (Based on 1.0mm)"}
-              </p>
-              
-              {/* 참고 주석 */}
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3 border border-yellow-200 dark:border-yellow-800 mb-6 text-left">
+              {/* 비교 시각 자료 */}
+              <div className="mt-8 space-y-6">
+                {/* 정량적 지표 - 통합 막대 그래프 */}
+                <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800">
+                  <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2 text-center">
+                    {language === "ko" ? "쉘 두께에 따른 구조·음향 특성 비교 개념도" : "Conceptual Diagram for Comparing Structural and Acoustic Characteristics by Shell Thickness"}
+                  </h4>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 text-center mb-4">
+                    {language === "ko" ? "상대값 (1.0mm 기준)" : "Relative Value (Based on 1.0mm)"}
+                  </p>
+                  
+                  {/* 참고 주석 */}
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3 border border-yellow-200 dark:border-yellow-800 mb-6 text-left">
                 <p className="text-[10px] text-gray-700 dark:text-gray-300 leading-relaxed">
                   {language === "ko" 
                     ? "※ 본 비교는 동일 재질 조건(탄성률 E, 밀도 ρ 불변)에서 두께 변화(1.0 → 1.2mm)에 따른 구조·기계·음향 특성을 재료역학 식(D ∝ Eh³, f ∝ √(D/ph))을 기준으로 추정한 개념도로, 실제 수치는 쉘 곡률, 응력 상태, 열처리 조건에 따라 달라질 수 있습니다."
@@ -915,8 +958,9 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
               </div>
             </div>
           </div>
-            </div>
-          )}
+        </div>
+          </div>
+        )}
         </div>
       )}
 
@@ -1150,49 +1194,304 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
         </div>
       )}
 
-      {/* YouTube 재생목록 - 핸드팬 리듬 훈련 페이지 */}
+      {/* YouTube 재생목록 - 필수 훈련 리듬 페이지 */}
       {isRhythmTrainingPage && (
         <div className="mb-6 w-full">
           <div className="relative w-full" style={{ paddingBottom: "56.25%" }}> {/* 16:9 비율 */}
             <iframe
               className="absolute top-0 left-0 w-full h-full rounded-lg"
               src="https://www.youtube.com/embed/videoseries?list=PL4WnUbNHhe60m0lavGl2sKGMfrinGza-Q"
-              title={language === "ko" ? "핸드팬 리듬 훈련" : "Handpan Rhythm Training"}
+              title={language === "ko" ? "필수 훈련 리듬" : "Essential Training Rhythm"}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
           </div>
-          <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
-            {language === "en" 
-              ? "· Click the playlist button in the top right corner of the video to view all videos."
-              : "· 동영상 우측 상단 재생목록 버튼을 누르면 전체 동영상을 확인하실 수 있습니다."}
-          </p>
         </div>
       )}
 
-      {/* YouTube 재생목록 - 기초 테크닉 페이지 */}
+      {/* YouTube 재생목록 - 딩 연주법 페이지 */}
       {isBasicTechniquePage && (
         <div className="mb-6 w-full">
           <div className="relative w-full" style={{ paddingBottom: "56.25%" }}> {/* 16:9 비율 */}
             <iframe
               className="absolute top-0 left-0 w-full h-full rounded-lg"
-              src="https://www.youtube.com/embed/videoseries?list=PL4WnUbNHhe61QgyJ7JCQTfOwKwZrRkkQ8"
-              title={language === "ko" ? "기초 테크닉" : "Basic Technique"}
+              src="https://www.youtube.com/embed/NLTcWrUORJM?list=PL4WnUbNHhe61QgyJ7JCQTfOwKwZrRkkQ8"
+              title={language === "ko" ? "딩 연주법" : "Ding Playing Technique"}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
           </div>
-          <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
-            {language === "en" 
-              ? "· Click the playlist button in the top right corner of the video to view all videos."
-              : "· 동영상 우측 상단 재생목록 버튼을 누르면 전체 동영상을 확인하실 수 있습니다."}
-          </p>
         </div>
       )}
 
+      {/* YouTube 재생목록 - 스네어 연주법 페이지 */}
+      {isSnarePage && (
+        <div className="mb-6 w-full">
+          <div className="relative w-full" style={{ paddingBottom: "56.25%" }}> {/* 16:9 비율 */}
+            <iframe
+              className="absolute top-0 left-0 w-full h-full rounded-lg"
+              src="https://www.youtube.com/embed/j_f2IviO6jY?list=PL4WnUbNHhe61QgyJ7JCQTfOwKwZrRkkQ8"
+              title={language === "ko" ? "스네어 연주법" : "Snare Playing Technique"}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      )}
+
+      {/* YouTube 재생목록 - 리듬 쪼개기 페이지 */}
+      {isRhythmBreakdownPage && (
+        <div className="mb-6 w-full">
+          <div className="relative w-full" style={{ paddingBottom: "56.25%" }}> {/* 16:9 비율 */}
+            <iframe
+              className="absolute top-0 left-0 w-full h-full rounded-lg"
+              src="https://www.youtube.com/embed/Rzg86xliG88?list=PL4WnUbNHhe60m0lavGl2sKGMfrinGza-Q"
+              title={language === "ko" ? "리듬 쪼개기" : "Rhythm Breakdown"}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      )}
+
+      {/* YouTube 재생목록 - 마디 수 세기 페이지 */}
+      {isMeasureCountingPage && (
+        <div className="mb-6 w-full">
+          <div className="relative w-full" style={{ paddingBottom: "56.25%" }}> {/* 16:9 비율 */}
+            <iframe
+              className="absolute top-0 left-0 w-full h-full rounded-lg"
+              src="https://www.youtube.com/embed/uUyyPxoMG64?list=PL4WnUbNHhe60m0lavGl2sKGMfrinGza-Q"
+              title={language === "ko" ? "마디 수 세기" : "Counting Measures"}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      )}
+
+      {/* 악기 표면이 벗겨져요 페이지 - 카드 형태로 표시 */}
+      {isSurfacePeelingPage && displayContent && (
+        <div className="mb-8 space-y-6">
+          {(() => {
+            const paragraphs = displayContent.split("\n\n");
+            return paragraphs.map((paragraph: string, index: number) => (
+              <div
+                key={index}
+                className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow"
+              >
+                <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {convertUrlsToLinks(paragraph)}
+                </div>
+              </div>
+            ));
+          })()}
+        </div>
+      )}
+
+      {/* 외부충격에 의해 악기 표면이 움푹 파였어요 페이지 - 카드 형태로 표시 */}
+      {isDentedSurfacePage && displayContent && (
+        <div className="mb-8 space-y-6">
+          {(() => {
+            const paragraphs = displayContent.split("\n\n");
+            return paragraphs.map((paragraph: string, index: number) => (
+              <div
+                key={index}
+                className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow"
+              >
+                <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {convertUrlsToLinks(paragraph)}
+                </div>
+              </div>
+            ));
+          })()}
+        </div>
+      )}
+
+      {/* 부딪치거나 떨어뜨려서 악기 옆면이 벌어졌어요 페이지 - 카드 형태로 표시 */}
+      {isSideOpenedPage && displayContent && (
+        <div className="mb-8 space-y-6">
+          {(() => {
+            const paragraphs = displayContent.split("\n\n");
+            return paragraphs.map((paragraph: string, index: number) => (
+              <div
+                key={index}
+                className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow"
+              >
+                <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {convertUrlsToLinks(paragraph)}
+                </div>
+              </div>
+            ));
+          })()}
+        </div>
+      )}
+
+      {/* 톤필드를 두드려도 소리가 나지 않아요 페이지 - 카드 형태로 표시 */}
+      {isNoSoundPage && displayContent && (
+        <div className="mb-8 space-y-6">
+          {(() => {
+            const paragraphs = displayContent.split("\n\n");
+            return paragraphs.map((paragraph: string, index: number) => (
+              <div
+                key={index}
+                className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow"
+              >
+                <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {convertUrlsToLinks(paragraph)}
+                </div>
+              </div>
+            ));
+          })()}
+        </div>
+      )}
+
+      {/* 배송 기간은 얼마나 걸리나요 페이지 - 카드 형태로 표시 */}
+      {isShippingPeriodPage && displayContent && (
+        <div className="mb-8 space-y-6">
+          {(() => {
+            const paragraphs = displayContent.split("\n\n");
+            return paragraphs.map((paragraph: string, index: number) => (
+              <div
+                key={index}
+                className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow"
+              >
+                <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {convertUrlsToLinks(paragraph)}
+                </div>
+              </div>
+            ));
+          })()}
+        </div>
+      )}
+
+      {/* 배송조회 방법이 궁금합니다 페이지 - 카드 형태로 표시 */}
+      {isShippingTrackingPage && displayContent && (
+        <div className="mb-8">
+          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+              {convertUrlsToLinks(displayContent)}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 전자세금계산서나 현금영수증 발행되나요 페이지 - 카드 형태로 표시 */}
+      {isReceiptPage && displayContent && (
+        <div className="mb-8">
+          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+              {convertUrlsToLinks(displayContent)}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 악기 보관 방법이 궁금해요 페이지 - 카드 형태로 표시 */}
+      {isStorageMethodPage && displayContent && (
+        <div className="mb-8">
+          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+              {convertUrlsToLinks(displayContent)}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 악기 관리 방법을 알려주세요 페이지 - 카드 형태로 표시 */}
+      {isMaintenanceMethodPage && displayContent && (
+        <div className="mb-8 space-y-6">
+          {(() => {
+            const paragraphs = displayContent.split("\n\n");
+            return paragraphs.map((paragraph: string, index: number) => (
+              <div
+                key={index}
+                className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow"
+              >
+                <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {convertUrlsToLinks(paragraph)}
+                </div>
+              </div>
+            ));
+          })()}
+        </div>
+      )}
+
+      {/* 악기 소리가 처음과 달리 불안하고 답답하게 들려요 페이지 - 첫 번째 문단만 카드 형태로 표시 */}
+      {isUnstableSoundPage && displayContent && (
+        <div className="mb-8">
+          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+              {(() => {
+                const paragraphs = displayContent.split("\n\n");
+                return convertUrlsToLinks(paragraphs[0]);
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 특정 저음을 두드릴 때 의도치 않은 고음 혹은 소음이 함께 들려요 페이지 - 첫 번째 문단만 카드 형태로 표시 */}
+      {isLowNoteNoisePage && displayContent && (
+        <div className="mb-8">
+          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+              {(() => {
+                const paragraphs = displayContent.split("\n\n");
+                return convertUrlsToLinks(paragraphs[0]);
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 튜닝을 하면 소리가 더 좋아지는게 맞나요 페이지 - 첫 번째 문단만 카드 형태로 표시 */}
+      {isTuningSoundPage && displayContent && (
+        <div className="mb-8">
+          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+              {(() => {
+                const paragraphs = displayContent.split("\n\n");
+                return convertUrlsToLinks(paragraphs[0]);
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 언제 리튠을 받으면 좋을까요 페이지 - 카드 2개 형태로 표시 */}
+      {isRetunePeriodPage && displayContent && (
+        <div className="mb-8 space-y-6">
+          {(() => {
+            const paragraphs = displayContent.split("\n\n");
+            // 첫 번째 문단을 첫 번째 카드로 표시
+            const firstCard = paragraphs[0];
+            // 두 번째 카드에는 "권장 주기:"부터 항목들까지 포함 (paragraphs[1]부터 paragraphs[3]까지)
+            const secondCard = paragraphs.slice(1, 4).join("\n\n");
+            
+            return [
+              <div
+                key={0}
+                className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow"
+              >
+                <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                  {convertUrlsToLinks(firstCard)}
+                </div>
+              </div>,
+              <div
+                key={1}
+                className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow"
+              >
+                <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                  {convertUrlsToLinks(secondCard)}
+                </div>
+              </div>
+            ];
+          })()}
+        </div>
+      )}
 
       {/* DC04 VS 스테인레스 페이지 - 카드 형태로 표시 */}
-      {isDC04Page && displayContent && (
+      {isDC04Page && displayContent && !isSurfacePeelingPage && !isDentedSurfacePage && !isSideOpenedPage && !isNoSoundPage && !isShippingPeriodPage && !isShippingTrackingPage && !isReceiptPage && !isStorageMethodPage && !isMaintenanceMethodPage && !isUnstableSoundPage && !isLowNoteNoisePage && !isTuningSoundPage && !isRetunePeriodPage && (
         <>
           {/* 본문 카드 형태로 표시 */}
           <div className="mb-8 space-y-6">
@@ -1559,14 +1858,14 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                     </div>
                   </div>
                 </div>
-              </div>
+        </div>
             )}
           </div>
         </>
       )}
 
-      {/* 본문 텍스트 - displayContent가 있을 때만 표시 (제작과정 페이지 및 DC04 페이지 제외) */}
-      {displayContent && !isManufacturingPage && !isDC04Page && (
+      {/* 본문 텍스트 - displayContent가 있을 때만 표시 (제작과정 페이지, DC04 페이지, 표면 벗겨짐 페이지, 외부충격 표면 움푹 파임 페이지, 톤필드 소리 안남 페이지, 옆면 벌어짐 페이지, 배송 기간 페이지, 배송조회 페이지, 전자세금계산서 페이지, 악기 보관 방법 페이지, 악기 관리 방법 페이지, 언제 리튠을 받으면 좋을까요 페이지 제외) */}
+      {displayContent && !isManufacturingPage && !isDC04Page && !isPressSpinningPage && !isSurfacePeelingPage && !isDentedSurfacePage && !isNoSoundPage && !isSideOpenedPage && !isShippingPeriodPage && !isShippingTrackingPage && !isReceiptPage && !isStorageMethodPage && !isMaintenanceMethodPage && !isRetunePeriodPage && (
         <div className="prose prose-sm max-w-none">
           {isTuningCostPage ? (
             // 튜닝 비용 페이지는 견적서 양식으로 표시
@@ -1581,20 +1880,31 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                   basicInfo.push(paragraphs[i]);
                 }
                 
+                // 기본 정보를 2개의 카드로 나눔
+                // 첫 번째 카드: "개별노트 리튠비용" + 딩 사이즈 + 일반 사이즈 (basicInfo[0] + basicInfo[1])
+                const firstCardInfo = basicInfo.slice(0, 2).join("\n\n");
+                // 두 번째 카드: 할인 정보 + 택배 정보 (basicInfo[2])
+                const secondCardInfo = basicInfo.slice(2, 3).join("\n\n");
+                
                 return (
                   <>
-                    {/* 기본 요금 정보 */}
-                    <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                      {basicInfo.map((info: string, index: number) => (
-                        <p key={index} className="mb-4">
-                          {info.split("\n").map((line: string, lineIndex: number) => (
-                            <span key={lineIndex}>
-                  {line}
-                              {lineIndex < info.split("\n").length - 1 && <br />}
-                            </span>
-                          ))}
-                </p>
-              ))}
+                    {/* 기본 요금 정보 - 카드 2개 */}
+                    <div className="mb-8 space-y-6">
+                      {/* 첫 번째 카드 */}
+                      <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+                        <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                          {firstCardInfo}
+                        </div>
+                      </div>
+                      
+                      {/* 두 번째 카드 */}
+                      {secondCardInfo.trim() && (
+                        <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+                          <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                            {secondCardInfo}
+                          </div>
+                        </div>
+                      )}
                     </div>
                     
                     {/* 견적서 예시 */}
@@ -2243,18 +2553,12 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
               })()}
             </div>
           ) : isTuningSoundPage ? (
-            // 튜닝 소리 페이지는 첫 번째 문단은 항상 표시, 나머지는 접기/펼치기
+            // 튜닝 소리 페이지는 첫 번째 문단은 카드로 표시되고, 나머지는 접기/펼치기
             (() => {
               const paragraphs = displayContent.split("\n\n");
-              const firstParagraph = paragraphs[0];
               
               return (
                 <>
-                  {/* 첫 번째 문단 - 항상 표시 */}
-                  <p className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                    {convertUrlsToLinks(firstParagraph)}
-                  </p>
-                  
                   {/* 자세히보기 버튼 */}
                   <button
                     onClick={() => setIsTuningDetailExpanded(!isTuningDetailExpanded)}
@@ -2371,11 +2675,6 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
               
               return (
                 <>
-                  {/* 첫 번째 문단 - 항상 표시 */}
-                  <p className="mb-6 text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                    {convertUrlsToLinks(firstParagraph)}
-                  </p>
-                  
                   {/* 자세히보기 버튼 */}
                   {sections.length > 0 && (
                     <button
@@ -2484,15 +2783,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
               );
             })()
           ) : faq.id === "34" ? (
-            // id "34"는 기존 내용을 모두 표시하고, 그 아래에 별도의 자세히보기/간단히보기 영역 추가
+            // id "34"는 첫 번째 문단은 카드로 표시되고, 나머지 내용은 자세히보기/간단히보기 영역에 표시
             <>
-              {/* 기존 내용 전체 표시 */}
-              {displayContent.split("\n\n").map((paragraph: string, index: number) => (
-                <p key={index} className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                  {convertUrlsToLinks(paragraph)}
-                </p>
-              ))}
-              
               {/* 자세히보기/간단히보기 영역 */}
               <div className="mt-6">
                 <button
@@ -2794,7 +3086,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
               const paragraphs = displayContent.split("\n\n");
               const firstParagraph = paragraphs[0];
               
-              // FAQ ID 20의 경우 특별 처리: 첫 3개 문단은 본문 상단에 표시, 도표는 자세히보기 영역에 표시
+              // FAQ ID 20의 경우 특별 처리: 첫 2개 문단은 카드로 표시, 도표는 자세히보기 영역에 표시
               if (faq.id === "20") {
                 const secondParagraph = paragraphs[1] || "";
                 const thirdParagraph = paragraphs[2] || "";
@@ -2802,16 +3094,24 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                 
                 return (
                   <>
-                    {/* 첫 번째 문단 - 항상 표시 */}
-                    <p className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                      {convertUrlsToLinks(firstParagraph)}
-                    </p>
+                    {/* 첫 번째 문단 - 카드 형태로 표시 */}
+                    <div className="mb-6">
+                      <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+                        <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                          {convertUrlsToLinks(firstParagraph)}
+                        </div>
+                      </div>
+                    </div>
                     
-                    {/* 두 번째 문단 - 본문 상단에 표시 */}
+                    {/* 두 번째 문단 - 카드 형태로 표시 */}
                     {secondParagraph && (
-                      <p className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                        {convertUrlsToLinks(secondParagraph)}
-                      </p>
+                      <div className="mb-6">
+                        <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+                          <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                            {convertUrlsToLinks(secondParagraph)}
+                          </div>
+                        </div>
+                      </div>
                     )}
                     
                     {/* 세 번째 문단 - 본문 상단에 표시 */}
@@ -2857,6 +3157,67 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                             {convertUrlsToLinks(paragraph)}
                           </p>
                         ))}
+                      </div>
+                    )}
+                  </>
+                );
+              }
+              
+              // FAQ ID 19의 경우 첫 번째 문단을 카드로 표시
+              if (faq.id === "19") {
+                const remainingParagraphs = paragraphs.slice(1);
+                
+                return (
+                  <>
+                    {/* 첫 번째 문단 - 카드 형태로 표시 */}
+                    <div className="mb-6">
+                      <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+                        <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                          {convertUrlsToLinks(firstParagraph)}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* 자세히보기 버튼 */}
+                    {remainingParagraphs.length > 0 && (
+                      <button
+                        onClick={() => setIsContentDetailExpanded(!isContentDetailExpanded)}
+                        className="mt-4 flex items-center gap-2 text-sm text-[#14B8A6] hover:text-[#0d9488] transition-colors font-medium"
+                      >
+                        <span>{isContentDetailExpanded ? t("간단히보기") : t("자세히보기")}</span>
+                        <svg
+                          className={`w-4 h-4 transition-transform duration-200 ${isContentDetailExpanded ? 'rotate-180' : ''}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                    
+                    {/* 나머지 문단 - 접기/펼치기 */}
+                    {isContentDetailExpanded && (
+                      <div className="mt-4 space-y-6">
+                        {remainingParagraphs.length > 0 && remainingParagraphs.map((paragraph: string, index: number) => (
+                          <div key={index} className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+                            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                              {convertUrlsToLinks(paragraph)}
+                            </div>
+                          </div>
+                        ))}
+                        {/* FAQ ID "19"에만 그래프 추가 */}
+                        <div className="mt-6 w-full overflow-hidden">
+                          <div className="w-full max-w-full">
+                            <TonefieldTensionDiagram width={720} height={480} color="#14B8A6" />
+                          </div>
+                        </div>
                       </div>
                     )}
                   </>
@@ -2916,6 +3277,35 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                     </div>
                   )}
                 </>
+              );
+            })()
+          ) : isPressSpinningPage ? (
+            // FAQ ID 16의 경우 1~2문단을 첫 번째 카드, 3~4문단을 두 번째 카드로 표시
+            (() => {
+              const paragraphs = displayContent.split("\n\n");
+              const firstCardContent = paragraphs.slice(0, 2).join("\n\n"); // 1~2문단
+              const secondCardContent = paragraphs.slice(2, 4).join("\n\n"); // 3~4문단
+              
+              return (
+                <div className="space-y-6">
+                  {/* 첫 번째 카드: 1~2문단 */}
+                  {firstCardContent && (
+                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+                      <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                        {convertUrlsToLinks(firstCardContent)}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* 두 번째 카드: 3~4문단 */}
+                  {secondCardContent && (
+                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+                      <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                        {convertUrlsToLinks(secondCardContent)}
+                      </div>
+                    </div>
+                  )}
+                </div>
               );
             })()
           ) : (

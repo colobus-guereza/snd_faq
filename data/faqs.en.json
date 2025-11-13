@@ -68,7 +68,7 @@
     "title": "The instrument surface is peeling.",
     "category": "Repair",
     "views": 720,
-    "content": "Handpans naturally form a protective layer (oxide film) on their surface in reaction to oxygen and moisture in the air during use. This layer is a natural defense barrier that protects the metal from rust and corrosion, and it repeatedly peels off and reforms partially depending on factors such as hand oils, moisture, temperature changes, and friction during use.\n\nFine powder or stains that come off on your hands are remnants of the oxide film formed during heat treatment, and this is not rust but a phenomenon that occurs during the natural surface stabilization process of the metal. Through this process, the surface color gradually becomes uniform, and initial scratches or heat treatment spots may become less noticeable or disappear.\n\nDepending on usage frequency, it takes 2-3 years for the surface to naturally peel off completely. However, if you find the partial peeling of the instrument surface visually uncomfortable during this process, there is also a method to artificially create a uniform appearance by shortening the time through full surface sanding (the process of grinding with fine sandpaper).",
+    "content": "The surface of a handpan naturally forms a 'thin protective oxide film (oxide film)' through an oxidation reaction with oxygen and moisture in the air. This protective film creates a passivation state that protects the metal from corrosion, and the color and texture changes that appear on the surface are not defects but rather natural phenomena as the metal adapts to and stabilizes in its environment.\n\nDuring use, parts of the oxide film may wear away and reform depending on hand oils, humidity, temperature changes, friction, etc. This cycle gradually becomes uniform over time, and the surface becomes more stabilized. Therefore, minor discoloration or gloss changes do not affect sound or performance, and can be understood as a process in which the protective film regenerates and matures.",
     "tags": ["Repair", "Surface"]
   },
   {
@@ -201,7 +201,7 @@
   },
   {
     "id": "36",
-    "title": "Handpan Rhythm Training",
+    "title": "Essential Training Rhythm",
     "category": "Lessons",
     "views": 0,
     "content": "",
@@ -209,10 +209,34 @@
   },
   {
     "id": "37",
-    "title": "Basic Technique",
+    "title": "Ding Playing Technique",
     "category": "Lessons",
     "views": 0,
     "content": "",
     "tags": ["Playing Technique", "Basic", "Technique"]
+  },
+  {
+    "id": "38",
+    "title": "Snare Playing Technique",
+    "category": "Lessons",
+    "views": 0,
+    "content": "",
+    "tags": ["Playing Technique", "Basic", "Technique"]
+  },
+  {
+    "id": "39",
+    "title": "Rhythm Breakdown",
+    "category": "Lessons",
+    "views": 0,
+    "content": "",
+    "tags": ["Playing Technique", "Rhythm", "Training"]
+  },
+  {
+    "id": "40",
+    "title": "Counting Measures",
+    "category": "Lessons",
+    "views": 0,
+    "content": "",
+    "tags": ["Playing Technique", "Rhythm", "Training"]
   }
 ]
