@@ -1367,9 +1367,36 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
       {/* 배송조회 방법이 궁금합니다 페이지 - 카드 형태로 표시 */}
       {isShippingTrackingPage && displayContent && (
         <div className="mb-8">
-          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
-            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-              {convertUrlsToLinks(displayContent)}
+          <div className="bg-white dark:bg-gray-900 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+            <div className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed space-y-3">
+              {(() => {
+                const paragraphs = displayContent.split("\n\n");
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                const linkMatch = displayContent.match(urlRegex);
+                const linkUrl = linkMatch ? linkMatch[0] : null;
+                const textWithoutLink = paragraphs[0];
+                
+                return (
+                  <>
+                    <p className="whitespace-pre-line">{textWithoutLink}</p>
+                    {linkUrl && (
+                      <div className="pt-2">
+                        <a
+                          href={linkUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#14B8A6] hover:bg-[#0d9488] text-white text-sm sm:text-base font-medium rounded-lg transition-colors w-full sm:w-auto justify-center sm:justify-start"
+                        >
+                          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                          <span>인터넷우체국 배송조회 페이지 바로가기</span>
+                        </a>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
             </div>
           </div>
         </div>
