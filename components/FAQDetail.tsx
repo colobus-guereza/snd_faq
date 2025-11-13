@@ -10,6 +10,7 @@ import AcousticMaturityChart from "./AcousticMaturityChart";
 import TonefieldTensionDiagram from "./TonefieldTensionDiagram";
 import Harmonics123Plot from "./Harmonics123Plot";
 import OctaveResonancePlot from "./OctaveResonancePlot";
+import C4C5G6ResonancePlot from "./C4C5G6ResonancePlot";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 interface FAQDetailProps {
@@ -2737,7 +2738,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                         <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
                           <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">예시</p>
                           <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                            D Kurd 10에서 C4를 연주하실 때 옥타브인 C5가 공명할 수 있습니다. C5에는 2F₀(옥타브), 3F₀(복합5도: 한 옥타브 + 완전5도) 성분이 포함되어 있어, C4를 타격하셔도 귀에는 C5의 고역 성분이 동반되어 들릴 수 있습니다. 이는 핸드팬의 본질인 하모닉스 정렬(1:2:3 비)이 잘 구현되었다는 정상 특성입니다.
+                            D Kurd 10에서 C4를 연주하실 때 옥타브인 C5가 공명할 수 있습니다. C5에는 2F₀(옥타브), 3F₀(복합5도: 한 옥타브 + 완전5도) 성분이 포함되어 있어, C4를 타격하셔도 귀에는 C5의 고역 성분 C6와 G6가 동반되어 들릴 수 있습니다. 이는 핸드팬의 본질인 하모닉스 정렬(1:2:3 비)이 잘 구현되었다는 정상 특성입니다.
                           </p>
                           <p className="text-gray-700 dark:text-gray-300 leading-relaxed mt-2">
                             또한 이 현상은 조율이 정확하게 이루어졌기 때문에 나타나는 현상으로, 조율 품질의 긍정적 지표로 보아 주시면 됩니다.
@@ -2746,39 +2747,11 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                       </div>
                     </div>
 
-                    {/* 옥타브 공명 시각화 그래프 */}
-                    <div className="mb-6">
-                      <OctaveResonancePlot />
-                    </div>
-
-                    {/* 새 악기에서 더 도드라져 들리는 이유 카드 */}
-                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
-                      <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                          새 악기에서 더 도드라져 들리는 이유
-                        </h4>
-                      </div>
-                      <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
-                        <div>
-                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">초기 상태</p>
-                          <p>새 악기는 기본음–옥타브–복합5도(1:2:3) 비율이 정밀하게 맞아 있으며, 각 모드의 Q값이 높아 에너지가 오래 유지됩니다. 이는 C4-C5의 위상이 주기적으로 결속되어 진폭이 커지는 도표의 이상적 상태에 해당하며, 옥타브·복합5도의 결속이 강해져 고역 성분이 또렷하게 들립니다.</p>
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">사용에 따른 변화</p>
-                          <p>시간이 지나며 금속 내부 응력 완화와 표면 변화로 미세한 위상 오차가 생기면 결속 구간이 느슨해집니다. 이때 공명은 부드러워지지만, 하모닉스의 에너지 분포가 고르게 되어 전체 울림이 안정된 방향으로 성숙합니다.</p>
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">리튠의 역할</p>
-                          <p>정기 리튠은 1:2:3 모드 비율과 위상 정렬을 회복시켜 위 도표의 주기적 결속 상태를 유지하게 합니다. 그 결과 음의 청감상 밀도와 지속시간이 회복되어 새 악기와 같은 명료한 공명감을 되살립니다.</p>
-                        </div>
-                      </div>
-                    </div>
-
                     {/* 점검 방법 카드 */}
                     <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
                       <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                          이것이 정상인지 점검하는 간단한 방법
+                          간단한 점검 방법
                         </h4>
                       </div>
                       <div className="space-y-4">
@@ -2822,6 +2795,16 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                           C4–C5 공명이 가장 두드러지지만, D3을 연주하실 때 D4가 공명하여 딩 D3의 댐핑감과 울림이 더 풍성하게 느껴지는 것도 동일한 옥타브 공명입니다. 악기와의 청감 학습이 진행되면, 처음에는 인지하지 못하셨던 다른 옥타브 쌍에서도 공명이 점차 또렷하게 들리실 수 있습니다. 이는 조율이 잘 되었기 때문에 나타나는 현상이며, 조율 품질을 가늠하는 긍정적 지표로 이해해 주시면 좋습니다.
                         </p>
                       </div>
+                    </div>
+
+                    {/* 옥타브 공명 시각화 그래프 */}
+                    <div className="mb-6">
+                      <OctaveResonancePlot />
+                    </div>
+
+                    {/* C4-C5-G6 공명 그래프 */}
+                    <div className="mb-6">
+                      <C4C5G6ResonancePlot />
                     </div>
                   </div>
                 )}

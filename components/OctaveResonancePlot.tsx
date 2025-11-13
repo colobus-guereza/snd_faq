@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
@@ -13,6 +13,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
  */
 export default function OctaveResonancePlot() {
   const { language } = useLanguage();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 900, height: 360 });
 
   // Constants
   const f0 = 261.63; // C4
@@ -24,15 +26,31 @@ export default function OctaveResonancePlot() {
   const decay = 20; // per-second exponential decay for sympathetic C5
   const c5Gain = 0.33; // C5 amplitude relative to C4
 
-  // SVG viewport
-  const W = 900;
-  const H = 360;
+  // SVG viewport (원본 크기 - viewBox로 반응형 처리)
+  const W = 900; // 원본 너비
+  const H = 360; // 원본 높이
   const padL = 60;
   const padR = 20;
   const padT = 30;
   const padB = 40;
 
-  // Helpers
+  // 컨테이너 크기 감지 (표시용)
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth;
+        const maxWidth = Math.min(900, containerWidth - 32); // 패딩 고려
+        const calculatedHeight = (maxWidth / 900) * 360;
+        setDimensions({ width: maxWidth, height: calculatedHeight });
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
+
+  // Helpers (원본 크기 기준)
   const xScale = (t: number) =>
     padL + (t / duration) * (W - padL - padR);
   const yScale = (y: number) =>
@@ -88,12 +106,18 @@ export default function OctaveResonancePlot() {
 
       <p className="text-sm text-gray-700 dark:text-gray-300 max-w-3xl leading-relaxed text-center">
         {language === "ko" 
-          ? "C4(261.63 Hz)를 구동하면, 옥타브 관계인 C5(523.25 Hz)가 약하게 공명하여 함께 진동할 수 있습니다. 아래 그래프는 시간-진폭 좌표계에서 C4(파란색), C5(주황색), 합성파(검정색)를 그립니다. 수직 가이드선은 C4의 한 주기 T₀마다 찍혀 위상 정렬 지점을 표시합니다. f(C5)=2·f(C4)이므로, 매 T₀마다 두 파는 다시 위상이 맞습니다."
-          : "When C4 (261.63 Hz) is driven, C5 (523.25 Hz), which is in an octave relationship, can resonate weakly and vibrate together. The graph below plots C4 (blue), C5 (orange), and the composite wave (black) in a time-amplitude coordinate system. Vertical guide lines are marked at each C4 period T₀ to show phase alignment points. Since f(C5)=2·f(C4), the two waves realign in phase every T₀."}
+          ? "일반 악기에서는 C4를 연주하면 주로 C4만 진동하지만, 핸드팬은 각 톤필드 안에 C4(토닉)·C5(옥타브)·G5(복합5도)가 함께 세팅되어 있습니다. 따라서 C4를 칠 때 같은 음계의 옥타브(C5)가 위상적으로 결속되어 함께 공명하는 것은 자연스러운 현상입니다. 아래 그래프는 시간-진폭 좌표계에서 C4(파란색), C5(주황색), 합성파(검정색)를 그립니다. 수직 가이드선은 C4의 한 주기 T₀마다 찍혀 위상 정렬 지점을 표시합니다. f(C5)=2·f(C4)이므로, 매 T₀마다 두 파는 다시 위상이 맞습니다. 이는 조율이 잘된 악기일수록 더 명확하게 들리며, 핸드팬의 음질 품질을 나타내는 긍정적 징후입니다."
+          : "In general instruments, when C4 is played, mainly C4 vibrates, but in a handpan, C4 (tonic), C5 (octave), and G5 (compound 5th) are set together within each tone field. Therefore, when C4 is played, it is a natural phenomenon for the octave (C5) of the same scale to be phase-locked and resonate together. The graph below plots C4 (blue), C5 (orange), and the composite wave (black) in a time-amplitude coordinate system. Vertical guide lines are marked at each C4 period T₀ to show phase alignment points. Since f(C5)=2·f(C4), the two waves realign in phase every T₀. This is heard more clearly in well-tuned instruments and is a positive sign indicating the sound quality of the handpan."}
       </p>
 
-      <div className="overflow-x-auto rounded-xl ring-1 ring-gray-200 dark:ring-gray-700">
-        <svg width={W} height={H} role="img" aria-label={language === "ko" ? "옥타브 공명 차트" : "Octave resonance chart"}>
+      <div ref={containerRef} className="w-full overflow-x-auto rounded-xl ring-1 ring-gray-200 dark:ring-gray-700">
+        <svg 
+          viewBox={`0 0 ${W} ${H}`}
+          preserveAspectRatio="xMidYMid meet"
+          className="w-full h-auto"
+          role="img" 
+          aria-label={language === "ko" ? "옥타브 공명 차트" : "Octave resonance chart"}
+        >
           {/* Background */}
           <rect x={0} y={0} width={W} height={H} fill="#ffffff" className="dark:fill-gray-900" />
 
@@ -208,6 +232,67 @@ export default function OctaveResonancePlot() {
       </div>
 
       <DetailsPanel f0={f0} f1={f1} T0={T0} language={language} />
+
+      {/* 해설란 */}
+      <div className="w-full" style={{ maxWidth: `${W}px` }}>
+        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
+            {language === "ko" ? "도표 해설" : "Diagram Explanation"}
+          </h3>
+          <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+            <div>
+              <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                {language === "ko" ? "1. 옥타브 공명이란?" : "1. What is Octave Resonance?"}
+              </p>
+              <p>
+                {language === "ko"
+                  ? "도표에서 보시는 것처럼, C4를 연주하면 옥타브 관계인 C5가 자동으로 함께 진동합니다. 이는 두 음의 주파수 비가 정확히 1:2일 때 발생하는 자연스러운 현상입니다. 파란색(C4)과 주황색(C5) 파형이 주기적으로 겹치는 지점에서 검정색 합성파의 진폭이 커지는 것을 확인할 수 있습니다."
+                  : "As shown in the diagram, when C4 is played, C5, which is in an octave relationship, automatically vibrates together. This is a natural phenomenon that occurs when the frequency ratio of the two notes is exactly 1:2. You can see that at points where the blue (C4) and orange (C5) waveforms periodically overlap, the amplitude of the black composite wave increases."}
+              </p>
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                {language === "ko" ? "2. 왜 새 악기에서 더 도드라지게 들릴까요?" : "2. Why is it more prominent in new instruments?"}
+              </p>
+              <p>
+                {language === "ko"
+                  ? "새 악기는 C4와 C5의 주파수 비가 매우 정확하게 1:2로 맞춰져 있어, 위상이 주기적으로 완벽하게 결속됩니다. 도표의 수직 가이드선(k·T₀)이 보여주는 것처럼, 매 주기마다 두 파형이 같은 위상으로 만나 에너지가 최대한 증폭됩니다. 시간이 지나면서 미세한 조율 변화가 생기면 이 결속이 약간 느슨해져 공명 강도가 감소합니다."
+                  : "New instruments have a very precise 1:2 frequency ratio between C4 and C5, allowing phases to periodically bind perfectly. As shown by the vertical guide lines (k·T₀) in the diagram, the two waveforms meet at the same phase every cycle, maximizing energy amplification. Over time, subtle tuning changes cause this binding to loosen slightly, reducing resonance intensity."}
+              </p>
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                {language === "ko" ? "3. 이것이 정상인가요?" : "3. Is this normal?"}
+              </p>
+              <p>
+                {language === "ko"
+                  ? "네, 완전히 정상입니다. 오히려 조율이 정확하게 이루어졌다는 긍정적 신호입니다. 핸드팬은 여러 배음이 함께 울리며 풍성함을 만드는 악기이므로, 옥타브 공명은 핸드팬의 본질적인 특성입니다. C5의 고역 성분(C6, G6)이 함께 들리는 것도 하모닉스 정렬(1:2:3 비)이 잘 구현되었다는 의미입니다."
+                  : "Yes, it's completely normal. In fact, it's a positive sign that tuning has been done accurately. Since handpans are instruments that create richness by resonating multiple harmonics together, octave resonance is an essential characteristic of handpans. The high-frequency components of C5 (C6, G6) being heard together also indicates that harmonic alignment (1:2:3 ratio) has been well implemented."}
+              </p>
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                {language === "ko" ? "4. 시간이 지나면서 어떻게 변하나요?" : "4. How does it change over time?"}
+              </p>
+              <p>
+                {language === "ko"
+                  ? "사용하면서 금속 내부 응력이 완화되고 미세한 변형이 누적되면, C4와 C5의 주파수 비가 약간 어긋날 수 있습니다. 이 경우 도표에서 보이는 주기적 위상 결속이 완벽하지 않게 되어 공명 강도가 감소합니다. 하지만 이는 자연스러운 성숙 과정이며, 소리는 부드러워지면서 하모닉스의 에너지 분포가 더 균형 있게 됩니다. 정기 리튠을 통해 이 상태를 복원할 수 있습니다."
+                  : "As you use the instrument, internal stress in the metal relaxes and subtle deformations accumulate, which can slightly misalign the frequency ratio between C4 and C5. In this case, the periodic phase binding shown in the diagram becomes less perfect, reducing resonance intensity. However, this is a natural maturation process, and the sound becomes softer while the energy distribution of harmonics becomes more balanced. Regular retuning can restore this state."}
+              </p>
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                {language === "ko" ? "5. 연주에 어떻게 활용할 수 있나요?" : "5. How can I use this in playing?"}
+              </p>
+              <p>
+                {language === "ko"
+                  ? "옥타브 공명을 이해하면 더 풍부한 연주가 가능합니다. C4를 연주할 때 C5가 자연스럽게 함께 울리므로, 의도적으로 C5를 따로 연주하지 않아도 화음 같은 풍성함을 얻을 수 있습니다. 또한 연주 강도에 따라 공명 강도가 달라지므로, 다양한 다이내믹으로 표현력을 확장할 수 있습니다. 이는 핸드팬만의 독특한 음색 특성입니다."
+                  : "Understanding octave resonance enables richer playing. When you play C4, C5 naturally resonates together, so you can achieve chord-like richness without intentionally playing C5 separately. Additionally, since resonance intensity varies with playing strength, you can expand your expressive range with various dynamics. This is a unique timbral characteristic of handpans."}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

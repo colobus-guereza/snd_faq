@@ -87,7 +87,11 @@ export default function Harmonics123Plot() {
 
       {/* 그래프 */}
       <div className="w-full flex flex-col items-center gap-4">
-        <svg width={W} height={H} className="rounded-2xl shadow border bg-white dark:bg-gray-900">
+        <svg 
+          viewBox={`0 0 ${W} ${H}`}
+          preserveAspectRatio="xMidYMid meet"
+          className="w-full h-auto rounded-2xl shadow border bg-white dark:bg-gray-900"
+        >
         {/* axes */}
         <line x1={PAD} y1={PAD + plotH / 2} x2={PAD + plotW} y2={PAD + plotH / 2} stroke="#9ca3af" strokeWidth={1} />
         <line x1={PAD} y1={PAD} x2={PAD} y2={PAD + plotH} stroke="#9ca3af" strokeWidth={1} />
