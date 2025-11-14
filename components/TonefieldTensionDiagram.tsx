@@ -93,6 +93,235 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
   const gid = "tonefield-dimple-grad";
   const gid2 = "tonefield-body-grad";
   const gridId = "coordinate-grid";
+  
+  // ===== 전체 타원 색상 수동 조절 파라미터 =====
+  // 전체 타원의 색상을 독립적으로 조절할 수 있습니다.
+  const OUTER_ELLIPSE_COLOR_CONFIG = {
+    // 버건디 계열 색상 설정
+    color: "#991b1b",           // 버건디 색상 (hex 코드)
+    opacity: 0.65,              // 투명도
+  };
+  // ============================================
+
+  // ===== Left Fifth 그라데이션 수동 조절 파라미터 =====
+  // 좌측 영역이므로 중심점을 좌측으로 조정
+  const LEFT_FIFTH_GRADIENT_CONFIG = {
+    // 그라데이션 중심점 조정 (타원 중심 기준)
+    centerOffsetX: -0.3,        // X축 오프셋 (음수 = 좌측) - 현재: 좌측으로 30%
+    centerOffsetY: 0,           // Y축 오프셋 (0 = 중심)
+    radiusMultiplier: 1.2,      // 반경 배율 (1.2 = 20% 확대)
+    
+    // 투명 구간 설정
+    transparentRange: 20,        // 투명 유지 구간 (% 단위, 안쪽 호 이후)
+    transparentStep: 1,          // 투명 구간 stop 간격 (%)
+    
+    // 그라디언트 구간 설정
+    gradientStartOffset: 21,     // 그라디언트 시작 오프셋 (% 단위, 안쪽 호 이후)
+    gradientStep: 0.5,           // 그라디언트 구간 stop 간격 (%)
+    
+    // 색상 및 투명도 설정 (보라색 계열)
+    startColor: "#a855f7",       // 시작 색상 (밝은 보라색)
+    endColor: "#581c87",         // 끝 색상 (짙은 보라색)
+    maxOpacity: 0.65,           // 최대 투명도
+  };
+  // ============================================
+  
+  // 타원의 호(arc)를 그리는 헬퍼 함수
+  const createArcPath = (startAngle: number, endAngle: number, isOuter: boolean = true) => {
+    const radiusX = isOuter ? rx : dimpleRx;
+    const radiusY = isOuter ? ry : dimpleRy;
+    const centerX = cx;
+    const centerY = adjustedCy;
+    
+    const startX = centerX + radiusX * Math.cos(startAngle);
+    const startY = centerY + radiusY * Math.sin(startAngle);
+    const endX = centerX + radiusX * Math.cos(endAngle);
+    const endY = centerY + radiusY * Math.sin(endAngle);
+    
+    // 각도 차이 계산 (시계방향으로)
+    let angleDiff = endAngle - startAngle;
+    if (angleDiff < 0) angleDiff += 2 * Math.PI;
+    if (angleDiff > 2 * Math.PI) angleDiff -= 2 * Math.PI;
+    
+    // 큰 호인지 작은 호인지 결정
+    const largeArcFlag = angleDiff > Math.PI ? 1 : 0;
+    const sweepFlag = 1; // 시계방향
+    
+    return `A ${radiusX} ${radiusY} 0 ${largeArcFlag} ${sweepFlag} ${endX} ${endY}`;
+  };
+  
+  // Octave 영역 경로 생성 (상단 영역)
+  // 안쪽 타원 호(좌상→상→우상) + 직선(안쪽 우상→바깥 우상) + 바깥 타원 호(우상→상→좌상, 역방향) + 직선(바깥 좌상→안쪽 좌상)
+  const createOctavePath = () => {
+    // 각도 정의
+    const topleftAngle = (5 * Math.PI) / 4;  // 좌상 225°
+    const topAngle = (3 * Math.PI) / 2;      // 상 270°
+    const toprightAngle = (7 * Math.PI) / 4; // 우상 315°
+    
+    // 안쪽 타원의 좌상 점에서 시작
+    const innerTopleftX = cx + dimpleRx * Math.cos(topleftAngle);
+    const innerTopleftY = adjustedCy + dimpleRy * Math.sin(topleftAngle);
+    
+    // 안쪽 타원의 우상 점
+    const innerToprightX = cx + dimpleRx * Math.cos(toprightAngle);
+    const innerToprightY = adjustedCy + dimpleRy * Math.sin(toprightAngle);
+    
+    // 바깥 타원의 우상 점
+    const outerToprightX = cx + rx * Math.cos(toprightAngle);
+    const outerToprightY = adjustedCy + ry * Math.sin(toprightAngle);
+    
+    // 바깥 타원의 좌상 점
+    const outerTopleftX = cx + rx * Math.cos(topleftAngle);
+    const outerTopleftY = adjustedCy + ry * Math.sin(topleftAngle);
+    
+    // 안쪽 타원 호: 좌상 → 상 → 우상 (시계방향)
+    // 바깥 타원 호: 우상 → 상 → 좌상 (반시계방향으로 역방향)
+    
+    // 경로: 안쪽 좌상 → 안쪽 우상 (안쪽 호) → 바깥 우상 (직선) → 바깥 좌상 (바깥 호 역방향) → 안쪽 좌상 (직선)
+    return `M ${innerTopleftX} ${innerTopleftY}
+            ${createArcPath(topleftAngle, toprightAngle, false)}
+            L ${outerToprightX} ${outerToprightY}
+            ${createReverseArcPath(toprightAngle, topleftAngle, true)}
+            L ${innerTopleftX} ${innerTopleftY}
+            Z`;
+  };
+  
+  // 역방향 호를 그리는 헬퍼 함수 (반시계방향)
+  const createReverseArcPath = (startAngle: number, endAngle: number, isOuter: boolean = true) => {
+    const radiusX = isOuter ? rx : dimpleRx;
+    const radiusY = isOuter ? ry : dimpleRy;
+    const centerX = cx;
+    const centerY = adjustedCy;
+    
+    const startX = centerX + radiusX * Math.cos(startAngle);
+    const startY = centerY + radiusY * Math.sin(startAngle);
+    const endX = centerX + radiusX * Math.cos(endAngle);
+    const endY = centerY + radiusY * Math.sin(endAngle);
+    
+    // 각도 차이 계산 (반시계방향으로)
+    let angleDiff = endAngle - startAngle;
+    if (angleDiff > 0) angleDiff -= 2 * Math.PI;
+    if (angleDiff < -2 * Math.PI) angleDiff += 2 * Math.PI;
+    
+    // 큰 호인지 작은 호인지 결정
+    const largeArcFlag = Math.abs(angleDiff) > Math.PI ? 1 : 0;
+    const sweepFlag = 0; // 반시계방향
+    
+    return `A ${radiusX} ${radiusY} 0 ${largeArcFlag} ${sweepFlag} ${endX} ${endY}`;
+  };
+
+  // Tonic 영역 경로 생성 (하단 영역)
+  // 안쪽 타원 호(좌하→하→우하) + 직선(안쪽 우하→바깥 우하) + 바깥 타원 호(우하→하→좌하, 역방향) + 직선(바깥 좌하→안쪽 좌하)
+  const createTonicPath = () => {
+    // 각도 정의
+    const bottomleftAngle = (3 * Math.PI) / 4;  // 좌하 135°
+    const bottomAngle = Math.PI / 2;            // 하 90°
+    const bottomrightAngle = Math.PI / 4;       // 우하 45°
+    
+    // 안쪽 타원의 좌하 점
+    const innerBottomleftX = cx + dimpleRx * Math.cos(bottomleftAngle);
+    const innerBottomleftY = adjustedCy + dimpleRy * Math.sin(bottomleftAngle);
+    
+    // 안쪽 타원의 하 점
+    const innerBottomX = cx + dimpleRx * Math.cos(bottomAngle);
+    const innerBottomY = adjustedCy + dimpleRy * Math.sin(bottomAngle);
+    
+    // 안쪽 타원의 우하 점
+    const innerBottomrightX = cx + dimpleRx * Math.cos(bottomrightAngle);
+    const innerBottomrightY = adjustedCy + dimpleRy * Math.sin(bottomrightAngle);
+    
+    // 바깥 타원의 우하 점
+    const outerBottomrightX = cx + rx * Math.cos(bottomrightAngle);
+    const outerBottomrightY = adjustedCy + ry * Math.sin(bottomrightAngle);
+    
+    // 바깥 타원의 하 점
+    const outerBottomX = cx + rx * Math.cos(bottomAngle);
+    const outerBottomY = adjustedCy + ry * Math.sin(bottomAngle);
+    
+    // 바깥 타원의 좌하 점
+    const outerBottomleftX = cx + rx * Math.cos(bottomleftAngle);
+    const outerBottomleftY = adjustedCy + ry * Math.sin(bottomleftAngle);
+    
+    // 경로: 안쪽 우하 → 안쪽 좌하 (안쪽 호 시계방향) → 바깥 좌하 (직선) → 바깥 우하 (바깥 호 역방향) → 안쪽 우하 (직선)
+    return `M ${innerBottomrightX} ${innerBottomrightY}
+            ${createArcPath(bottomrightAngle, bottomleftAngle, false)}
+            L ${outerBottomleftX} ${outerBottomleftY}
+            ${createReverseArcPath(bottomleftAngle, bottomrightAngle, true)}
+            L ${innerBottomrightX} ${innerBottomrightY}
+            Z`;
+  };
+
+  // Left Fifth 영역 경로 생성 (좌측 영역)
+  // 안쪽 타원 호(좌상→좌→좌하) + 직선(안쪽 좌하→바깥 좌하) + 바깥 타원 호(좌하→좌→좌상, 역방향) + 직선(바깥 좌상→안쪽 좌상)
+  const createLeftFifthPath = () => {
+    // 각도 정의 - Octave/Tonic과 겹치지 않도록 조정
+    const topleftAngle = (5 * Math.PI) / 4 + 0.01;   // 좌상 225° + 약간 (Octave와 분리)
+    const leftAngle = Math.PI;                        // 좌 180°
+    const bottomleftAngle = (3 * Math.PI) / 4 - 0.01; // 좌하 135° - 약간 (Tonic과 분리)
+    
+    // 안쪽 타원의 좌상 점에서 시작
+    const innerTopleftX = cx + dimpleRx * Math.cos(topleftAngle);
+    const innerTopleftY = adjustedCy + dimpleRy * Math.sin(topleftAngle);
+    
+    // 안쪽 타원의 좌하 점
+    const innerBottomleftX = cx + dimpleRx * Math.cos(bottomleftAngle);
+    const innerBottomleftY = adjustedCy + dimpleRy * Math.sin(bottomleftAngle);
+    
+    // 바깥 타원의 좌하 점
+    const outerBottomleftX = cx + rx * Math.cos(bottomleftAngle);
+    const outerBottomleftY = adjustedCy + ry * Math.sin(bottomleftAngle);
+    
+    // 바깥 타원의 좌상 점
+    const outerTopleftX = cx + rx * Math.cos(topleftAngle);
+    const outerTopleftY = adjustedCy + ry * Math.sin(topleftAngle);
+    
+    // 안쪽 타원 호: 좌상 → 좌 → 좌하 (시계방향)
+    // 바깥 타원 호: 좌하 → 좌 → 좌상 (반시계방향으로 역방향)
+    
+    // 경로: 안쪽 좌하 → 안쪽 좌상 (안쪽 호 시계방향) → 바깥 좌상 (직선) → 바깥 좌하 (바깥 호 역방향) → 안쪽 좌하 (직선)
+    return `M ${innerBottomleftX} ${innerBottomleftY}
+            ${createArcPath(bottomleftAngle, topleftAngle, false)}
+            L ${outerTopleftX} ${outerTopleftY}
+            ${createReverseArcPath(topleftAngle, bottomleftAngle, true)}
+            L ${innerBottomleftX} ${innerBottomleftY}
+            Z`;
+  };
+
+  // Right Fifth 영역 경로 생성 (우측 영역)
+  // 안쪽 타원 호(우상→우→우하) + 직선(안쪽 우하→바깥 우하) + 바깥 타원 호(우하→우→우상, 역방향) + 직선(바깥 우상→안쪽 우상)
+  const createRightFifthPath = () => {
+    // 각도 정의 - Octave/Tonic과 겹치지 않도록 조정
+    const toprightAngle = (7 * Math.PI) / 4 - 0.01;  // 우상 315° - 약간 (Octave와 분리)
+    const rightAngle = 0;                             // 우 0°
+    const bottomrightAngle = Math.PI / 4 + 0.01;     // 우하 45° + 약간 (Tonic과 분리)
+    
+    // 안쪽 타원의 우상 점에서 시작
+    const innerToprightX = cx + dimpleRx * Math.cos(toprightAngle);
+    const innerToprightY = adjustedCy + dimpleRy * Math.sin(toprightAngle);
+    
+    // 안쪽 타원의 우하 점
+    const innerBottomrightX = cx + dimpleRx * Math.cos(bottomrightAngle);
+    const innerBottomrightY = adjustedCy + dimpleRy * Math.sin(bottomrightAngle);
+    
+    // 바깥 타원의 우하 점
+    const outerBottomrightX = cx + rx * Math.cos(bottomrightAngle);
+    const outerBottomrightY = adjustedCy + ry * Math.sin(bottomrightAngle);
+    
+    // 바깥 타원의 우상 점
+    const outerToprightX = cx + rx * Math.cos(toprightAngle);
+    const outerToprightY = adjustedCy + ry * Math.sin(toprightAngle);
+    
+    // 안쪽 타원 호: 우상 → 우 → 우하 (시계방향)
+    // 바깥 타원 호: 우하 → 우 → 우상 (반시계방향으로 역방향)
+    
+    // 경로: 안쪽 우상 → 안쪽 우하 (안쪽 호) → 바깥 우하 (직선) → 바깥 우상 (바깥 호 역방향) → 안쪽 우상 (직선)
+    return `M ${innerToprightX} ${innerToprightY}
+            ${createArcPath(toprightAngle, bottomrightAngle, false)}
+            L ${outerBottomrightX} ${outerBottomrightY}
+            ${createReverseArcPath(bottomrightAngle, toprightAngle, true)}
+            L ${innerToprightX} ${innerToprightY}
+            Z`;
+  };
 
   // 그리드 설정
   const gridSize = 40; // 그리드 간격 (픽셀)
@@ -149,12 +378,12 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             />
           </pattern>
           
-          {/* Outer radial gradient for the tonefield plate - 장력 표현 강화 */}
+          {/* Outer radial gradient for the tonefield plate - 버건디 계열 색상 */}
           <radialGradient id={gid2} cx="50%" cy="50%" r="100%">
-            <stop offset="0%" stopColor="#cbd5e1" stopOpacity="0.4" />
-            <stop offset="30%" stopColor="#94a3b8" stopOpacity="0.3" />
-            <stop offset="60%" stopColor="#64748b" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="#e2e8f0" stopOpacity="0.1" />
+            <stop offset="0%" stopColor={OUTER_ELLIPSE_COLOR_CONFIG.color} stopOpacity={OUTER_ELLIPSE_COLOR_CONFIG.opacity * 0.6} />
+            <stop offset="30%" stopColor={OUTER_ELLIPSE_COLOR_CONFIG.color} stopOpacity={OUTER_ELLIPSE_COLOR_CONFIG.opacity * 0.5} />
+            <stop offset="60%" stopColor={OUTER_ELLIPSE_COLOR_CONFIG.color} stopOpacity={OUTER_ELLIPSE_COLOR_CONFIG.opacity * 0.4} />
+            <stop offset="100%" stopColor={OUTER_ELLIPSE_COLOR_CONFIG.color} stopOpacity={OUTER_ELLIPSE_COLOR_CONFIG.opacity * 0.3} />
           </radialGradient>
           {/* Dimple gradient suggesting a shallow depression - 장력 집중 표현 */}
           <radialGradient id={gid} cx="50%" cy="45%" r="80%">
@@ -171,6 +400,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+          
         </defs>
 
         {/* 좌표평면 배경 그리드 - 라이트 모드 */}
@@ -234,106 +464,6 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           className="hidden dark:block"
         />
 
-        {/* 좌표축 라벨 - 작은 타원과 큰 타원 사이 중앙에 배치 */}
-        {/* 두 타원 사이의 중앙 위치 계산 */}
-        {/* 작은 타원 가장자리: adjustedCy ± dimpleRy, cx ± dimpleRx */}
-        {/* 큰 타원 가장자리: adjustedCy ± ry, cx ± rx */}
-        {/* 중앙 위치: (작은 타원 가장자리 + 큰 타원 가장자리) / 2 */}
-        {/* Y축 상단: Octav */}
-        <text
-          x={cx}
-          y={adjustedCy - (dimpleRy + ry) / 2}
-          textAnchor="middle"
-          fontSize="14"
-          fill={labelColorLight}
-          fontWeight="600"
-          className="dark:hidden"
-        >
-          Octav
-        </text>
-        <text
-          x={cx}
-          y={adjustedCy - (dimpleRy + ry) / 2}
-          textAnchor="middle"
-          fontSize="14"
-          fill={labelColorDark}
-          fontWeight="600"
-          className="hidden dark:block"
-        >
-          Octav
-        </text>
-
-        {/* Y축 하단: Tonic */}
-        <text
-          x={cx}
-          y={adjustedCy + (dimpleRy + ry) / 2}
-          textAnchor="middle"
-          fontSize="14"
-          fill={labelColorLight}
-          fontWeight="600"
-          className="dark:hidden"
-        >
-          Tonic
-        </text>
-        <text
-          x={cx}
-          y={adjustedCy + (dimpleRy + ry) / 2}
-          textAnchor="middle"
-          fontSize="14"
-          fill={labelColorDark}
-          fontWeight="600"
-          className="hidden dark:block"
-        >
-          Tonic
-        </text>
-
-        {/* X축 좌측: Fifth */}
-        <text
-          x={cx - (dimpleRx + rx) / 2}
-          y={adjustedCy + 5}
-          textAnchor="middle"
-          fontSize="14"
-          fill={labelColorLight}
-          fontWeight="600"
-          className="dark:hidden"
-        >
-          Fifth
-        </text>
-        <text
-          x={cx - (dimpleRx + rx) / 2}
-          y={adjustedCy + 5}
-          textAnchor="middle"
-          fontSize="14"
-          fill={labelColorDark}
-          fontWeight="600"
-          className="hidden dark:block"
-        >
-          Fifth
-        </text>
-
-        {/* X축 우측: Fifth */}
-        <text
-          x={cx + (dimpleRx + rx) / 2}
-          y={adjustedCy + 5}
-          textAnchor="middle"
-          fontSize="14"
-          fill={labelColorLight}
-          fontWeight="600"
-          className="dark:hidden"
-        >
-          Fifth
-        </text>
-        <text
-          x={cx + (dimpleRx + rx) / 2}
-          y={adjustedCy + 5}
-          textAnchor="middle"
-          fontSize="14"
-          fill={labelColorDark}
-          fontWeight="600"
-          className="hidden dark:block"
-        >
-          Fifth
-        </text>
 
         {/* 좌표축 눈금 표시 (숫자 라벨 없음) */}
         {/* X축 눈금 (중심 기준 좌우) */}
@@ -398,16 +528,52 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           );
         })}
 
-        {/* Outer ellipse (tonefield body) */}
+        {/* Outer ellipse (tonefield body) - fill 투명 처리로 영역 색상 표시 */}
         <ellipse
           cx={cx}
           cy={adjustedCy}
           rx={rx}
           ry={ry}
-          fill={`url(#${gid2})`}
+          fill="none"
           stroke="#334155"
           strokeWidth={2}
           filter="url(#soft)"
+        />
+        
+        {/* Octave 영역 (상단) - 빨간색 */}
+        <path
+          d={createOctavePath()}
+          fill="#ef4444"
+          fillOpacity="0.7"
+          stroke="#dc2626"
+          strokeWidth="3"
+        />
+
+        {/* Tonic 영역 (하단) - 파란색 */}
+        <path
+          d={createTonicPath()}
+          fill="#3b82f6"
+          fillOpacity="0.7"
+          stroke="#2563eb"
+          strokeWidth="3"
+        />
+
+        {/* Left Fifth 영역 (좌측) - 녹색 */}
+        <path
+          d={createLeftFifthPath()}
+          fill="#22c55e"
+          fillOpacity="0.7"
+          stroke="#16a34a"
+          strokeWidth="3"
+        />
+
+        {/* Right Fifth 영역 (우측) - 테스트 색상: 노란색 */}
+        <path
+          d={createRightFifthPath()}
+          fill="#eab308"
+          fillOpacity="0.7"
+          stroke="#ca8a04"
+          strokeWidth="3"
         />
 
         {/* Dimple (central elliptical depression) */}
@@ -460,6 +626,214 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           );
         })}
 
+        {/* 바깥 타원 8개 꼭지점 좌표 표시 (상하좌우 + 대각선 4곳) */}
+        {(() => {
+          // 상하좌우 4곳 (0°, 90°, 180°, 270°)
+          const cardinalAngles = [
+            { angle: 0, label: "우" },      // Right
+            { angle: Math.PI / 2, label: "하" },   // Bottom
+            { angle: Math.PI, label: "좌" },       // Left
+            { angle: (3 * Math.PI) / 2, label: "상" }, // Top
+          ];
+          
+          // 대각선 4곳 (45°, 135°, 225°, 315°)
+          // SVG 좌표계: y축이 아래로 갈수록 증가하므로 각도와 라벨이 반대
+          const diagonalAngles = [
+            { angle: Math.PI / 4, label: "우하" },      // 45° = 우하 (x+, y+)
+            { angle: (3 * Math.PI) / 4, label: "좌하" }, // 135° = 좌하 (x-, y+)
+            { angle: (5 * Math.PI) / 4, label: "좌상" }, // 225° = 좌상 (x-, y-)
+            { angle: (7 * Math.PI) / 4, label: "우상" }, // 315° = 우상 (x+, y-)
+          ];
+          
+          const allPoints = [...cardinalAngles, ...diagonalAngles];
+          
+          return allPoints.map((point, i) => {
+            // 바깥 타원 위의 점 계산
+            const pointX = cx + rx * Math.cos(point.angle);
+            const pointY = adjustedCy + ry * Math.sin(point.angle);
+            const radius = 6; // 원의 반지름
+            const labelOffset = 12; // 라벨 오프셋
+            
+            // 라벨 위치 계산 (원 밖으로)
+            const labelX = pointX + labelOffset * Math.cos(point.angle);
+            const labelY = pointY + labelOffset * Math.sin(point.angle);
+            
+            return (
+              <g key={`outer-point-${i}`} visibility="hidden">
+                <circle
+                  cx={pointX}
+                  cy={pointY}
+                  r={radius}
+                  fill="#ef4444"
+                  stroke="#ffffff"
+                  strokeWidth={1.5}
+                  className="dark:stroke-gray-900"
+                />
+                <text
+                  x={labelX}
+                  y={labelY}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontSize="11"
+                  fill="#ef4444"
+                  fontWeight="600"
+                  className="dark:fill-red-500"
+                >
+                  {point.label}
+                </text>
+                {/* 좌표 값 표시 (작은 글씨) */}
+                <text
+                  x={labelX}
+                  y={labelY + 14}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontSize="9"
+                  fill="#6b7280"
+                  className="dark:fill-gray-400"
+                >
+                  ({Math.round(pointX)}, {Math.round(pointY)})
+                </text>
+              </g>
+            );
+          });
+        })()}
+
+        {/* 안쪽 타원(딤플) 8개 꼭지점 좌표 표시 (상하좌우 + 대각선 4곳) */}
+        {(() => {
+          // 상하좌우 4곳 (0°, 90°, 180°, 270°)
+          const cardinalAngles = [
+            { angle: 0, label: "우" },      // Right
+            { angle: Math.PI / 2, label: "하" },   // Bottom
+            { angle: Math.PI, label: "좌" },       // Left
+            { angle: (3 * Math.PI) / 2, label: "상" }, // Top
+          ];
+          
+          // 대각선 4곳 (45°, 135°, 225°, 315°)
+          // SVG 좌표계: y축이 아래로 갈수록 증가하므로 각도와 라벨이 반대
+          const diagonalAngles = [
+            { angle: Math.PI / 4, label: "우하" },      // 45° = 우하 (x+, y+)
+            { angle: (3 * Math.PI) / 4, label: "좌하" }, // 135° = 좌하 (x-, y+)
+            { angle: (5 * Math.PI) / 4, label: "좌상" }, // 225° = 좌상 (x-, y-)
+            { angle: (7 * Math.PI) / 4, label: "우상" }, // 315° = 우상 (x+, y-)
+          ];
+          
+          const allPoints = [...cardinalAngles, ...diagonalAngles];
+          
+          return allPoints.map((point, i) => {
+            // 안쪽 타원(딤플) 위의 점 계산
+            const pointX = cx + dimpleRx * Math.cos(point.angle);
+            const pointY = adjustedCy + dimpleRy * Math.sin(point.angle);
+            const radius = 5; // 원의 반지름 (안쪽은 조금 작게)
+            const labelOffset = -10; // 라벨 오프셋 (안쪽으로)
+            
+            // 라벨 위치 계산 (원 안쪽으로)
+            const labelX = pointX + labelOffset * Math.cos(point.angle);
+            const labelY = pointY + labelOffset * Math.sin(point.angle);
+            
+            return (
+              <g key={`inner-point-${i}`} visibility="hidden">
+                <circle
+                  cx={pointX}
+                  cy={pointY}
+                  r={radius}
+                  fill="#3b82f6"
+                  stroke="#ffffff"
+                  strokeWidth={1.5}
+                  className="dark:stroke-gray-900"
+                />
+                <text
+                  x={labelX}
+                  y={labelY}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontSize="10"
+                  fill="#3b82f6"
+                  fontWeight="600"
+                  className="dark:fill-blue-400"
+                >
+                  {point.label}
+                </text>
+                {/* 좌표 값 표시 (작은 글씨) */}
+                <text
+                  x={labelX}
+                  y={labelY + 12}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontSize="8"
+                  fill="#6b7280"
+                  className="dark:fill-gray-400"
+                >
+                  ({Math.round(pointX)}, {Math.round(pointY)})
+                </text>
+              </g>
+            );
+          });
+        })()}
+
+        {/* 라벨 텍스트 - 최상위 레이어 (모든 도형 위에 표시) */}
+        {/* Y축 상단: Octav (옥타브 도형 중앙) */}
+        <text
+          x={cx}
+          y={adjustedCy - (dimpleRy + ry) / 2}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fontSize="16"
+          fill="#ffffff"
+          stroke="#000000"
+          strokeWidth="0.5"
+          fontWeight="700"
+          style={{ paintOrder: "stroke fill" }}
+        >
+          Octav
+        </text>
+
+        {/* Y축 하단: Tonic */}
+        <text
+          x={cx}
+          y={adjustedCy + (dimpleRy + ry) / 2}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fontSize="16"
+          fill="#ffffff"
+          stroke="#000000"
+          strokeWidth="0.5"
+          fontWeight="700"
+          style={{ paintOrder: "stroke fill" }}
+        >
+          Tonic
+        </text>
+
+        {/* X축 좌측: Fifth */}
+        <text
+          x={cx - (dimpleRx + rx) / 2}
+          y={adjustedCy}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fontSize="16"
+          fill="#ffffff"
+          stroke="#000000"
+          strokeWidth="0.5"
+          fontWeight="700"
+          style={{ paintOrder: "stroke fill" }}
+        >
+          Fifth
+        </text>
+
+        {/* X축 우측: Fifth */}
+        <text
+          x={cx + (dimpleRx + rx) / 2}
+          y={adjustedCy}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fontSize="16"
+          fill="#ffffff"
+          stroke="#000000"
+          strokeWidth="0.5"
+          fontWeight="700"
+          style={{ paintOrder: "stroke fill" }}
+        >
+          Fifth
+        </text>
 
       </svg>
     </div>
