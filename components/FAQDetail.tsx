@@ -1473,15 +1473,29 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
 
       {/* 튜닝을 하면 소리가 더 좋아지는게 맞나요 페이지 - 첫 번째 문단만 카드 형태로 표시 */}
       {isTuningSoundPage && displayContent && (
-        <div className="mb-8">
-          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
-            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-              {(() => {
-                const paragraphs = displayContent.split("\n\n");
-                return convertUrlsToLinks(paragraphs[0]);
-              })()}
-            </div>
-          </div>
+        <div className="mb-8 space-y-6">
+          {(() => {
+            const paragraphs = displayContent.split("\n\n");
+            return (
+              <>
+                {/* 첫 번째 문단 카드 */}
+                <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+                  <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {convertUrlsToLinks(paragraphs[0])}
+                  </div>
+                </div>
+                
+                {/* 두 번째와 세 번째 문단 카드들 */}
+                {paragraphs.slice(1, 3).map((paragraph: string, index: number) => (
+                  <div key={index} className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+                    <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                      {convertUrlsToLinks(paragraph)}
+                    </div>
+                  </div>
+                ))}
+              </>
+            );
+          })()}
         </div>
       )}
 
@@ -2580,10 +2594,8 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
               })()}
             </div>
           ) : isTuningSoundPage ? (
-            // 튜닝 소리 페이지는 첫 번째 문단은 카드로 표시되고, 나머지는 접기/펼치기
+            // 튜닝 소리 페이지는 그래프만 접기/펼치기
             (() => {
-              const paragraphs = displayContent.split("\n\n");
-              
               return (
                 <>
                   {/* 자세히보기 버튼 */}
@@ -2608,7 +2620,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                     </svg>
                   </button>
                   
-                  {/* 상세 내용 - 접기/펼치기 */}
+                  {/* 그래프만 접기/펼치기 */}
                   {isTuningDetailExpanded && (
                     <div className="mt-4">
                       <AcousticMaturityChart />

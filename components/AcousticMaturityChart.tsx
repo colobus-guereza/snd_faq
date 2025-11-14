@@ -136,11 +136,14 @@ export default function AcousticMaturityChart() {
         </p>
       </div>
       
-      {/* 그래프 A: 소리품질(조율 상태/청감 품질) */}
+      {/* 그래프 A. 소리품질 변화 개념도 (조율 상태·청감 품질) */}
       <div>
         <h3 className="text-lg font-medium mb-2 text-gray-900 dark:text-gray-100">
-          그래프 A: 소리품질(조율 상태/청감 품질)
+          그래프 A. 소리품질 변화 개념도 (조율 상태·청감 품질)
         </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 leading-relaxed">
+          그래프 A는 리튠 직후의 단기적 회복을, 그래프 B는 그 누적이 장기적으로 축적되는 과정을 의미합니다.
+        </p>
         <div className="h-96 w-full rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 relative" style={{ padding: '8px' }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 35, right: 35, bottom: 45, left: 55 }}>
@@ -216,11 +219,14 @@ export default function AcousticMaturityChart() {
         </div>
       </div>
 
-      {/* 그래프 B: 장기 음향성숙도 */}
+      {/* 그래프 B. 장기 음향성숙도 개념도 (정기 리튠 효과 모델) */}
       <div>
         <h3 className="text-lg font-medium mb-2 text-gray-900 dark:text-gray-100">
-          그래프 B: 장기 음향성숙도
+          그래프 B. 장기 음향성숙도 개념도 (정기 리튠 효과 모델)
         </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 leading-relaxed">
+          그래프 A의 단기적 회복이 반복되면서 누적되어 장기적으로 음향 성숙도가 향상되는 과정을 보여줍니다.
+        </p>
         <div className="h-96 w-full rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 relative" style={{ padding: '8px' }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 35, right: 35, bottom: 45, left: 55 }}>
@@ -246,7 +252,7 @@ export default function AcousticMaturityChart() {
                 name="정기리튠 실시" 
                 dot={false} 
                 strokeWidth={2}
-                stroke="#3b82f6"
+                stroke="#f97316"
               />
               <Line 
                 type="monotone" 
@@ -260,6 +266,13 @@ export default function AcousticMaturityChart() {
             </LineChart>
           </ResponsiveContainer>
         </div>
+      </div>
+
+      {/* 개념도 설명 문구 */}
+      <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg">
+        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed italic">
+          본 도표는 실제 측정값이 아닌, 정기리튠에 따른 조율 상태 및 음향성숙도 변화를 설명하기 위한 개념적 모델입니다.
+        </p>
       </div>
 
       {/* 메커니즘 및 권장 주기 */}
