@@ -159,17 +159,17 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
 
     // ===== 등고선 레벨 설정 =====
     // 바깥 타원 대비 비율 배열 (1.0 = 바깥 타원, 0.0 = 중심)
-    // 예: [0.85, 0.70, 0.55, 0.40] = 4개 등고선
-    ratios: [0.85, 0.70, 0.55, 0.40],
+    // 림 근처에 장력 집중 시각화: [0.70, 0.82, 0.90, 0.97]
+    ratios: [0.70, 0.82, 0.90, 0.97],
 
     // ===== 색상 및 스타일 =====
     color: "#3bb18f",                 // 등고선 색상 (청록색 계열)
-    baseOpacity: 0.35,                // 첫 번째 등고선 투명도
+    baseOpacity: 0.18,                // 첫 번째 등고선 투명도 (낮춤)
     opacityStep: 0.06,                // 안쪽으로 갈수록 투명도 감소량
 
     // ===== 선 두께 =====
-    outerStrokeWidth: 1.2,            // 가장 바깥 등고선 두께
-    innerStrokeWidth: 0.6,            // 안쪽 등고선 두께
+    outerStrokeWidth: 0.9,            // 가장 바깥 등고선 두께
+    innerStrokeWidth: 0.5,            // 안쪽 등고선 두께
   };
   // ============================================
 
@@ -180,11 +180,11 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
     enabled: true,                    // 장력선 활성화
 
     // ===== 선 개수 =====
-    count: 16,                        // 방사형 장력선 개수 (권장: 12, 16, 24)
+    count: 24,                        // 방사형 장력선 개수 (더 촘촘하게)
 
     // ===== 선 위치 설정 =====
-    startRatio: 0.58,                 // 시작 위치 (딤플 경계 근처)
-    endRatio: 0.97,                   // 끝 위치 (바깥 타원 가까이)
+    startRatio: 0.40,                 // 시작 위치 (딤플 안쪽에서 시작)
+    endRatio: 1.03,                   // 끝 위치 (림 약간 바깥까지)
 
     // ===== 색상 및 스타일 =====
     colorStart: "#2bb5a0",            // 시작 색상 (진한 청록색)
@@ -193,7 +193,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
     opacityEnd: 0.2,                  // 끝 투명도
 
     // ===== 선 두께 =====
-    strokeWidth: 1.1,                 // 선 두께
+    strokeWidth: 1.0,                 // 선 두께
   };
   // ============================================
 
@@ -205,7 +205,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
 
     // ===== 상단 하이라이트 (빛 반사) =====
     topColor: "white",                // 상단 색상
-    topOpacity: 0.25,                 // 상단 투명도
+    topOpacity: 0.35,                 // 상단 투명도 (강화)
     topOffset: 0,                     // 시작 위치 (0% = 최상단)
 
     // ===== 중간 투명 영역 =====
@@ -214,9 +214,9 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
     // ===== 하단 그림자 (장력으로 인한 음영) =====
     bottomColor: "black",             // 하단 색상
     bottomStartOffset: 0.70,          // 그림자 시작 (70%)
-    bottomStartOpacity: 0.08,         // 그림자 시작 투명도
+    bottomStartOpacity: 0.10,         // 그림자 시작 투명도 (강화)
     bottomEndOffset: 1.0,             // 그림자 끝 (100% = 최하단)
-    bottomEndOpacity: 0.18,           // 그림자 끝 투명도
+    bottomEndOpacity: 0.24,           // 그림자 끝 투명도 (강화)
   };
   // ============================================
 
@@ -247,13 +247,13 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
     enabled: true,                    // 인워드 섀도우 활성화
 
     // ===== 섀도우 범위 설정 =====
-    startOffset: 0.65,                // 섀도우 시작 지점 (65% - 중심 쪽은 영향 없음)
+    startOffset: 0.55,                // 섀도우 시작 지점 (55% - 중앙 쪽으로 당김)
     endOffset: 1.0,                   // 섀도우 끝 지점 (100% - 외곽 림)
 
     // ===== 색상 및 투명도 =====
     color: "#1f5b52",                 // 회청색 계열 진한 녹색
     startOpacity: 0.0,                // 시작 투명도 (중심 쪽)
-    endOpacity: 0.22,                 // 끝 투명도 (외곽 림)
+    endOpacity: 0.30,                 // 끝 투명도 (외곽 림, 강화)
   };
   // ============================================
 
@@ -528,22 +528,29 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             )}
           </radialGradient>
 
-          {/* 방사형 장력선용 그라데이션 (중심에서 바깥으로 투명도 감소) */}
+          {/* 방사형 장력선용 그라데이션 (림에서 가장 강하게) */}
           <radialGradient
             id="tension-line-stroke-gradient"
             cx="50%"
             cy="50%"
             r="70%"
           >
+            {/* 중심은 약하게 */}
             <stop
               offset="0%"
-              stopColor={RADIAL_TENSION_LINES_CONFIG.colorStart}
-              stopOpacity={RADIAL_TENSION_LINES_CONFIG.opacityStart}
+              stopColor="#2bb5a0"
+              stopOpacity={0.10}
             />
             <stop
+              offset="55%"
+              stopColor="#2bb5a0"
+              stopOpacity={0.35}
+            />
+            {/* 림 근처에서 가장 진하게 */}
+            <stop
               offset="100%"
-              stopColor={RADIAL_TENSION_LINES_CONFIG.colorEnd}
-              stopOpacity={RADIAL_TENSION_LINES_CONFIG.opacityEnd}
+              stopColor="#2bb5a0"
+              stopOpacity={0.80}
             />
           </radialGradient>
 
