@@ -119,45 +119,35 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
   };
   // ============================================
 
-  // ===== 8개 영역 개별 그라데이션 설정 =====
-  // 톤필드 8개 방향(상하좌우 4방향 + 대각선 4방향)의 하모닉스 튜닝 강도를 시각화
-  // 각 영역의 색상과 투명도를 독립적으로 조절 가능
-  const EIGHT_REGION_GRADIENT_CONFIG = {
-    startOpacity: 0.0,                // 안쪽 타원 투명도 (중심)
-    regions: {
-      octaveLeft: {                   // 1. 좌상 대각선 (225°~270°)
-        color: "transparent",
-        endOpacity: 0.0
-      },
-      octaveRight: {                  // 2. 우상 대각선 (270°~315°)
-        color: "transparent",
-        endOpacity: 0.0
-      },
-      rightTop: {                     // 3. 우측상단 (315°~360°)
-        color: "transparent",
-        endOpacity: 0.0
-      },
-      rightBottom: {                  // 4. 우측하단 (0°~45°)
-        color: "transparent",
-        endOpacity: 0.0
-      },
-      tonicRight: {                   // 5. 우하 대각선 (45°~90°)
-        color: "transparent",
-        endOpacity: 0.0
-      },
-      tonicLeft: {                    // 6. 좌하 대각선 (90°~135°)
-        color: "transparent",
-        endOpacity: 0.0
-      },
-      leftBottom: {                   // 7. 좌측하단 (135°~180°)
-        color: "transparent",
-        endOpacity: 0.0
-      },
-      leftTop: {                      // 8. 좌측상단 (180°~225°)
-        color: "transparent",
-        endOpacity: 0.0
-      },
-    }
+  // ===== 방사형 그라데이션 세부 설정 (도너츠 전체 영역) =====
+  // 톤필드 중심에서 바깥쪽으로 방사형 그라데이션 적용
+  // 360도 전방향 균일한 하모닉스 튜닝 강도 시각화
+  const RADIAL_GRADIENT_CONFIG = {
+    // ===== 기본 설정 =====
+    enabled: true,                    // 그라데이션 활성화 (false면 투명)
+
+    // ===== 색상 설정 =====
+    // 단일 색상 모드: useMultiColor=false일 때 color만 사용
+    // 다중 색상 모드: useMultiColor=true일 때 startColor → endColor
+    useMultiColor: false,             // 다중 색상 모드 활성화
+    color: "#86efac",                 // 단일 색상 (밝은 연녹색, 하모닉스 튜닝)
+    startColor: "#86efac",            // 시작 색상 (다중 색상 모드)
+    endColor: "#22c55e",              // 끝 색상 (다중 색상 모드)
+
+    // ===== 투명도 설정 =====
+    innerOpacity: 0.0,                // 딤플 경계 (중심) 투명도 (0.0~1.0)
+    midOpacity: 0.3,                  // 중간 지점 투명도 (옵션)
+    outerOpacity: 0.5,                // 바깥 타원 경계 투명도 (0.0~1.0)
+
+    // ===== 그라데이션 전환 지점 설정 =====
+    // offset 값: 0.0(중심) ~ 1.0(바깥) 사이
+    dimpleRatio: (dimpleRx / rx + dimpleRy / ry) / 2,  // 딤플 비율 (자동 계산)
+    useMidPoint: false,               // 중간 지점 활성화
+    midPoint: 0.7,                    // 중간 색상/투명도 적용 지점 (0.0~1.0)
+
+    // ===== 고급 설정 =====
+    gradientType: "smooth",           // 그라데이션 타입: "smooth" | "sharp"
+    // smooth: 부드러운 전환, sharp: 급격한 전환
   };
   // ============================================
   
@@ -185,104 +175,21 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
     return `A ${radiusX} ${radiusY} 0 ${largeArcFlag} ${sweepFlag} ${endX} ${endY}`;
   };
   
-  // ===== 8개 영역 경로 생성 함수 =====
-  // 범용 영역 경로 생성 함수
-  const createRegionPath = (startAngle: number, endAngle: number) => {
-    const innerStartX = cx + dimpleRx * Math.cos(startAngle);
-    const innerStartY = adjustedCy + dimpleRy * Math.sin(startAngle);
-    const innerEndX = cx + dimpleRx * Math.cos(endAngle);
-    const innerEndY = adjustedCy + dimpleRy * Math.sin(endAngle);
-    const outerEndX = cx + rx * Math.cos(endAngle);
-    const outerEndY = adjustedCy + ry * Math.sin(endAngle);
-    const outerStartX = cx + rx * Math.cos(startAngle);
-    const outerStartY = adjustedCy + ry * Math.sin(startAngle);
+  // ===== 도너츠 영역 경로 생성 함수 =====
+  // 바깥 타원과 안쪽 딤플 타원 사이의 도너츠 영역 생성
+  // fill-rule="evenodd"로 구멍 뚫린 효과
+  const createDonutPath = () => {
+    // 바깥 타원 전체 경로 (시계방향)
+    const outerStart = `M ${cx + rx} ${adjustedCy}`;
+    const outerArc1 = `A ${rx} ${ry} 0 0 1 ${cx - rx} ${adjustedCy}`;
+    const outerArc2 = `A ${rx} ${ry} 0 0 1 ${cx + rx} ${adjustedCy}`;
 
-    return `M ${innerStartX} ${innerStartY}
-            ${createArcPath(startAngle, endAngle, false)}
-            L ${outerEndX} ${outerEndY}
-            ${createReverseArcPath(endAngle, startAngle, true)}
-            L ${innerStartX} ${innerStartY}
-            Z`;
-  };
+    // 안쪽 딤플 타원 전체 경로 (반시계방향으로 구멍 생성)
+    const innerStart = `M ${cx + dimpleRx} ${adjustedCy}`;
+    const innerArc1 = `A ${dimpleRx} ${dimpleRy} 0 0 0 ${cx - dimpleRx} ${adjustedCy}`;
+    const innerArc2 = `A ${dimpleRx} ${dimpleRy} 0 0 0 ${cx + dimpleRx} ${adjustedCy}`;
 
-  // 1. Octave-Left: 좌상 대각선 영역 (225°~270°)
-  const createOctaveLeftPath = () => {
-    const topleftAngle = (5 * Math.PI) / 4;  // 225°
-    const topAngle = (3 * Math.PI) / 2;      // 270°
-    return createRegionPath(topleftAngle, topAngle);
-  };
-
-  // 2. Octave-Right: 우상 대각선 영역 (270°~315°)
-  const createOctaveRightPath = () => {
-    const topAngle = (3 * Math.PI) / 2;      // 270°
-    const toprightAngle = (7 * Math.PI) / 4; // 315°
-    return createRegionPath(topAngle, toprightAngle);
-  };
-
-  // 3. Right-Top: 우측상단 영역 (315°~0°/360°)
-  const createRightTopPath = () => {
-    const toprightAngle = (7 * Math.PI) / 4; // 315°
-    const rightAngle = 2 * Math.PI;          // 0°/360° (2π)
-    return createRegionPath(toprightAngle, rightAngle);
-  };
-
-  // 4. Right-Bottom: 우측하단 영역 (0°~45°)
-  const createRightBottomPath = () => {
-    const rightAngle = 0;                    // 0°
-    const bottomrightAngle = Math.PI / 4;    // 45°
-    return createRegionPath(rightAngle, bottomrightAngle);
-  };
-
-  // 5. Tonic-Right: 우하 대각선 영역 (45°~90°)
-  const createTonicRightPath = () => {
-    const bottomrightAngle = Math.PI / 4;    // 45°
-    const bottomAngle = Math.PI / 2;         // 90°
-    return createRegionPath(bottomrightAngle, bottomAngle);
-  };
-
-  // 6. Tonic-Left: 좌하 대각선 영역 (90°~135°)
-  const createTonicLeftPath = () => {
-    const bottomAngle = Math.PI / 2;         // 90°
-    const bottomleftAngle = (3 * Math.PI) / 4; // 135°
-    return createRegionPath(bottomAngle, bottomleftAngle);
-  };
-
-  // 7. Left-Bottom: 좌측하단 영역 (135°~180°)
-  const createLeftBottomPath = () => {
-    const bottomleftAngle = (3 * Math.PI) / 4; // 135°
-    const leftAngle = Math.PI;                 // 180°
-    return createRegionPath(bottomleftAngle, leftAngle);
-  };
-
-  // 8. Left-Top: 좌측상단 영역 (180°~225°)
-  const createLeftTopPath = () => {
-    const leftAngle = Math.PI;               // 180°
-    const topleftAngle = (5 * Math.PI) / 4;  // 225°
-    return createRegionPath(leftAngle, topleftAngle);
-  };
-  
-  // 역방향 호를 그리는 헬퍼 함수 (반시계방향)
-  const createReverseArcPath = (startAngle: number, endAngle: number, isOuter: boolean = true) => {
-    const radiusX = isOuter ? rx : dimpleRx;
-    const radiusY = isOuter ? ry : dimpleRy;
-    const centerX = cx;
-    const centerY = adjustedCy;
-    
-    const startX = centerX + radiusX * Math.cos(startAngle);
-    const startY = centerY + radiusY * Math.sin(startAngle);
-    const endX = centerX + radiusX * Math.cos(endAngle);
-    const endY = centerY + radiusY * Math.sin(endAngle);
-    
-    // 각도 차이 계산 (반시계방향으로)
-    let angleDiff = endAngle - startAngle;
-    if (angleDiff > 0) angleDiff -= 2 * Math.PI;
-    if (angleDiff < -2 * Math.PI) angleDiff += 2 * Math.PI;
-    
-    // 큰 호인지 작은 호인지 결정
-    const largeArcFlag = Math.abs(angleDiff) > Math.PI ? 1 : 0;
-    const sweepFlag = 0; // 반시계방향
-    
-    return `A ${radiusX} ${radiusY} 0 ${largeArcFlag} ${sweepFlag} ${endX} ${endY}`;
+    return `${outerStart} ${outerArc1} ${outerArc2} Z ${innerStart} ${innerArc1} ${innerArc2} Z`;
   };
 
   // ===== 각 영역의 대각선만 추출 (점선 적용용) =====
@@ -440,55 +347,53 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             </feMerge>
           </filter>
 
-          {/* 8개 영역 그라데이션 정의 (하모닉스 튜닝 강도 시각화) */}
+          {/* 방사형 그라데이션 정의 (도너츠 전체 영역, 360도 균일) */}
+          <radialGradient
+            id="radial-tonefield-gradient"
+            cx="50%"
+            cy="50%"
+            r="50%"
+            gradientUnits="objectBoundingBox"
+          >
+            {RADIAL_GRADIENT_CONFIG.enabled ? (
+              <>
+                {/* 중심 (0%) */}
+                <stop
+                  offset="0%"
+                  stopColor={RADIAL_GRADIENT_CONFIG.useMultiColor ? RADIAL_GRADIENT_CONFIG.startColor : RADIAL_GRADIENT_CONFIG.color}
+                  stopOpacity={RADIAL_GRADIENT_CONFIG.innerOpacity}
+                />
 
-          {/* 1. Octave-Left: 좌상 대각선 225°~270° */}
-          <linearGradient id="gradient-octave-left" x1="50%" y1="50%" x2="0%" y2="0%">
-            <stop offset="0%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.octaveLeft.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.startOpacity} />
-            <stop offset="100%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.octaveLeft.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.regions.octaveLeft.endOpacity} />
-          </linearGradient>
+                {/* 딤플 경계 (자동 계산) - 투명 유지 */}
+                <stop
+                  offset={`${RADIAL_GRADIENT_CONFIG.dimpleRatio * 100}%`}
+                  stopColor={RADIAL_GRADIENT_CONFIG.useMultiColor ? RADIAL_GRADIENT_CONFIG.startColor : RADIAL_GRADIENT_CONFIG.color}
+                  stopOpacity={RADIAL_GRADIENT_CONFIG.innerOpacity}
+                />
 
-          {/* 2. Octave-Right: 우상 대각선 270°~315° */}
-          <linearGradient id="gradient-octave-right" x1="50%" y1="50%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.octaveRight.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.startOpacity} />
-            <stop offset="100%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.octaveRight.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.regions.octaveRight.endOpacity} />
-          </linearGradient>
+                {/* 중간 지점 (옵션) */}
+                {RADIAL_GRADIENT_CONFIG.useMidPoint && (
+                  <stop
+                    offset={`${RADIAL_GRADIENT_CONFIG.midPoint * 100}%`}
+                    stopColor={RADIAL_GRADIENT_CONFIG.useMultiColor
+                      ? `color-mix(in srgb, ${RADIAL_GRADIENT_CONFIG.startColor} 50%, ${RADIAL_GRADIENT_CONFIG.endColor} 50%)`
+                      : RADIAL_GRADIENT_CONFIG.color}
+                    stopOpacity={RADIAL_GRADIENT_CONFIG.midOpacity}
+                  />
+                )}
 
-          {/* 3. Right-Top: 우측상단 315°~360° */}
-          <linearGradient id="gradient-right-top" x1="50%" y1="50%" x2="100%" y2="50%">
-            <stop offset="0%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.rightTop.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.startOpacity} />
-            <stop offset="100%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.rightTop.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.regions.rightTop.endOpacity} />
-          </linearGradient>
-
-          {/* 4. Right-Bottom: 우측하단 0°~45° */}
-          <linearGradient id="gradient-right-bottom" x1="50%" y1="50%" x2="100%" y2="50%">
-            <stop offset="0%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.rightBottom.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.startOpacity} />
-            <stop offset="100%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.rightBottom.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.regions.rightBottom.endOpacity} />
-          </linearGradient>
-
-          {/* 5. Tonic-Right: 우하 대각선 45°~90° */}
-          <linearGradient id="gradient-tonic-right" x1="50%" y1="50%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.tonicRight.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.startOpacity} />
-            <stop offset="100%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.tonicRight.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.regions.tonicRight.endOpacity} />
-          </linearGradient>
-
-          {/* 6. Tonic-Left: 좌하 대각선 90°~135° */}
-          <linearGradient id="gradient-tonic-left" x1="50%" y1="50%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.tonicLeft.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.startOpacity} />
-            <stop offset="100%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.tonicLeft.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.regions.tonicLeft.endOpacity} />
-          </linearGradient>
-
-          {/* 7. Left-Bottom: 좌측하단 135°~180° */}
-          <linearGradient id="gradient-left-bottom" x1="50%" y1="50%" x2="0%" y2="50%">
-            <stop offset="0%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.leftBottom.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.startOpacity} />
-            <stop offset="100%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.leftBottom.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.regions.leftBottom.endOpacity} />
-          </linearGradient>
-
-          {/* 8. Left-Top: 좌측상단 180°~225° */}
-          <linearGradient id="gradient-left-top" x1="50%" y1="50%" x2="0%" y2="50%">
-            <stop offset="0%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.leftTop.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.startOpacity} />
-            <stop offset="100%" stopColor={EIGHT_REGION_GRADIENT_CONFIG.regions.leftTop.color} stopOpacity={EIGHT_REGION_GRADIENT_CONFIG.regions.leftTop.endOpacity} />
-          </linearGradient>
+                {/* 바깥 타원 경계 (100%) */}
+                <stop
+                  offset="100%"
+                  stopColor={RADIAL_GRADIENT_CONFIG.useMultiColor ? RADIAL_GRADIENT_CONFIG.endColor : RADIAL_GRADIENT_CONFIG.color}
+                  stopOpacity={RADIAL_GRADIENT_CONFIG.outerOpacity}
+                />
+              </>
+            ) : (
+              // 그라데이션 비활성화 시 완전 투명
+              <stop offset="0%" stopColor="transparent" stopOpacity={0} />
+            )}
+          </radialGradient>
 
         </defs>
 
@@ -629,61 +534,12 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           filter="url(#soft)"
         />
 
-        {/* ===== 8개 영역 렌더링 (하모닉스 튜닝 강도 시각화) ===== */}
-
-        {/* 1. Octave-Left: 좌상 대각선 (225°~270°) */}
+        {/* ===== 도너츠 영역 렌더링 (방사형 그라데이션, 360도 균일) ===== */}
+        {/* 톤필드 전체 영역 - 중심에서 바깥으로 방사형 하모닉스 튜닝 강도 시각화 */}
         <path
-          d={createOctaveLeftPath()}
-          fill="url(#gradient-octave-left)"
-          stroke="none"
-        />
-
-        {/* 2. Octave-Right: 우상 대각선 (270°~315°) */}
-        <path
-          d={createOctaveRightPath()}
-          fill="url(#gradient-octave-right)"
-          stroke="none"
-        />
-
-        {/* 3. Right-Top: 우측상단 (315°~360°) */}
-        <path
-          d={createRightTopPath()}
-          fill="url(#gradient-right-top)"
-          stroke="none"
-        />
-
-        {/* 4. Right-Bottom: 우측하단 (0°~45°) */}
-        <path
-          d={createRightBottomPath()}
-          fill="url(#gradient-right-bottom)"
-          stroke="none"
-        />
-
-        {/* 5. Tonic-Right: 우하 대각선 (45°~90°) */}
-        <path
-          d={createTonicRightPath()}
-          fill="url(#gradient-tonic-right)"
-          stroke="none"
-        />
-
-        {/* 6. Tonic-Left: 좌하 대각선 (90°~135°) */}
-        <path
-          d={createTonicLeftPath()}
-          fill="url(#gradient-tonic-left)"
-          stroke="none"
-        />
-
-        {/* 7. Left-Bottom: 좌측하단 (135°~180°) */}
-        <path
-          d={createLeftBottomPath()}
-          fill="url(#gradient-left-bottom)"
-          stroke="none"
-        />
-
-        {/* 8. Left-Top: 좌측상단 (180°~225°) */}
-        <path
-          d={createLeftTopPath()}
-          fill="url(#gradient-left-top)"
+          d={createDonutPath()}
+          fill="url(#radial-tonefield-gradient)"
+          fillRule="evenodd"
           stroke="none"
         />
 
