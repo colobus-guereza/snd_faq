@@ -150,7 +150,29 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
     // smooth: 부드러운 전환, sharp: 급격한 전환
   };
   // ============================================
-  
+
+  // ===== 장력 등고선 설정 (Tension Contour Lines) =====
+  // 동심원 타원으로 장력 분포 레벨 시각화
+  const CONTOUR_CONFIG = {
+    // ===== 기본 설정 =====
+    enabled: true,                    // 등고선 활성화
+
+    // ===== 등고선 레벨 설정 =====
+    // 바깥 타원 대비 비율 배열 (1.0 = 바깥 타원, 0.0 = 중심)
+    // 예: [0.85, 0.70, 0.55, 0.40] = 4개 등고선
+    ratios: [0.85, 0.70, 0.55, 0.40],
+
+    // ===== 색상 및 스타일 =====
+    color: "#3bb18f",                 // 등고선 색상 (청록색 계열)
+    baseOpacity: 0.35,                // 첫 번째 등고선 투명도
+    opacityStep: 0.06,                // 안쪽으로 갈수록 투명도 감소량
+
+    // ===== 선 두께 =====
+    outerStrokeWidth: 1.2,            // 가장 바깥 등고선 두께
+    innerStrokeWidth: 0.6,            // 안쪽 등고선 두께
+  };
+  // ============================================
+
   // 타원의 호(arc)를 그리는 헬퍼 함수
   const createArcPath = (startAngle: number, endAngle: number, isOuter: boolean = true) => {
     const radiusX = isOuter ? rx : dimpleRx;
@@ -542,6 +564,22 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           fillRule="evenodd"
           stroke="none"
         />
+
+        {/* ===== 장력 등고선 (Tension Contour Lines) ===== */}
+        {/* 동심원 타원으로 장력 분포 레벨 시각화 */}
+        {CONTOUR_CONFIG.enabled && CONTOUR_CONFIG.ratios.map((ratio, i) => (
+          <ellipse
+            key={`contour-${i}`}
+            cx={cx}
+            cy={adjustedCy}
+            rx={rx * ratio}
+            ry={ry * ratio}
+            fill="none"
+            stroke={CONTOUR_CONFIG.color}
+            strokeWidth={i === 0 ? CONTOUR_CONFIG.outerStrokeWidth : CONTOUR_CONFIG.innerStrokeWidth}
+            strokeOpacity={CONTOUR_CONFIG.baseOpacity - i * CONTOUR_CONFIG.opacityStep}
+          />
+        ))}
 
         {/* ===== 대각선 (점선) ===== */}
         {/* 옥타브 대각선 */}
