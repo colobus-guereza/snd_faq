@@ -103,6 +103,22 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
   };
   // ============================================
 
+  // ===== 4개 영역 색상 설정 =====
+  // 기본 색상: 전체 톤필드와 동일한 기본 색상
+  const BASE_REGION_COLOR = {
+    color: OUTER_ELLIPSE_COLOR_CONFIG.color,  // 전체 톤필드 색상과 동일
+    opacity: OUTER_ELLIPSE_COLOR_CONFIG.opacity * 0.8,  // 약간 더 투명하게
+  };
+
+  // 개별 오버레이 색상 (null이면 기본 색상만 사용)
+  const REGION_OVERLAY_COLORS = {
+    octave: null,        // null = 기본 색상만 사용, 또는 { color: "#ef4444", opacity: 0.3 }
+    tonic: null,         // null = 기본 색상만 사용, 또는 { color: "#3b82f6", opacity: 0.3 }
+    leftFifth: null,     // null = 기본 색상만 사용, 또는 { color: "#22c55e", opacity: 0.3 }
+    rightFifth: null,    // null = 기본 색상만 사용, 또는 { color: "#eab308", opacity: 0.3 }
+  };
+  // ============================================
+
   // ===== Left Fifth 그라데이션 수동 조절 파라미터 =====
   // 좌측 영역이므로 중심점을 좌측으로 조정
   const LEFT_FIFTH_GRADIENT_CONFIG = {
@@ -150,7 +166,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
     return `A ${radiusX} ${radiusY} 0 ${largeArcFlag} ${sweepFlag} ${endX} ${endY}`;
   };
   
-  // Octave 영역 경로 생성 (상단 영역)
+  // ===== 옥타브(Octave) 영역 경로 생성 (상단 영역) =====
   // 안쪽 타원 호(좌상→상→우상) + 직선(안쪽 우상→바깥 우상) + 바깥 타원 호(우상→상→좌상, 역방향) + 직선(바깥 좌상→안쪽 좌상)
   const createOctavePath = () => {
     // 각도 정의
@@ -210,7 +226,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
     return `A ${radiusX} ${radiusY} 0 ${largeArcFlag} ${sweepFlag} ${endX} ${endY}`;
   };
 
-  // Tonic 영역 경로 생성 (하단 영역)
+  // ===== 토닉(Tonic) 영역 경로 생성 (하단 영역) =====
   // 안쪽 타원 호(좌하→하→우하) + 직선(안쪽 우하→바깥 우하) + 바깥 타원 호(우하→하→좌하, 역방향) + 직선(바깥 좌하→안쪽 좌하)
   const createTonicPath = () => {
     // 각도 정의
@@ -251,7 +267,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             Z`;
   };
 
-  // Left Fifth 영역 경로 생성 (좌측 영역)
+  // ===== 좌측5도(Left Fifth) 영역 경로 생성 (좌측 영역) =====
   // 안쪽 타원 호(좌상→좌→좌하) + 직선(안쪽 좌하→바깥 좌하) + 바깥 타원 호(좌하→좌→좌상, 역방향) + 직선(바깥 좌상→안쪽 좌상)
   const createLeftFifthPath = () => {
     // 각도 정의 - Octave/Tonic과 겹치지 않도록 조정
@@ -287,7 +303,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             Z`;
   };
 
-  // Right Fifth 영역 경로 생성 (우측 영역)
+  // ===== 우측5도(Right Fifth) 영역 경로 생성 (우측 영역) =====
   // 안쪽 타원 호(우상→우→우하) + 직선(안쪽 우하→바깥 우하) + 바깥 타원 호(우하→우→우상, 역방향) + 직선(바깥 우상→안쪽 우상)
   const createRightFifthPath = () => {
     // 각도 정의 - Octave/Tonic과 겹치지 않도록 조정
@@ -321,6 +337,83 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             ${createReverseArcPath(bottomrightAngle, toprightAngle, true)}
             L ${innerToprightX} ${innerToprightY}
             Z`;
+  };
+
+  // ===== 각 영역의 대각선만 추출 (점선 적용용) =====
+  const getOctaveDiagonalLines = () => {
+    const topleftAngle = (5 * Math.PI) / 4;
+    const toprightAngle = (7 * Math.PI) / 4;
+
+    const innerTopleftX = cx + dimpleRx * Math.cos(topleftAngle);
+    const innerTopleftY = adjustedCy + dimpleRy * Math.sin(topleftAngle);
+    const innerToprightX = cx + dimpleRx * Math.cos(toprightAngle);
+    const innerToprightY = adjustedCy + dimpleRy * Math.sin(toprightAngle);
+    const outerToprightX = cx + rx * Math.cos(toprightAngle);
+    const outerToprightY = adjustedCy + ry * Math.sin(toprightAngle);
+    const outerTopleftX = cx + rx * Math.cos(topleftAngle);
+    const outerTopleftY = adjustedCy + ry * Math.sin(topleftAngle);
+
+    return [
+      { x1: innerToprightX, y1: innerToprightY, x2: outerToprightX, y2: outerToprightY },
+      { x1: innerTopleftX, y1: innerTopleftY, x2: outerTopleftX, y2: outerTopleftY }
+    ];
+  };
+
+  const getTonicDiagonalLines = () => {
+    const bottomleftAngle = (3 * Math.PI) / 4;
+    const bottomrightAngle = Math.PI / 4;
+
+    const innerBottomleftX = cx + dimpleRx * Math.cos(bottomleftAngle);
+    const innerBottomleftY = adjustedCy + dimpleRy * Math.sin(bottomleftAngle);
+    const innerBottomrightX = cx + dimpleRx * Math.cos(bottomrightAngle);
+    const innerBottomrightY = adjustedCy + dimpleRy * Math.sin(bottomrightAngle);
+    const outerBottomrightX = cx + rx * Math.cos(bottomrightAngle);
+    const outerBottomrightY = adjustedCy + ry * Math.sin(bottomrightAngle);
+    const outerBottomleftX = cx + rx * Math.cos(bottomleftAngle);
+    const outerBottomleftY = adjustedCy + ry * Math.sin(bottomleftAngle);
+
+    return [
+      { x1: innerBottomrightX, y1: innerBottomrightY, x2: outerBottomrightX, y2: outerBottomrightY },
+      { x1: innerBottomleftX, y1: innerBottomleftY, x2: outerBottomleftX, y2: outerBottomleftY }
+    ];
+  };
+
+  const getLeftFifthDiagonalLines = () => {
+    const topleftAngle = (5 * Math.PI) / 4 + 0.01;
+    const bottomleftAngle = (3 * Math.PI) / 4 - 0.01;
+
+    const innerTopleftX = cx + dimpleRx * Math.cos(topleftAngle);
+    const innerTopleftY = adjustedCy + dimpleRy * Math.sin(topleftAngle);
+    const innerBottomleftX = cx + dimpleRx * Math.cos(bottomleftAngle);
+    const innerBottomleftY = adjustedCy + dimpleRy * Math.sin(bottomleftAngle);
+    const outerBottomleftX = cx + rx * Math.cos(bottomleftAngle);
+    const outerBottomleftY = adjustedCy + ry * Math.sin(bottomleftAngle);
+    const outerTopleftX = cx + rx * Math.cos(topleftAngle);
+    const outerTopleftY = adjustedCy + ry * Math.sin(topleftAngle);
+
+    return [
+      { x1: innerBottomleftX, y1: innerBottomleftY, x2: outerBottomleftX, y2: outerBottomleftY },
+      { x1: innerTopleftX, y1: innerTopleftY, x2: outerTopleftX, y2: outerTopleftY }
+    ];
+  };
+
+  const getRightFifthDiagonalLines = () => {
+    const toprightAngle = (7 * Math.PI) / 4 - 0.01;
+    const bottomrightAngle = Math.PI / 4 + 0.01;
+
+    const innerToprightX = cx + dimpleRx * Math.cos(toprightAngle);
+    const innerToprightY = adjustedCy + dimpleRy * Math.sin(toprightAngle);
+    const innerBottomrightX = cx + dimpleRx * Math.cos(bottomrightAngle);
+    const innerBottomrightY = adjustedCy + dimpleRy * Math.sin(bottomrightAngle);
+    const outerBottomrightX = cx + rx * Math.cos(bottomrightAngle);
+    const outerBottomrightY = adjustedCy + ry * Math.sin(bottomrightAngle);
+    const outerToprightX = cx + rx * Math.cos(toprightAngle);
+    const outerToprightY = adjustedCy + ry * Math.sin(toprightAngle);
+
+    return [
+      { x1: innerToprightX, y1: innerToprightY, x2: outerToprightX, y2: outerToprightY },
+      { x1: innerBottomrightX, y1: innerBottomrightY, x2: outerBottomrightX, y2: outerBottomrightY }
+    ];
   };
 
   // 그리드 설정
@@ -536,45 +629,98 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           ry={ry}
           fill="none"
           stroke="#334155"
-          strokeWidth={2}
+          strokeWidth={1}
           filter="url(#soft)"
         />
-        
-        {/* Octave 영역 (상단) - 빨간색 */}
+
+        {/* ===== 옥타브(Octave) 영역 (상단) - 투명 ===== */}
         <path
           d={createOctavePath()}
-          fill="#ef4444"
-          fillOpacity="0.7"
-          stroke="#dc2626"
-          strokeWidth="3"
+          fill="none"
+          stroke="none"
         />
 
-        {/* Tonic 영역 (하단) - 파란색 */}
+        {/* ===== 토닉(Tonic) 영역 (하단) - 투명 ===== */}
         <path
           d={createTonicPath()}
-          fill="#3b82f6"
-          fillOpacity="0.7"
-          stroke="#2563eb"
-          strokeWidth="3"
+          fill="none"
+          stroke="none"
         />
 
-        {/* Left Fifth 영역 (좌측) - 녹색 */}
+        {/* ===== 좌측5도(Left Fifth) 영역 (좌측) - 투명 ===== */}
         <path
           d={createLeftFifthPath()}
-          fill="#22c55e"
-          fillOpacity="0.7"
-          stroke="#16a34a"
-          strokeWidth="3"
+          fill="none"
+          stroke="none"
         />
 
-        {/* Right Fifth 영역 (우측) - 테스트 색상: 노란색 */}
+        {/* ===== 우측5도(Right Fifth) 영역 (우측) - 투명 ===== */}
         <path
           d={createRightFifthPath()}
-          fill="#eab308"
-          fillOpacity="0.7"
-          stroke="#ca8a04"
-          strokeWidth="3"
+          fill="none"
+          stroke="none"
         />
+
+        {/* ===== 대각선 (점선) ===== */}
+        {/* 옥타브 대각선 */}
+        {getOctaveDiagonalLines().map((line, idx) => (
+          <line
+            key={`octave-diagonal-${idx}`}
+            x1={line.x1}
+            y1={line.y1}
+            x2={line.x2}
+            y2={line.y2}
+            stroke="#334155"
+            strokeOpacity="0.5"
+            strokeWidth="0.5"
+            strokeDasharray="4 2"
+          />
+        ))}
+
+        {/* 토닉 대각선 */}
+        {getTonicDiagonalLines().map((line, idx) => (
+          <line
+            key={`tonic-diagonal-${idx}`}
+            x1={line.x1}
+            y1={line.y1}
+            x2={line.x2}
+            y2={line.y2}
+            stroke="#334155"
+            strokeOpacity="0.5"
+            strokeWidth="0.5"
+            strokeDasharray="4 2"
+          />
+        ))}
+
+        {/* 좌측5도 대각선 */}
+        {getLeftFifthDiagonalLines().map((line, idx) => (
+          <line
+            key={`leftfifth-diagonal-${idx}`}
+            x1={line.x1}
+            y1={line.y1}
+            x2={line.x2}
+            y2={line.y2}
+            stroke="#334155"
+            strokeOpacity="0.5"
+            strokeWidth="0.5"
+            strokeDasharray="4 2"
+          />
+        ))}
+
+        {/* 우측5도 대각선 */}
+        {getRightFifthDiagonalLines().map((line, idx) => (
+          <line
+            key={`rightfifth-diagonal-${idx}`}
+            x1={line.x1}
+            y1={line.y1}
+            x2={line.x2}
+            y2={line.y2}
+            stroke="#334155"
+            strokeOpacity="0.5"
+            strokeWidth="0.5"
+            strokeDasharray="4 2"
+          />
+        ))}
 
         {/* Dimple (central elliptical depression) */}
         <ellipse
@@ -584,7 +730,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           ry={dimpleRy}
           fill={`url(#${gid})`}
           stroke="#475569"
-          strokeWidth={1.5}
+          strokeWidth={0.75}
         />
 
         {/* Dimple contour rings to suggest depth */}
@@ -598,7 +744,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             fill="none"
             stroke="#64748b"
             strokeOpacity={0.25}
-            strokeWidth={idx === 2 ? 1.2 : 0.8}
+            strokeWidth={idx === 2 ? 0.6 : 0.4}
           />
         ))}
 
@@ -771,7 +917,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
         })()}
 
         {/* 라벨 텍스트 - 최상위 레이어 (모든 도형 위에 표시) */}
-        {/* Y축 상단: Octav (옥타브 도형 중앙) */}
+        {/* Y축 상단: Octave (옥타브 도형 중앙) */}
         <text
           x={cx}
           y={adjustedCy - (dimpleRy + ry) / 2}
@@ -784,7 +930,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           fontWeight="700"
           style={{ paintOrder: "stroke fill" }}
         >
-          Octav
+          Octave
         </text>
 
         {/* Y축 하단: Tonic */}
