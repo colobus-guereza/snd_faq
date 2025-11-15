@@ -220,6 +220,26 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
   };
   // ============================================
 
+  // ===== 벡터 필드 그라데이션 설정 (Vector Field Gradient) =====
+  // Conic gradient로 방향성 있는 장력 흐름 표현
+  const VECTOR_FIELD_CONFIG = {
+    // ===== 기본 설정 =====
+    enabled: true,                    // 벡터 필드 활성화
+
+    // ===== 방향성 줄무늬 설정 =====
+    stripeCount: 24,                  // 방사형 줄무늬 개수 (권장: 16, 24, 32)
+    stripeIntensity: 0.04,            // 줄무늬 강도 (3-5% 권장, 0.03~0.05)
+
+    // ===== 색상 설정 =====
+    baseColor: "#86efac",             // 기본 색상 (밝은 연녹색)
+    brightColor: "#a7f3c0",           // 밝은 색상 (하이라이트)
+    darkColor: "#6ee7a5",             // 어두운 색상 (그림자)
+
+    // ===== 투명도 설정 =====
+    baseOpacity: 0.4,                 // 기본 투명도
+  };
+  // ============================================
+
   // 타원의 호(arc)를 그리는 헬퍼 함수
   const createArcPath = (startAngle: number, endAngle: number, isOuter: boolean = true) => {
     const radiusX = isOuter ? rx : dimpleRx;
@@ -665,6 +685,52 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           fillRule="evenodd"
           stroke="none"
         />
+
+        {/* ===== 벡터 필드 그라데이션 (Vector Field Gradient) ===== */}
+        {/* 방향성 있는 장력 흐름 표현 - 각도별 미세한 밝기 변화 */}
+        {VECTOR_FIELD_CONFIG.enabled &&
+          Array.from({ length: VECTOR_FIELD_CONFIG.stripeCount }, (_, i) => {
+            const startAngle = (i / VECTOR_FIELD_CONFIG.stripeCount) * 2 * Math.PI;
+            const endAngle = ((i + 1) / VECTOR_FIELD_CONFIG.stripeCount) * 2 * Math.PI;
+
+            // 각도별 밝기 변화 (사인파 패턴)
+            const brightness = Math.sin(i * Math.PI / (VECTOR_FIELD_CONFIG.stripeCount / 4)) * VECTOR_FIELD_CONFIG.stripeIntensity;
+            const isBright = brightness > 0;
+            const intensity = Math.abs(brightness);
+
+            // 부채꼴 영역 path 생성 (안쪽 타원 → 바깥 타원)
+            const innerX1 = cx + dimpleRx * Math.cos(startAngle);
+            const innerY1 = adjustedCy + dimpleRy * Math.sin(startAngle);
+            const innerX2 = cx + dimpleRx * Math.cos(endAngle);
+            const innerY2 = adjustedCy + dimpleRy * Math.sin(endAngle);
+            const outerX1 = cx + rx * Math.cos(startAngle);
+            const outerY1 = adjustedCy + ry * Math.sin(startAngle);
+            const outerX2 = cx + rx * Math.cos(endAngle);
+            const outerY2 = adjustedCy + ry * Math.sin(endAngle);
+
+            // 각도 차이 계산
+            let angleDiff = endAngle - startAngle;
+            const largeArcFlag = angleDiff > Math.PI ? 1 : 0;
+
+            // 부채꼴 path: 안쪽 시작 → 안쪽 호 → 바깥쪽 끝으로 직선 → 바깥 호 역방향 → 안쪽 시작으로 직선
+            const sectorPath = `
+              M ${innerX1} ${innerY1}
+              A ${dimpleRx} ${dimpleRy} 0 ${largeArcFlag} 1 ${innerX2} ${innerY2}
+              L ${outerX2} ${outerY2}
+              A ${rx} ${ry} 0 ${largeArcFlag} 0 ${outerX1} ${outerY1}
+              Z
+            `;
+
+            return (
+              <path
+                key={`vector-field-${i}`}
+                d={sectorPath}
+                fill={isBright ? VECTOR_FIELD_CONFIG.brightColor : VECTOR_FIELD_CONFIG.darkColor}
+                fillOpacity={intensity}
+                stroke="none"
+              />
+            );
+          })}
 
         {/* ===== 소프트 멤브레인 쉐이딩 오버레이 ===== */}
         {/* 수직 방향 그라데이션으로 당겨진 금속 표면의 곡률과 장력 표현 */}
