@@ -279,6 +279,47 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
   };
   // ============================================
 
+  // ===== 장력 벨트 설정 (Tension Belt) =====
+  // 림 바로 안쪽의 밝은 장력 띠 - 막이 잡아당겨지는 경계 표현
+  const TENSION_BELT_CONFIG = {
+    // ===== 기본 설정 =====
+    enabled: true,                    // 장력 벨트 활성화
+
+    // ===== 위치 설정 =====
+    insetOffset: 6,                   // 림에서 안쪽으로 떨어진 거리 (px)
+
+    // ===== 그라데이션 설정 =====
+    innerStartOffset: 0.0,            // 내부 시작 (0%)
+    innerMidOffset: 0.75,             // 내부 중간 (75%)
+    beltStartOffset: 0.90,            // 벨트 시작 (90%)
+    beltEndOffset: 1.0,               // 벨트 끝 (100%)
+
+    // ===== 색상 및 투명도 =====
+    innerColor: "#ffffff",            // 내부 색상
+    beltColor: "#ffffff",             // 벨트 색상
+    innerOpacity: 0.0,                // 내부 투명도
+    beltPeakOpacity: 0.55,            // 벨트 최대 투명도 (90% 지점)
+    beltEndOpacity: 0.0,              // 벨트 끝 투명도 (100% 지점)
+  };
+  // ============================================
+
+  // ===== 림 앵커 설정 (Rim Anchors) =====
+  // 림을 고정하는 짧은 안쪽 방향 틱 - 360° 앵커 포인트 표현
+  const RIM_ANCHOR_CONFIG = {
+    // ===== 기본 설정 =====
+    enabled: true,                    // 림 앵커 활성화
+
+    // ===== 앵커 설정 =====
+    count: 24,                        // 앵커 개수 (장력선과 동일)
+    length: 8,                        // 안쪽으로 들어오는 길이 (px)
+
+    // ===== 색상 및 스타일 =====
+    stroke: "#166f5b",                // 진한 청록색
+    strokeWidth: 0.9,                 // 선 두께
+    opacity: 0.55,                    // 투명도
+  };
+  // ============================================
+
   // 타원의 호(arc)를 그리는 헬퍼 함수
   const createArcPath = (startAngle: number, endAngle: number, isOuter: boolean = true) => {
     const radiusX = isOuter ? rx : dimpleRx;
@@ -610,6 +651,38 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             />
           </radialGradient>
 
+          {/* 장력 벨트용 그라데이션 (림 바로 안쪽의 밝은 띠) */}
+          <radialGradient
+            id="tension-belt-gradient"
+            cx="50%"
+            cy="50%"
+            r="60%"
+          >
+            {/* 내부는 거의 영향 없음 */}
+            <stop
+              offset={`${TENSION_BELT_CONFIG.innerStartOffset * 100}%`}
+              stopColor={TENSION_BELT_CONFIG.innerColor}
+              stopOpacity={TENSION_BELT_CONFIG.innerOpacity}
+            />
+            <stop
+              offset={`${TENSION_BELT_CONFIG.innerMidOffset * 100}%`}
+              stopColor={TENSION_BELT_CONFIG.innerColor}
+              stopOpacity={TENSION_BELT_CONFIG.innerOpacity}
+            />
+            {/* 림 바로 안쪽에서 급격히 밝아짐 */}
+            <stop
+              offset={`${TENSION_BELT_CONFIG.beltStartOffset * 100}%`}
+              stopColor={TENSION_BELT_CONFIG.beltColor}
+              stopOpacity={TENSION_BELT_CONFIG.beltPeakOpacity}
+            />
+            {/* 림 근처에서 다시 사라짐 */}
+            <stop
+              offset={`${TENSION_BELT_CONFIG.beltEndOffset * 100}%`}
+              stopColor={TENSION_BELT_CONFIG.beltColor}
+              stopOpacity={TENSION_BELT_CONFIG.beltEndOpacity}
+            />
+          </radialGradient>
+
         </defs>
 
         {/* 좌표평면 배경 그리드 - 라이트 모드 */}
@@ -889,6 +962,46 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           />
         )}
 
+        {/* ===== 장력 벨트 (Tension Belt) ===== */}
+        {/* 림 바로 안쪽의 밝은 장력 띠 - 막이 잡아당겨지는 경계 표현 */}
+        {TENSION_BELT_CONFIG.enabled && (
+          <path
+            d={createDonutPath()}
+            fill="url(#tension-belt-gradient)"
+            fillRule="evenodd"
+            stroke="none"
+          />
+        )}
+
+        {/* ===== 림 앵커 (Rim Anchors) ===== */}
+        {/* 림을 고정하는 짧은 안쪽 방향 틱 - 360° 앵커 포인트 표현 */}
+        {RIM_ANCHOR_CONFIG.enabled &&
+          Array.from({ length: RIM_ANCHOR_CONFIG.count }, (_, i) => {
+            const angle = (i / RIM_ANCHOR_CONFIG.count) * 2 * Math.PI;
+
+            // 림 위의 시작점
+            const sx = cx + Math.cos(angle) * rx;
+            const sy = adjustedCy + Math.sin(angle) * ry;
+
+            // 안쪽으로 조금 들어온 끝점
+            const ex = cx + Math.cos(angle) * (rx - RIM_ANCHOR_CONFIG.length);
+            const ey = adjustedCy + Math.sin(angle) * (ry - RIM_ANCHOR_CONFIG.length);
+
+            return (
+              <line
+                key={`rim-anchor-${i}`}
+                x1={sx}
+                y1={sy}
+                x2={ex}
+                y2={ey}
+                stroke={RIM_ANCHOR_CONFIG.stroke}
+                strokeWidth={RIM_ANCHOR_CONFIG.strokeWidth}
+                strokeOpacity={RIM_ANCHOR_CONFIG.opacity}
+                strokeLinecap="round"
+              />
+            );
+          })}
+
         {/* ===== 대각선 (점선) ===== */}
         {/* 옥타브 대각선 */}
         {getOctaveDiagonalLines().map((line, idx) => (
@@ -989,8 +1102,8 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           );
         })}
 
-        {/* Radial tension arrows: uniform length = uniform tension */}
-        {dirs.map((t, i) => {
+        {/* Radial tension arrows: 비활성화 (타원을 당기는 느낌 없음) */}
+        {false && dirs.map((t, i) => {
           const { shaft, head } = arrowPath(t);
           return (
             <g key={i}>
