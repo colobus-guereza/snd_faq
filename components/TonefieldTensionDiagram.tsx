@@ -197,6 +197,29 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
   };
   // ============================================
 
+  // ===== 소프트 멤브레인 쉐이딩 설정 (Soft Membrane Shading) =====
+  // 수직 방향 그라데이션으로 당겨진 금속 표면의 곡률과 장력 표현
+  const MEMBRANE_SHADING_CONFIG = {
+    // ===== 기본 설정 =====
+    enabled: true,                    // 멤브레인 쉐이딩 활성화
+
+    // ===== 상단 하이라이트 (빛 반사) =====
+    topColor: "white",                // 상단 색상
+    topOpacity: 0.25,                 // 상단 투명도
+    topOffset: 0,                     // 시작 위치 (0% = 최상단)
+
+    // ===== 중간 투명 영역 =====
+    midOffset: 0.45,                  // 중간 투명 지점 (45%)
+
+    // ===== 하단 그림자 (장력으로 인한 음영) =====
+    bottomColor: "black",             // 하단 색상
+    bottomStartOffset: 0.70,          // 그림자 시작 (70%)
+    bottomStartOpacity: 0.08,         // 그림자 시작 투명도
+    bottomEndOffset: 1.0,             // 그림자 끝 (100% = 최하단)
+    bottomEndOpacity: 0.18,           // 그림자 끝 투명도
+  };
+  // ============================================
+
   // 타원의 호(arc)를 그리는 헬퍼 함수
   const createArcPath = (startAngle: number, endAngle: number, isOuter: boolean = true) => {
     const radiusX = isOuter ? rx : dimpleRx;
@@ -460,6 +483,41 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             />
           </radialGradient>
 
+          {/* 소프트 멤브레인 쉐이딩용 그라데이션 (수직 방향 장력 표현) */}
+          {/* 위쪽 밝게 (빛 반사) → 중간 투명 → 아래쪽 어둡게 (그림자) */}
+          <linearGradient
+            id="membrane-shading-gradient"
+            x1="0%"
+            y1="0%"
+            x2="0%"
+            y2="100%"
+          >
+            {/* 상단 하이라이트 */}
+            <stop
+              offset={`${MEMBRANE_SHADING_CONFIG.topOffset * 100}%`}
+              stopColor={MEMBRANE_SHADING_CONFIG.topColor}
+              stopOpacity={MEMBRANE_SHADING_CONFIG.topOpacity}
+            />
+            {/* 중간 투명 */}
+            <stop
+              offset={`${MEMBRANE_SHADING_CONFIG.midOffset * 100}%`}
+              stopColor={MEMBRANE_SHADING_CONFIG.topColor}
+              stopOpacity={0}
+            />
+            {/* 하단 그림자 시작 */}
+            <stop
+              offset={`${MEMBRANE_SHADING_CONFIG.bottomStartOffset * 100}%`}
+              stopColor={MEMBRANE_SHADING_CONFIG.bottomColor}
+              stopOpacity={MEMBRANE_SHADING_CONFIG.bottomStartOpacity}
+            />
+            {/* 하단 그림자 끝 */}
+            <stop
+              offset={`${MEMBRANE_SHADING_CONFIG.bottomEndOffset * 100}%`}
+              stopColor={MEMBRANE_SHADING_CONFIG.bottomColor}
+              stopOpacity={MEMBRANE_SHADING_CONFIG.bottomEndOpacity}
+            />
+          </linearGradient>
+
         </defs>
 
         {/* 좌표평면 배경 그리드 - 라이트 모드 */}
@@ -607,6 +665,17 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           fillRule="evenodd"
           stroke="none"
         />
+
+        {/* ===== 소프트 멤브레인 쉐이딩 오버레이 ===== */}
+        {/* 수직 방향 그라데이션으로 당겨진 금속 표면의 곡률과 장력 표현 */}
+        {MEMBRANE_SHADING_CONFIG.enabled && (
+          <path
+            d={createDonutPath()}
+            fill="url(#membrane-shading-gradient)"
+            fillRule="evenodd"
+            stroke="none"
+          />
+        )}
 
         {/* ===== 장력 등고선 (Tension Contour Lines) ===== */}
         {/* 동심원 타원으로 장력 분포 레벨 시각화 */}
