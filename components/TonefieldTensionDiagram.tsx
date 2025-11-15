@@ -240,6 +240,45 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
   };
   // ============================================
 
+  // ===== 외곽 인워드 섀도우 설정 (Inward Shadow) =====
+  // 톤필드 외곽을 따라 안쪽으로 말려 들어가는 음영 - 당겨진 금속 표면 입체감
+  const INWARD_SHADOW_CONFIG = {
+    // ===== 기본 설정 =====
+    enabled: true,                    // 인워드 섀도우 활성화
+
+    // ===== 섀도우 범위 설정 =====
+    startOffset: 0.65,                // 섀도우 시작 지점 (65% - 중심 쪽은 영향 없음)
+    endOffset: 1.0,                   // 섀도우 끝 지점 (100% - 외곽 림)
+
+    // ===== 색상 및 투명도 =====
+    color: "#1f5b52",                 // 회청색 계열 진한 녹색
+    startOpacity: 0.0,                // 시작 투명도 (중심 쪽)
+    endOpacity: 0.22,                 // 끝 투명도 (외곽 림)
+  };
+  // ============================================
+
+  // ===== 외곽 리플 엣지 설정 (Ripple Edge) =====
+  // 바깥 경계를 따라 360° 가느다란 주름 - 장력이 바깥으로 빠져나가는 느낌
+  const RIPPLE_EDGE_CONFIG = {
+    // ===== 기본 설정 =====
+    enabled: true,                    // 리플 엣지 활성화
+
+    // ===== 리플 레이어 설정 =====
+    // 각 레이어는 바깥 타원 대비 확대 비율
+    layers: [
+      { factor: 1.03, strokeWidth: 0.6, opacity: 0.40, dashArray: "3 4" },
+      { factor: 1.06, strokeWidth: 0.4, opacity: 0.28, dashArray: "1.5 4.5" },
+    ],
+
+    // ===== 색상 설정 =====
+    color: "#7fd5b6",                 // 밝은 청록색 (장력선 색상과 유사)
+
+    // ===== 블러 효과 =====
+    useBlur: true,                    // 부드러운 블러 효과
+    blurAmount: 0.8,                  // 블러 강도 (stdDeviation)
+  };
+  // ============================================
+
   // 타원의 호(arc)를 그리는 헬퍼 함수
   const createArcPath = (startAngle: number, endAngle: number, isOuter: boolean = true) => {
     const radiusX = isOuter ? rx : dimpleRx;
@@ -436,6 +475,11 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             </feMerge>
           </filter>
 
+          {/* 리플 엣지용 블러 필터 (부드러운 주름 표현) */}
+          <filter id="rippleBlur" x="-10%" y="-10%" width="120%" height="120%">
+            <feGaussianBlur stdDeviation={RIPPLE_EDGE_CONFIG.blurAmount} />
+          </filter>
+
           {/* 방사형 그라데이션 정의 (도너츠 전체 영역, 360도 균일) */}
           <radialGradient
             id="radial-tonefield-gradient"
@@ -537,6 +581,27 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
               stopOpacity={MEMBRANE_SHADING_CONFIG.bottomEndOpacity}
             />
           </linearGradient>
+
+          {/* 외곽 인워드 섀도우용 그라데이션 (외곽 림 → 안쪽으로 말려들어가는 음영) */}
+          <radialGradient
+            id="inward-shadow-gradient"
+            cx="50%"
+            cy="50%"
+            r="55%"
+          >
+            {/* 중심 쪽은 영향 없음 */}
+            <stop
+              offset={`${INWARD_SHADOW_CONFIG.startOffset * 100}%`}
+              stopColor={INWARD_SHADOW_CONFIG.color}
+              stopOpacity={INWARD_SHADOW_CONFIG.startOpacity}
+            />
+            {/* 외곽 림 근처에서만 어두워짐 */}
+            <stop
+              offset={`${INWARD_SHADOW_CONFIG.endOffset * 100}%`}
+              stopColor={INWARD_SHADOW_CONFIG.color}
+              stopOpacity={INWARD_SHADOW_CONFIG.endOpacity}
+            />
+          </radialGradient>
 
         </defs>
 
@@ -677,6 +742,25 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           filter="url(#soft)"
         />
 
+        {/* ===== 외곽 리플 엣지 (Ripple Edge) ===== */}
+        {/* 바깥 경계를 따라 360° 가느다란 주름 - 장력이 바깥으로 빠져나가는 느낌 */}
+        {RIPPLE_EDGE_CONFIG.enabled &&
+          RIPPLE_EDGE_CONFIG.layers.map((layer, i) => (
+            <ellipse
+              key={`ripple-${i}`}
+              cx={cx}
+              cy={adjustedCy}
+              rx={rx * layer.factor}
+              ry={ry * layer.factor}
+              fill="none"
+              stroke={RIPPLE_EDGE_CONFIG.color}
+              strokeWidth={layer.strokeWidth}
+              strokeOpacity={layer.opacity}
+              strokeDasharray={layer.dashArray}
+              filter={RIPPLE_EDGE_CONFIG.useBlur ? "url(#rippleBlur)" : undefined}
+            />
+          ))}
+
         {/* ===== 도너츠 영역 렌더링 (방사형 그라데이션, 360도 균일) ===== */}
         {/* 톤필드 전체 영역 - 중심에서 바깥으로 방사형 하모닉스 튜닝 강도 시각화 */}
         <path
@@ -786,6 +870,17 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
               />
             );
           })}
+
+        {/* ===== 외곽 인워드 섀도우 (Inward Shadow) ===== */}
+        {/* 외곽 림을 따라 안쪽으로 말려 들어가는 음영 - 당겨진 금속 표면 입체감 */}
+        {INWARD_SHADOW_CONFIG.enabled && (
+          <path
+            d={createDonutPath()}
+            fill="url(#inward-shadow-gradient)"
+            fillRule="evenodd"
+            stroke="none"
+          />
+        )}
 
         {/* ===== 대각선 (점선) ===== */}
         {/* 옥타브 대각선 */}
