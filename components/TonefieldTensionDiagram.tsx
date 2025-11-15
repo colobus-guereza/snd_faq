@@ -173,6 +173,30 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
   };
   // ============================================
 
+  // ===== 방사형 장력 곡선 설정 (Radial Tension Lines) =====
+  // 딤플에서 바깥으로 뻗어나가며 바깥쪽으로 휘어지는 곡선
+  const RADIAL_TENSION_LINES_CONFIG = {
+    // ===== 기본 설정 =====
+    enabled: true,                    // 장력선 활성화
+
+    // ===== 선 개수 =====
+    count: 16,                        // 방사형 장력선 개수 (권장: 12, 16, 24)
+
+    // ===== 선 위치 설정 =====
+    startRatio: 0.58,                 // 시작 위치 (딤플 경계 근처)
+    endRatio: 0.97,                   // 끝 위치 (바깥 타원 가까이)
+
+    // ===== 색상 및 스타일 =====
+    colorStart: "#2bb5a0",            // 시작 색상 (진한 청록색)
+    colorEnd: "#2bb5a0",              // 끝 색상
+    opacityStart: 0.7,                // 시작 투명도
+    opacityEnd: 0.2,                  // 끝 투명도
+
+    // ===== 선 두께 =====
+    strokeWidth: 1.1,                 // 선 두께
+  };
+  // ============================================
+
   // 타원의 호(arc)를 그리는 헬퍼 함수
   const createArcPath = (startAngle: number, endAngle: number, isOuter: boolean = true) => {
     const radiusX = isOuter ? rx : dimpleRx;
@@ -417,6 +441,25 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             )}
           </radialGradient>
 
+          {/* 방사형 장력선용 그라데이션 (중심에서 바깥으로 투명도 감소) */}
+          <radialGradient
+            id="tension-line-stroke-gradient"
+            cx="50%"
+            cy="50%"
+            r="70%"
+          >
+            <stop
+              offset="0%"
+              stopColor={RADIAL_TENSION_LINES_CONFIG.colorStart}
+              stopOpacity={RADIAL_TENSION_LINES_CONFIG.opacityStart}
+            />
+            <stop
+              offset="100%"
+              stopColor={RADIAL_TENSION_LINES_CONFIG.colorEnd}
+              stopOpacity={RADIAL_TENSION_LINES_CONFIG.opacityEnd}
+            />
+          </radialGradient>
+
         </defs>
 
         {/* 좌표평면 배경 그리드 - 라이트 모드 */}
@@ -580,6 +623,34 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             strokeOpacity={CONTOUR_CONFIG.baseOpacity - i * CONTOUR_CONFIG.opacityStep}
           />
         ))}
+
+        {/* ===== 방사형 장력선 (Radial Tension Lines) ===== */}
+        {/* 딤플에서 바깥으로 팽팽하게 당겨진 직선 - 금속판 장력 표현 */}
+        {RADIAL_TENSION_LINES_CONFIG.enabled &&
+          Array.from({ length: RADIAL_TENSION_LINES_CONFIG.count }, (_, i) => {
+            const angle = (i / RADIAL_TENSION_LINES_CONFIG.count) * 2 * Math.PI;
+
+            // 시작점 (딤플 경계 근처)
+            const x1 = cx + Math.cos(angle) * rx * RADIAL_TENSION_LINES_CONFIG.startRatio;
+            const y1 = adjustedCy + Math.sin(angle) * ry * RADIAL_TENSION_LINES_CONFIG.startRatio;
+
+            // 끝점 (바깥 타원 가까이)
+            const x2 = cx + Math.cos(angle) * rx * RADIAL_TENSION_LINES_CONFIG.endRatio;
+            const y2 = adjustedCy + Math.sin(angle) * ry * RADIAL_TENSION_LINES_CONFIG.endRatio;
+
+            return (
+              <line
+                key={`tension-line-${i}`}
+                x1={x1}
+                y1={y1}
+                x2={x2}
+                y2={y2}
+                stroke="url(#tension-line-stroke-gradient)"
+                strokeWidth={RADIAL_TENSION_LINES_CONFIG.strokeWidth}
+                strokeLinecap="round"
+              />
+            );
+          })}
 
         {/* ===== 대각선 (점선) ===== */}
         {/* 옥타브 대각선 */}
