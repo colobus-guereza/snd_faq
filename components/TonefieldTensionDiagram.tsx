@@ -94,13 +94,14 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
 
   // Ellipse radii with enforced 2:3 ratio for both outer ellipse and inner dimple
   // We compute a uniform scale 's' so that rx:ry = 2:3 fits inside the SVG with padding.
-  // 상하 여백을 더 크게 설정하여 화살표가 잘리지 않도록 함
-  const paddingTop = 60; // 상단 여백 확대
-  const paddingBottom = 60; // 하단 여백 확대
-  const paddingHorizontal = 8; // 좌우 여백 (줄임)
+  // 상하 여백을 더욱 확대하여 멀리 배치된 앵커 포함
+  const paddingTop = 150; // 상단 여백 확대 (멀리 배치된 앵커 포함)
+  const paddingBottom = 150; // 하단 여백 확대
+  const paddingHorizontal = 50; // 좌우 여백 확대
   const s = Math.min((w - 2 * paddingHorizontal) / 4, (h - paddingTop - paddingBottom) / 6); // fit 2s (rx) and 3s (ry)
-  const rx = 2 * s;
-  const ry = 3 * s;
+  // 톤필드 크기 고정 (96 x 144)
+  const rx = 96;
+  const ry = 144;
   // 타원의 중심을 가로 중앙, 세로는 여백을 고려하여 조정
   const adjustedCy = paddingTop + ry + (h - paddingTop - paddingBottom - 2 * ry) / 2;
   // Keep inner dimple at the same 2:3 ratio by scaling both radii equally
@@ -749,6 +750,13 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             <stop offset="100%" stopColor="#020617" stopOpacity="0.0" />
           </radialGradient>
 
+          {/* 별 모양 막 그라데이션 (노란색 → 연녹색) */}
+          <radialGradient id="starMembraneFill" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stopColor="#fff9b1" />
+            <stop offset="45%" stopColor="#fff176" />
+            <stop offset="100%" stopColor="#7fe38a" />
+          </radialGradient>
+
         </defs>
 
         {/* 좌표평면 배경 그리드 - 라이트 모드 */}
@@ -897,6 +905,103 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             filter="url(#soft)"
           />
         )}
+
+        {/* ===== 8-pointed Star Membrane ===== */}
+        {/* 별 모양 막 - 톤필드를 둘러싼 8개 뾰족한 돌출부 */}
+        {(() => {
+          // 별 모양 크기 설정 (고정된 톤필드 크기 기준)
+          // 톤필드가 20% 증가되어 있으므로 (rx=96, ry=144), 원래 크기로 환산
+          const baseRx = rx / 1.2; // 96 / 1.2 = 80
+          const baseRy = ry / 1.2; // 144 / 1.2 = 120
+          const starOuterRx = baseRx * 1.8; // 별 꼭지점 반경
+          const starOuterRy = baseRy * 1.8;
+          const starInnerRx = baseRx * 1.1; // 오목한 부분 반경
+          const starInnerRy = baseRy * 1.1;
+
+          // 앵커 위치 (더 멀리 배치하여 당겨진 느낌 강화)
+          const anchorRx = baseRx * 2.8;
+          const anchorRy = baseRy * 2.8;
+
+          // 8개 방향 각도 (별 꼭지점)
+          const starAngles = [0, 45, 90, 135, 180, 225, 270, 315];
+
+          // 별 꼭지점 좌표
+          const starPoints = starAngles.map(deg => {
+            const rad = deg * Math.PI / 180;
+            return {
+              angle: deg,
+              x: cx + starOuterRx * Math.cos(rad),
+              y: adjustedCy + starOuterRy * Math.sin(rad)
+            };
+          });
+
+          // 오목한 부분 좌표 (별 꼭지점 사이)
+          const valleyAngles = [22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5];
+          const valleyPoints = valleyAngles.map(deg => {
+            const rad = deg * Math.PI / 180;
+            return {
+              angle: deg,
+              x: cx + starInnerRx * Math.cos(rad),
+              y: adjustedCy + starInnerRy * Math.sin(rad)
+            };
+          });
+
+          // 앵커 좌표
+          const anchorPoints = starAngles.map(deg => {
+            const rad = deg * Math.PI / 180;
+            return {
+              angle: deg,
+              x: cx + anchorRx * Math.cos(rad),
+              y: adjustedCy + anchorRy * Math.sin(rad)
+            };
+          });
+
+          // 별 모양 경로 생성 (꼭지점 → 오목 → 꼭지점 → 오목 ...)
+          let starPath = `M ${starPoints[0].x},${starPoints[0].y}`;
+          for (let i = 0; i < 8; i++) {
+            const valley = valleyPoints[i];
+            const nextStar = starPoints[(i + 1) % 8];
+            // 부드러운 곡선으로 연결
+            starPath += ` Q ${valley.x},${valley.y} ${nextStar.x},${nextStar.y}`;
+          }
+          starPath += ' Z';
+
+          return (
+            <>
+              {/* 별 모양 막 */}
+              <path
+                d={starPath}
+                fill="url(#starMembraneFill)"
+                stroke="#3d7058"
+                strokeWidth={1.4}
+                opacity={0.92}
+              />
+
+              {/* 앵커 8개 */}
+              <g fill="#fefefe" stroke="#3d7058" strokeWidth={1.4}>
+                {anchorPoints.map((point, i) => (
+                  <circle key={`star-anchor-${i}`} cx={point.x} cy={point.y} r={6} />
+                ))}
+              </g>
+
+              {/* 앵커 → 별 꼭지점 연결선 */}
+              <g stroke="#3d7058" strokeWidth={1.2} strokeLinecap="round">
+                {anchorPoints.map((anchor, i) => {
+                  const star = starPoints[i];
+                  return (
+                    <line
+                      key={`star-anchor-line-${i}`}
+                      x1={anchor.x}
+                      y1={anchor.y}
+                      x2={star.x}
+                      y2={star.y}
+                    />
+                  );
+                })}
+              </g>
+            </>
+          );
+        })()}
 
         {/* ===== 외곽 리플 엣지 (Ripple Edge) ===== */}
         {/* 바깥 경계를 따라 360° 가느다란 주름 - 장력이 바깥으로 빠져나가는 느낌 */}
