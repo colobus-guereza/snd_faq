@@ -18,13 +18,51 @@ import React from "react";
  *   <TonefieldTensionDiagram width={720} height={480} />
  */
 
+/**
+ * 애니메이션 프레임 제어용 파라미터 (0~1 정규화)
+ */
+export type TensionFrameParams = {
+  anchorLevel?: number;      // 앵커가 얼마나 멀리 나가 있는지 (0=타원경계, 1=최대)
+  concavityLevel?: number;   // 골짜기가 얼마나 오목한지 (0=평평, 1=최대오목)
+  stretchLevel?: number;     // 별 모양 팁이 얼마나 늘어났는지 (0=타원, 1=최대늘어남)
+  arrowLevel?: number;       // 화살표 길이/굵기/투명도 (0=안보임, 1=최대)
+  colorLevel?: number;       // 막 색/그라디언트 강도 (0=옅음, 1=최대)
+  tonefieldLevel?: number;   // 톤필드 그라디언트 밝기 (0=투명, 1=최대밝기)
+};
+
 export type TonefieldTensionDiagramProps = {
   width?: number;
   height?: number;
   arrows?: number;
   color?: string; // Tailwind color tokens are fine at parent level, but here we keep raw hex
   showLegend?: boolean;
+  frameParams?: TensionFrameParams;  // 애니메이션 프레임 제어
 };
+
+/**
+ * 12프레임 애니메이션용 프리셋 파라미터
+ * 프레임 1-11: 막이 점진적으로 당겨지는 과정
+ * 프레임 12: 완전히 당겨진 상태 (모든 레벨 = 1.0)
+ */
+export const ANIMATION_FRAME_PARAMS: TensionFrameParams[] = [
+  // Frame 1 (index 0): 초기 상태 - 거의 당겨지지 않음
+  { anchorLevel: 0.0, concavityLevel: 0.0, stretchLevel: 0.0, arrowLevel: 0.0, colorLevel: 0.0, tonefieldLevel: 0.0 },
+
+  // Frame 2-11: 점진적 증가 (ease-in 커브 적용 가능)
+  { anchorLevel: 0.15, concavityLevel: 0.15, stretchLevel: 0.15, arrowLevel: 0.15, colorLevel: 0.15, tonefieldLevel: 0.15 },
+  { anchorLevel: 0.30, concavityLevel: 0.30, stretchLevel: 0.30, arrowLevel: 0.30, colorLevel: 0.30, tonefieldLevel: 0.30 },
+  { anchorLevel: 0.45, concavityLevel: 0.45, stretchLevel: 0.45, arrowLevel: 0.45, colorLevel: 0.45, tonefieldLevel: 0.45 },
+  { anchorLevel: 0.55, concavityLevel: 0.55, stretchLevel: 0.55, arrowLevel: 0.55, colorLevel: 0.55, tonefieldLevel: 0.55 },
+  { anchorLevel: 0.65, concavityLevel: 0.65, stretchLevel: 0.65, arrowLevel: 0.65, colorLevel: 0.65, tonefieldLevel: 0.65 },
+  { anchorLevel: 0.73, concavityLevel: 0.73, stretchLevel: 0.73, arrowLevel: 0.73, colorLevel: 0.73, tonefieldLevel: 0.73 },
+  { anchorLevel: 0.80, concavityLevel: 0.80, stretchLevel: 0.80, arrowLevel: 0.80, colorLevel: 0.80, tonefieldLevel: 0.80 },
+  { anchorLevel: 0.86, concavityLevel: 0.86, stretchLevel: 0.86, arrowLevel: 0.86, colorLevel: 0.86, tonefieldLevel: 0.86 },
+  { anchorLevel: 0.91, concavityLevel: 0.91, stretchLevel: 0.91, arrowLevel: 0.91, colorLevel: 0.91, tonefieldLevel: 0.91 },
+  { anchorLevel: 0.96, concavityLevel: 0.96, stretchLevel: 0.96, arrowLevel: 0.96, colorLevel: 0.96, tonefieldLevel: 0.96 },
+
+  // Frame 12 (index 11): 완전히 당겨진 최종 상태
+  { anchorLevel: 1.0, concavityLevel: 1.0, stretchLevel: 1.0, arrowLevel: 1.0, colorLevel: 1.0, tonefieldLevel: 1.0 },
+];
 
 /**
  * buildTensionRimPath
@@ -86,7 +124,21 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
   arrows = 24,
   color = "#2563eb", // Tailwind blue-600
   showLegend = true,
+  frameParams,
 }) => {
+  // 애니메이션 프레임 레벨 추출 (기본값 1 = 프레임 12 상태)
+  const {
+    anchorLevel = 1,
+    concavityLevel = 1,
+    stretchLevel = 1,
+    arrowLevel = 1,
+    colorLevel = 1,
+    tonefieldLevel = 1,
+  } = frameParams ?? {};
+
+  // Linear interpolation 유틸리티
+  const lerp = (min: number, max: number, t: number) => min + (max - min) * t;
+
   const w = width;
   const h = height;
   const cx = w / 2; // 가로 중앙 정렬
@@ -249,7 +301,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
     // ===== 선 스타일 =====
     strokeWidth: 1.1,                 // 선 두께
     color: "#1b6a57",                 // 선 색상 (진한 청록색)
-    opacity: 0.7,                     // 투명도
+    opacity: 0,                       // 투명도 (0 = 비활성화, 0.7 = 활성화)
   };
   // ============================================
 
@@ -788,6 +840,15 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
 
         </defs>
 
+        {/* 검정색 배경 */}
+        <rect
+          x="0"
+          y="0"
+          width={w}
+          height={h}
+          fill="#000000"
+        />
+
         {/* 좌표평면 배경 그리드 - 라이트 모드 */}
         <rect
           x="0"
@@ -795,6 +856,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           width={w}
           height={h}
           fill={`url(#${gridId}-light)`}
+          fillOpacity={0}
           className="dark:hidden"
         />
         {/* 좌표평면 배경 그리드 - 다크 모드 */}
@@ -804,6 +866,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           width={w}
           height={h}
           fill={`url(#${gridId}-dark)`}
+          fillOpacity={0}
           className="hidden dark:block"
         />
 
@@ -814,7 +877,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           y1={adjustedCy}
           x2={w}
           y2={adjustedCy}
-          stroke={axisColorLight}
+          stroke="transparent"
           strokeWidth="1.5"
           className="dark:hidden"
         />
@@ -824,7 +887,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           y1={adjustedCy}
           x2={w}
           y2={adjustedCy}
-          stroke={axisColorDark}
+          stroke="transparent"
           strokeWidth="1.5"
           className="hidden dark:block"
         />
@@ -834,7 +897,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           y1="0"
           x2={cx}
           y2={h}
-          stroke={axisColorLight}
+          stroke="transparent"
           strokeWidth="1.5"
           className="dark:hidden"
         />
@@ -844,7 +907,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           y1="0"
           x2={cx}
           y2={h}
-          stroke={axisColorDark}
+          stroke="transparent"
           strokeWidth="1.5"
           className="hidden dark:block"
         />
@@ -864,7 +927,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
                 y1={adjustedCy - 4}
                 x2={x}
                 y2={adjustedCy + 4}
-                stroke={axisColorLight}
+                stroke="transparent"
                 strokeWidth="1"
                 className="dark:hidden"
               />
@@ -874,7 +937,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
                 y1={adjustedCy - 4}
                 x2={x}
                 y2={adjustedCy + 4}
-                stroke={axisColorDark}
+                stroke="transparent"
                 strokeWidth="1"
                 className="hidden dark:block"
               />
@@ -895,7 +958,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
                 y1={y}
                 x2={cx + 4}
                 y2={y}
-                stroke={axisColorLight}
+                stroke="transparent"
                 strokeWidth="1"
                 className="dark:hidden"
               />
@@ -905,7 +968,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
                 y1={y}
                 x2={cx + 4}
                 y2={y}
-                stroke={axisColorDark}
+                stroke="transparent"
                 strokeWidth="1"
                 className="hidden dark:block"
               />
@@ -950,22 +1013,31 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           const starInnerRy = baseRy * 0.80;
 
           // 앵커 위치 (기본)
-          const anchorRxBase = baseRx * 2.8;
-          const anchorRyBase = baseRy * 2.8;
-          // 좌우측 앵커는 더 멀리 (꼭지점 증가 비율 반영: 2.12/1.8 = 1.178)
-          const anchorRxHorizontal = baseRx * 3.9;
-          const anchorRyHorizontal = baseRy * 3.9;
+          const anchorMultiplierMin = 1.2; // anchorLevel=0 → 타원 경계
+          const anchorMultiplierBaseMax = 2.8;
+          const anchorMultiplierHorizontalMax = 3.9; // 좌우측 앵커는 더 멀리
+
+          const anchorRxBase = baseRx * lerp(anchorMultiplierMin, anchorMultiplierBaseMax, anchorLevel);
+          const anchorRyBase = baseRy * lerp(anchorMultiplierMin, anchorMultiplierBaseMax, anchorLevel);
+          const anchorRxHorizontal = baseRx * lerp(anchorMultiplierMin, anchorMultiplierHorizontalMax, anchorLevel);
+          const anchorRyHorizontal = baseRy * lerp(anchorMultiplierMin, anchorMultiplierHorizontalMax, anchorLevel);
 
           // 8개 방향 각도 (별 꼭지점)
           const starAngles = [0, 45, 90, 135, 180, 225, 270, 315];
 
-          // 별 꼭지점 좌표 (좌우측은 더 바깥으로)
+          // 별 꼭지점 좌표 (좌우측은 더 바깥으로) - stretchLevel 적용
+          const tipMultiplierHorizontalMax = 2.12;
+          const tipMultiplierOtherMax = 1.8;
+          const tipMultiplierMin = 1.2;  // stretchLevel=0 일 때 타원 경계
+
           const starPoints = starAngles.map(deg => {
             const rad = deg * Math.PI / 180;
-            // 좌측(180°) 또는 우측(0°)인지 확인
             const isHorizontal = (deg === 0 || deg === 180);
-            // 좌우측 꼭지점은 앵커 증가 비율(3.3/2.8 = 1.179)만큼 더 바깥으로
-            const tipMultiplier = isHorizontal ? 2.12 : 1.8;
+
+            const tipMultiplierMax = isHorizontal ? tipMultiplierHorizontalMax : tipMultiplierOtherMax;
+            // ✅ stretchLevel로 최소(타원)~최대(지금 모양) 사이 보간
+            const tipMultiplier = lerp(tipMultiplierMin, tipMultiplierMax, stretchLevel);
+
             const tipRx = baseRx * tipMultiplier;
             const tipRy = baseRy * tipMultiplier;
 
@@ -978,15 +1050,20 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
 
           // 오목한 부분 좌표 (방향별 차등 오목도 - 좌우 더 깊게, 상하 덜 깊게)
           const valleyAngles = [22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5];
-          const valleyPoints = valleyAngles.map(deg => {
-            const rad = deg * Math.PI / 180;
-            // 수평 방향 성분 (좌우 = 1, 상하 = 0)
+          const valleyMultiplierMax = (rad: number) => {
             const horizontalComponent = Math.abs(Math.cos(rad));
             // 좌우(수평): 0.672 (더 깊게), 상하(수직): 0.781 (덜 깊게)
             // 오목도 30% 총 축소 (10% + 10% + 10%): 톤필드 경계선 침범 방지
-            const valleyMultiplier = 0.781 - 0.109 * horizontalComponent;
-            const valleyRx = baseRx * valleyMultiplier;
-            const valleyRy = baseRy * valleyMultiplier;
+            return 0.781 - 0.109 * horizontalComponent;
+          };
+          const valleyMultiplierMin = 1.2; // concavityLevel=0 → 타원 경계
+
+          const valleyPoints = valleyAngles.map(deg => {
+            const rad = (deg * Math.PI) / 180;
+            const maxMul = valleyMultiplierMax(rad);
+            const mul = lerp(valleyMultiplierMin, maxMul, concavityLevel);
+            const valleyRx = baseRx * mul;
+            const valleyRy = baseRy * mul;
 
             return {
               angle: deg,
@@ -1020,6 +1097,15 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           }
           starPath += ' Z';
 
+          // 막 색상 강도 (colorLevel 적용)
+          const horizontalOpacityMin = 0.25;
+          const horizontalOpacityMax = 1.0;
+          const verticalOpacityMin = 0.175;
+          const verticalOpacityMax = 0.7;
+
+          const horizontalOpacity = lerp(horizontalOpacityMin, horizontalOpacityMax, colorLevel);
+          const verticalOpacity = lerp(verticalOpacityMin, verticalOpacityMax, colorLevel);
+
           return (
             <>
               {/* 별 모양 막 - 이방성 장력 분포 (2레이어 합성) */}
@@ -1029,7 +1115,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
                 d={starPath}
                 fill="url(#starMembraneHorizontal)"
                 stroke="none"
-                opacity={1.0}
+                opacity={horizontalOpacity}
               />
 
               {/* 레이어 2: 수직 방향 장력 (보조 레이어 - 상하 푸른색, 중첩) */}
@@ -1037,7 +1123,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
                 d={starPath}
                 fill="url(#starMembraneVertical)"
                 stroke="none"
-                opacity={0.7}
+                opacity={verticalOpacity}
                 style={{ mixBlendMode: 'multiply' }}
               />
 
@@ -1109,8 +1195,8 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
                 })}
               </g>
 
-              {/* 앵커 → 별 꼭지점 연결선 - 시선 집중 감소 */}
-              <g stroke="#3d7058" strokeWidth={1.2} strokeOpacity={0.4} strokeLinecap="round">
+              {/* 앵커 → 별 꼭지점 연결선 - 흰색 실처럼 표현 */}
+              <g stroke="#ffffff" strokeWidth={1.2} strokeOpacity={0.4} strokeLinecap="round">
                 {anchorPoints.map((anchor, i) => {
                   const star = starPoints[i];
                   return (
@@ -1149,11 +1235,23 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
 
         {/* ===== 도너츠 영역 렌더링 (방사형 그라데이션, 360도 균일) ===== */}
         {/* 톤필드 전체 영역 - 중심에서 바깥으로 방사형 하모닉스 튜닝 강도 시각화 */}
+
+        {/* 톤필드 윤곽선 (실루엣 유지용 - 프레임 1에서도 위치 파악) */}
+        <path
+          d={createDonutPath()}
+          fill="none"
+          fillRule="evenodd"
+          stroke="rgba(0,0,0,0.15)"
+          strokeWidth={1}
+        />
+
+        {/* 톤필드 그라디언트 (tonefieldLevel에 따라 페이드 인) */}
         <path
           d={createDonutPath()}
           fill="url(#radial-tonefield-gradient)"
           fillRule="evenodd"
           stroke="none"
+          opacity={tonefieldLevel}
         />
 
         {/* ===== 톤필드 방향성 힌트 (미세한 이방성 장력 영향) ===== */}
@@ -1165,7 +1263,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           fill="url(#tonefieldDirectionalHintH)"
           fillRule="evenodd"
           stroke="none"
-          opacity={0.85}
+          opacity={0.85 * tonefieldLevel}
         />
 
         {/* 수직 방향 힌트 (상하 = 차분한 초록) */}
@@ -1174,7 +1272,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           fill="url(#tonefieldDirectionalHintV)"
           fillRule="evenodd"
           stroke="none"
-          opacity={0.75}
+          opacity={0.75 * tonefieldLevel}
         />
 
         {/* ===== 벡터 필드 그라데이션 (Vector Field Gradient) ===== */}
@@ -1270,7 +1368,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
                 y2={y2}
                 stroke={TENSION_AXIS_CONFIG.color}
                 strokeWidth={TENSION_AXIS_CONFIG.strokeWidth}
-                strokeOpacity={TENSION_AXIS_CONFIG.opacity}
+                strokeOpacity={TENSION_AXIS_CONFIG.opacity * tonefieldLevel}
                 strokeLinecap="round"
               />
             );
@@ -1299,7 +1397,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
                 y2={yInner}
                 stroke={INNER_STRETCH_LINES_CONFIG.color}
                 strokeWidth={INNER_STRETCH_LINES_CONFIG.strokeWidth}
-                strokeOpacity={INNER_STRETCH_LINES_CONFIG.opacity}
+                strokeOpacity={INNER_STRETCH_LINES_CONFIG.opacity * tonefieldLevel}
                 strokeLinecap="round"
               />
             );
@@ -1471,8 +1569,11 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
 
           // 화살표 통일 스타일: 모든 방향 동일
           const arrowColor = "#ff5a3c";      // 살짝 어두운 레드-오렌지 (고장력 표현)
-          const arrowThickness = 1.4;        // 눈에 잘 들어오되 막을 가리지 않는 수준
-          const arrowOpacity = 0.8;          // 적당한 존재감
+          const arrowThicknessMax = 1.4;     // 눈에 잘 들어오되 막을 가리지 않는 수준
+          const arrowOpacityMax = 0.8;       // 적당한 존재감
+
+          const arrowThickness = lerp(0.0, arrowThicknessMax, arrowLevel);
+          const arrowOpacity = lerp(0.0, arrowOpacityMax, arrowLevel);
 
           return starAngles.map((deg, i) => {
             const rad = deg * Math.PI / 180;
@@ -1717,6 +1818,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           stroke="#000000"
           strokeWidth="0.5"
           fontWeight="700"
+          opacity={0.7}
           style={{ paintOrder: "stroke fill" }}
         >
           Octave
@@ -1733,6 +1835,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           stroke="#000000"
           strokeWidth="0.5"
           fontWeight="700"
+          opacity={0.7}
           style={{ paintOrder: "stroke fill" }}
         >
           Tonic
@@ -1749,6 +1852,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           stroke="#000000"
           strokeWidth="0.5"
           fontWeight="700"
+          opacity={0.7}
           style={{ paintOrder: "stroke fill" }}
         >
           Fifth
@@ -1765,6 +1869,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           stroke="#000000"
           strokeWidth="0.5"
           fontWeight="700"
+          opacity={0.7}
           style={{ paintOrder: "stroke fill" }}
         >
           Fifth

@@ -7,7 +7,7 @@ import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
 import AcousticMaturityChart from "./AcousticMaturityChart";
-import TonefieldTensionDiagram from "./TonefieldTensionDiagram";
+import TonefieldTensionDiagram, { ANIMATION_FRAME_PARAMS } from "./TonefieldTensionDiagram";
 import Harmonics123Plot from "./Harmonics123Plot";
 import OctaveResonancePlot from "./OctaveResonancePlot";
 import C4C5G6ResonancePlot from "./C4C5G6ResonancePlot";
@@ -3294,12 +3294,19 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                             </div>
                           </div>
                         ))}
-                        {/* FAQ ID "19"에만 그래프 추가 */}
-                        <div className="mt-6 w-full overflow-hidden">
-                          <div className="w-full max-w-full">
-                            <TonefieldTensionDiagram width={720} height={480} color="#14B8A6" />
+                        {/* FAQ ID "19"에만 그래프 추가 - 총 12개 (애니메이션 프레임) */}
+                        {Array.from({ length: 12 }, (_, i) => (
+                          <div key={`diagram-${i}`} className="mt-6 w-full overflow-hidden">
+                            <div className="w-full max-w-full">
+                              <TonefieldTensionDiagram
+                                width={720}
+                                height={480}
+                                color="#14B8A6"
+                                frameParams={ANIMATION_FRAME_PARAMS[i]}
+                              />
+                            </div>
                           </div>
-                        </div>
+                        ))}
                       </div>
                     )}
                   </>
@@ -3348,14 +3355,21 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                           {convertUrlsToLinks(paragraph)}
                         </p>
                       ))}
-                      {/* FAQ ID "19"에만 그래프 추가 */}
+                      {/* FAQ ID "19"에만 그래프 추가 - 총 12개 (애니메이션 프레임) */}
                       {faq.id === "19" && (
                         <>
-                          <div className="mt-6 w-full overflow-hidden">
-                            <div className="w-full max-w-full">
-                              <TonefieldTensionDiagram width={720} height={480} color="#14B8A6" />
+                          {Array.from({ length: 12 }, (_, i) => (
+                            <div key={`diagram-mobile-${i}`} className="mt-6 w-full overflow-hidden">
+                              <div className="w-full max-w-full">
+                                <TonefieldTensionDiagram
+                                  width={720}
+                                  height={480}
+                                  color="#14B8A6"
+                                  frameParams={ANIMATION_FRAME_PARAMS[i]}
+                                />
+                              </div>
                             </div>
-                          </div>
+                          ))}
                         </>
                       )}
                     </div>
