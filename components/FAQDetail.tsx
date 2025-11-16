@@ -3318,6 +3318,15 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                           </div>
                         )}
 
+                        {/* 개념도 설명 텍스트 카드 추가 */}
+                        {faq.id === "19" && (
+                          <div className="mt-6 bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+                            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                              위 이미지는 이러한 장력 정렬 원리를 이해하기 위한 추상화된 개념도입니다. 가상의 앵커가 톤필드를 360도 방향으로 당기는 모습은 실제 해머링 과정에서 톤필드 내외부를 두드려 금속의 탄성과 응력 분포를 미세하게 균형 맞추는 과정을 비유적으로 표현한 것입니다. 장력이 균일하게 맞춰지면 세 하모닉 모드가 조화롭게 활성화되고, 팽팽하게 당길수록 공명은 선명해지며 음정의 안정성과 음색의 깊이가 향상됩니다. 이 개념도는 실제 조율 과정에서 일어나는 보이지 않는 장력 균형을 직관적으로 보여주는 시각적 설명 자료입니다.
+                            </div>
+                          </div>
+                        )}
+
                         {/* FAQ ID "19"에만 그래프 추가 - 총 24개 (애니메이션 프레임) */}
                         {/* 24개 프레임 다이어그램 비활성화 - PNG 파일로 저장 완료 */}
                         {/* {Array.from({ length: 24 }, (_, i) => (
@@ -3392,6 +3401,15 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                           <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-3">
                             톤필드 장력–하모닉스 활성화 시퀀스
                           </p>
+                        </div>
+                      )}
+
+                      {/* 개념도 설명 텍스트 카드 추가 (모바일) */}
+                      {faq.id === "19" && (
+                        <div className="mt-6 bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                          <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                            위 이미지는 이러한 장력 정렬 원리를 이해하기 위한 추상화된 개념도입니다. 가상의 앵커가 톤필드를 360도 방향으로 당기는 모습은 실제 해머링 과정에서 톤필드 내외부를 두드려 금속의 탄성과 응력 분포를 미세하게 균형 맞추는 과정을 비유적으로 표현한 것입니다. 장력이 균일하게 맞춰지면 세 하모닉 모드가 조화롭게 활성화되고, 팽팽하게 당길수록 공명은 선명해지며 음정의 안정성과 음색의 깊이가 향상됩니다. 이 개념도는 실제 조율 과정에서 일어나는 보이지 않는 장력 균형을 직관적으로 보여주는 시각적 설명 자료입니다.
+                          </div>
                         </div>
                       )}
 
