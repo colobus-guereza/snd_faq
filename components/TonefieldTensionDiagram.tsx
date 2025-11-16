@@ -40,27 +40,39 @@ export type TonefieldTensionDiagramProps = {
 };
 
 /**
- * 12프레임 애니메이션용 프리셋 파라미터
- * 프레임 1-11: 막이 점진적으로 당겨지는 과정
- * 프레임 12: 완전히 당겨진 상태 (모든 레벨 = 1.0)
+ * 24프레임 애니메이션용 프리셋 파라미터
+ * 프레임 1-23: 막이 점진적으로 당겨지는 과정
+ * 프레임 24: 완전히 당겨진 상태 (모든 레벨 = 1.0)
  */
 export const ANIMATION_FRAME_PARAMS: TensionFrameParams[] = [
   // Frame 1 (index 0): 초기 상태 - 거의 당겨지지 않음
-  { anchorLevel: 0.0, concavityLevel: 0.0, stretchLevel: 0.0, arrowLevel: 0.0, colorLevel: 0.0, tonefieldLevel: 0.0 },
+  { anchorLevel: 0.00, concavityLevel: 0.00, stretchLevel: 0.00, arrowLevel: 0.00, colorLevel: 0.00, tonefieldLevel: 0.00 },
 
-  // Frame 2-11: 점진적 증가 (ease-in 커브 적용 가능)
-  { anchorLevel: 0.15, concavityLevel: 0.15, stretchLevel: 0.15, arrowLevel: 0.15, colorLevel: 0.15, tonefieldLevel: 0.15 },
+  // Frame 2-23: 점진적 증가 (24 프레임으로 부드러운 전환)
+  { anchorLevel: 0.04, concavityLevel: 0.04, stretchLevel: 0.04, arrowLevel: 0.04, colorLevel: 0.04, tonefieldLevel: 0.04 },
+  { anchorLevel: 0.09, concavityLevel: 0.09, stretchLevel: 0.09, arrowLevel: 0.09, colorLevel: 0.09, tonefieldLevel: 0.09 },
+  { anchorLevel: 0.13, concavityLevel: 0.13, stretchLevel: 0.13, arrowLevel: 0.13, colorLevel: 0.13, tonefieldLevel: 0.13 },
+  { anchorLevel: 0.17, concavityLevel: 0.17, stretchLevel: 0.17, arrowLevel: 0.17, colorLevel: 0.17, tonefieldLevel: 0.17 },
+  { anchorLevel: 0.22, concavityLevel: 0.22, stretchLevel: 0.22, arrowLevel: 0.22, colorLevel: 0.22, tonefieldLevel: 0.22 },
+  { anchorLevel: 0.26, concavityLevel: 0.26, stretchLevel: 0.26, arrowLevel: 0.26, colorLevel: 0.26, tonefieldLevel: 0.26 },
   { anchorLevel: 0.30, concavityLevel: 0.30, stretchLevel: 0.30, arrowLevel: 0.30, colorLevel: 0.30, tonefieldLevel: 0.30 },
-  { anchorLevel: 0.45, concavityLevel: 0.45, stretchLevel: 0.45, arrowLevel: 0.45, colorLevel: 0.45, tonefieldLevel: 0.45 },
-  { anchorLevel: 0.55, concavityLevel: 0.55, stretchLevel: 0.55, arrowLevel: 0.55, colorLevel: 0.55, tonefieldLevel: 0.55 },
+  { anchorLevel: 0.35, concavityLevel: 0.35, stretchLevel: 0.35, arrowLevel: 0.35, colorLevel: 0.35, tonefieldLevel: 0.35 },
+  { anchorLevel: 0.39, concavityLevel: 0.39, stretchLevel: 0.39, arrowLevel: 0.39, colorLevel: 0.39, tonefieldLevel: 0.39 },
+  { anchorLevel: 0.43, concavityLevel: 0.43, stretchLevel: 0.43, arrowLevel: 0.43, colorLevel: 0.43, tonefieldLevel: 0.43 },
+  { anchorLevel: 0.48, concavityLevel: 0.48, stretchLevel: 0.48, arrowLevel: 0.48, colorLevel: 0.48, tonefieldLevel: 0.48 },
+  { anchorLevel: 0.52, concavityLevel: 0.52, stretchLevel: 0.52, arrowLevel: 0.52, colorLevel: 0.52, tonefieldLevel: 0.52 },
+  { anchorLevel: 0.57, concavityLevel: 0.57, stretchLevel: 0.57, arrowLevel: 0.57, colorLevel: 0.57, tonefieldLevel: 0.57 },
+  { anchorLevel: 0.61, concavityLevel: 0.61, stretchLevel: 0.61, arrowLevel: 0.61, colorLevel: 0.61, tonefieldLevel: 0.61 },
   { anchorLevel: 0.65, concavityLevel: 0.65, stretchLevel: 0.65, arrowLevel: 0.65, colorLevel: 0.65, tonefieldLevel: 0.65 },
-  { anchorLevel: 0.73, concavityLevel: 0.73, stretchLevel: 0.73, arrowLevel: 0.73, colorLevel: 0.73, tonefieldLevel: 0.73 },
-  { anchorLevel: 0.80, concavityLevel: 0.80, stretchLevel: 0.80, arrowLevel: 0.80, colorLevel: 0.80, tonefieldLevel: 0.80 },
-  { anchorLevel: 0.86, concavityLevel: 0.86, stretchLevel: 0.86, arrowLevel: 0.86, colorLevel: 0.86, tonefieldLevel: 0.86 },
+  { anchorLevel: 0.70, concavityLevel: 0.70, stretchLevel: 0.70, arrowLevel: 0.70, colorLevel: 0.70, tonefieldLevel: 0.70 },
+  { anchorLevel: 0.74, concavityLevel: 0.74, stretchLevel: 0.74, arrowLevel: 0.74, colorLevel: 0.74, tonefieldLevel: 0.74 },
+  { anchorLevel: 0.78, concavityLevel: 0.78, stretchLevel: 0.78, arrowLevel: 0.78, colorLevel: 0.78, tonefieldLevel: 0.78 },
+  { anchorLevel: 0.83, concavityLevel: 0.83, stretchLevel: 0.83, arrowLevel: 0.83, colorLevel: 0.83, tonefieldLevel: 0.83 },
+  { anchorLevel: 0.87, concavityLevel: 0.87, stretchLevel: 0.87, arrowLevel: 0.87, colorLevel: 0.87, tonefieldLevel: 0.87 },
   { anchorLevel: 0.91, concavityLevel: 0.91, stretchLevel: 0.91, arrowLevel: 0.91, colorLevel: 0.91, tonefieldLevel: 0.91 },
   { anchorLevel: 0.96, concavityLevel: 0.96, stretchLevel: 0.96, arrowLevel: 0.96, colorLevel: 0.96, tonefieldLevel: 0.96 },
 
-  // Frame 12 (index 11): 완전히 당겨진 최종 상태
+  // Frame 24 (index 23): 완전히 당겨진 최종 상태
   { anchorLevel: 1.0, concavityLevel: 1.0, stretchLevel: 1.0, arrowLevel: 1.0, colorLevel: 1.0, tonefieldLevel: 1.0 },
 ];
 
@@ -631,7 +643,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
         preserveAspectRatio="xMidYMid meet"
         role="img"
         aria-label="Elliptical tonefield with central dimple and 360-degree uniform radial tension"
-        className="rounded-2xl shadow-lg bg-white dark:bg-zinc-900 w-full h-auto"
+        className="shadow-lg bg-black w-full h-auto"
         style={{ maxWidth: '100%', height: 'auto' }}
       >
         <defs>
@@ -819,23 +831,24 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           </linearGradient>
 
           {/* 외부 막 그라데이션 - 이방성 장력 분포 (방향별 색상) */}
+          {/* 모든 프레임에서 붉은색 고정, 투명도 100% */}
 
-          {/* 수평 방향 그라디언트 (주 레이어): 좌우 = 강한 장력 (붉은색) */}
+          {/* 수평 방향 그라디언트 (주 레이어): 좌우 = 강한 장력 */}
           <linearGradient id="starMembraneHorizontal" x1="0%" y1="50%" x2="100%" y2="50%">
-            <stop offset="0%" stopColor="#FF4B3A" stopOpacity="0.9" />   {/* 좌측 - 뜨거운 빨강 (강한 장력) */}
-            <stop offset="25%" stopColor="#FF7043" stopOpacity="0.85" /> {/* 좌중 - 주황빨강 */}
-            <stop offset="50%" stopColor="#F6C453" stopOpacity="0.75" /> {/* 중앙 - 노랑 (중립) */}
-            <stop offset="75%" stopColor="#FF7043" stopOpacity="0.85" /> {/* 우중 - 주황빨강 */}
-            <stop offset="100%" stopColor="#FF4B3A" stopOpacity="0.9" /> {/* 우측 - 뜨거운 빨강 (강한 장력) */}
+            <stop offset="0%" stopColor="#FF4B3A" stopOpacity="0.9" />
+            <stop offset="25%" stopColor="#FF7043" stopOpacity="0.85" />
+            <stop offset="50%" stopColor="#F6C453" stopOpacity="0.75" />
+            <stop offset="75%" stopColor="#FF7043" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#FF4B3A" stopOpacity="0.9" />
           </linearGradient>
 
-          {/* 수직 방향 그라디언트 (보조 레이어): 상하 = 약한 장력 (푸른색) */}
+          {/* 수직 방향 그라디언트 (보조 레이어): 상하 = 약한 장력 */}
           <linearGradient id="starMembraneVertical" x1="50%" y1="0%" x2="50%" y2="100%">
-            <stop offset="0%" stopColor="#46B5E5" stopOpacity="0.6" />   {/* 상단 - 차가운 파랑 (약한 장력) */}
-            <stop offset="25%" stopColor="#2F82D0" stopOpacity="0.5" />  {/* 상중 - 청록 */}
-            <stop offset="50%" stopColor="#F6C453" stopOpacity="0.3" />  {/* 중앙 - 노랑 (투명하게) */}
-            <stop offset="75%" stopColor="#2F82D0" stopOpacity="0.5" />  {/* 하중 - 청록 */}
-            <stop offset="100%" stopColor="#46B5E5" stopOpacity="0.6" /> {/* 하단 - 차가운 파랑 (약한 장력) */}
+            <stop offset="0%" stopColor="#46B5E5" stopOpacity="0.6" />
+            <stop offset="25%" stopColor="#2F82D0" stopOpacity="0.5" />
+            <stop offset="50%" stopColor="#F6C453" stopOpacity="0.3" />
+            <stop offset="75%" stopColor="#2F82D0" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#46B5E5" stopOpacity="0.6" />
           </linearGradient>
 
         </defs>
@@ -1014,8 +1027,8 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
 
           // 앵커 위치 (기본)
           const anchorMultiplierMin = 1.2; // anchorLevel=0 → 타원 경계
-          const anchorMultiplierBaseMax = 2.8;
-          const anchorMultiplierHorizontalMax = 3.9; // 좌우측 앵커는 더 멀리
+          const anchorMultiplierBaseMax = 6.0; // 대각선, 상하 앵커 - 24번 프레임에서 화면 바깥으로 더 멀리
+          const anchorMultiplierHorizontalMax = 5.5; // 좌우측 앵커는 더 멀리 (24번 프레임에서 화면 바깥)
 
           const anchorRxBase = baseRx * lerp(anchorMultiplierMin, anchorMultiplierBaseMax, anchorLevel);
           const anchorRyBase = baseRy * lerp(anchorMultiplierMin, anchorMultiplierBaseMax, anchorLevel);
@@ -1097,11 +1110,11 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           }
           starPath += ' Z';
 
-          // 막 색상 강도 (colorLevel 적용)
-          const horizontalOpacityMin = 0.25;
-          const horizontalOpacityMax = 1.0;
-          const verticalOpacityMin = 0.175;
-          const verticalOpacityMax = 0.7;
+          // 막 색상 강도 (1번 프레임: 0% → 24번 프레임: 100% 점진적 증가)
+          const horizontalOpacityMin = 0.0;   // Frame 1: 완전 투명
+          const horizontalOpacityMax = 1.0;   // Frame 24: 완전 불투명
+          const verticalOpacityMin = 0.0;     // Frame 1: 완전 투명
+          const verticalOpacityMax = 0.7;     // Frame 24: 70% 불투명
 
           const horizontalOpacity = lerp(horizontalOpacityMin, horizontalOpacityMax, colorLevel);
           const verticalOpacity = lerp(verticalOpacityMin, verticalOpacityMax, colorLevel);
@@ -1110,7 +1123,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             <>
               {/* 별 모양 막 - 이방성 장력 분포 (2레이어 합성) */}
 
-              {/* 레이어 1: 수평 방향 장력 (주 레이어 - 좌우 붉은색) */}
+              {/* 레이어 1: 수평 방향 장력 (주 레이어 - 붉은색 고정) */}
               <path
                 d={starPath}
                 fill="url(#starMembraneHorizontal)"
@@ -1118,7 +1131,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
                 opacity={horizontalOpacity}
               />
 
-              {/* 레이어 2: 수직 방향 장력 (보조 레이어 - 상하 푸른색, 중첩) */}
+              {/* 레이어 2: 수직 방향 장력 (보조 레이어 - 푸른색, 중첩) */}
               <path
                 d={starPath}
                 fill="url(#starMembraneVertical)"
@@ -1807,6 +1820,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
         })()}
 
         {/* 라벨 텍스트 - 최상위 레이어 (모든 도형 위에 표시) */}
+        {/* 텍스트는 프레임 진행에 따라 페이드 아웃 (1→12: 100%→0%) */}
         {/* Y축 상단: Octave (옥타브 도형 중앙) */}
         <text
           x={cx}
@@ -1818,7 +1832,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           stroke="#000000"
           strokeWidth="0.5"
           fontWeight="700"
-          opacity={0.7}
+          opacity={1.0 - tonefieldLevel}
           style={{ paintOrder: "stroke fill" }}
         >
           Octave
@@ -1835,7 +1849,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           stroke="#000000"
           strokeWidth="0.5"
           fontWeight="700"
-          opacity={0.7}
+          opacity={1.0 - tonefieldLevel}
           style={{ paintOrder: "stroke fill" }}
         >
           Tonic
@@ -1852,7 +1866,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           stroke="#000000"
           strokeWidth="0.5"
           fontWeight="700"
-          opacity={0.7}
+          opacity={1.0 - tonefieldLevel}
           style={{ paintOrder: "stroke fill" }}
         >
           Fifth
@@ -1869,7 +1883,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           stroke="#000000"
           strokeWidth="0.5"
           fontWeight="700"
-          opacity={0.7}
+          opacity={1.0 - tonefieldLevel}
           style={{ paintOrder: "stroke fill" }}
         >
           Fifth

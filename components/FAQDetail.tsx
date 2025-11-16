@@ -3294,8 +3294,21 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                             </div>
                           </div>
                         ))}
-                        {/* FAQ ID "19"에만 그래프 추가 - 총 12개 (애니메이션 프레임) */}
-                        {Array.from({ length: 12 }, (_, i) => (
+
+                        {/* FAQ ID "19"에만 장력 튜닝 GIF 애니메이션 추가 */}
+                        {faq.id === "19" && (
+                          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+                            <img
+                              src="/images/tension.gif"
+                              alt="핸드팬 장력 튜닝 애니메이션"
+                              className="w-full h-auto rounded-lg"
+                            />
+                          </div>
+                        )}
+
+                        {/* FAQ ID "19"에만 그래프 추가 - 총 24개 (애니메이션 프레임) */}
+                        {/* 24개 프레임 다이어그램 비활성화 - PNG 파일로 저장 완료 */}
+                        {/* {Array.from({ length: 24 }, (_, i) => (
                           <div key={`diagram-${i}`} className="mt-6 w-full overflow-hidden">
                             <div className="w-full max-w-full">
                               <TonefieldTensionDiagram
@@ -3306,7 +3319,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                               />
                             </div>
                           </div>
-                        ))}
+                        ))} */}
                       </div>
                     )}
                   </>
@@ -3355,10 +3368,23 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                           {convertUrlsToLinks(paragraph)}
                         </p>
                       ))}
-                      {/* FAQ ID "19"에만 그래프 추가 - 총 12개 (애니메이션 프레임) */}
+
+                      {/* FAQ ID "19"에만 장력 튜닝 GIF 애니메이션 추가 (모바일) */}
                       {faq.id === "19" && (
+                        <div className="mt-6 bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-800 shadow-sm">
+                          <img
+                            src="/images/tension.gif"
+                            alt="핸드팬 장력 튜닝 애니메이션"
+                            className="w-full h-auto rounded-lg"
+                          />
+                        </div>
+                      )}
+
+                      {/* FAQ ID "19"에만 그래프 추가 - 총 24개 (애니메이션 프레임) */}
+                      {/* 24개 프레임 다이어그램 비활성화 - PNG 파일로 저장 완료 */}
+                      {/* {faq.id === "19" && (
                         <>
-                          {Array.from({ length: 12 }, (_, i) => (
+                          {Array.from({ length: 24 }, (_, i) => (
                             <div key={`diagram-mobile-${i}`} className="mt-6 w-full overflow-hidden">
                               <div className="w-full max-w-full">
                                 <TonefieldTensionDiagram
@@ -3371,7 +3397,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                             </div>
                           ))}
                         </>
-                      )}
+                      )} */}
                     </div>
                   )}
                 </>
