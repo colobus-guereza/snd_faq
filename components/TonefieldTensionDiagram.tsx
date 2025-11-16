@@ -750,13 +750,25 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             <stop offset="100%" stopColor="#020617" stopOpacity="0.0" />
           </radialGradient>
 
-          {/* 외부 막 그라데이션 (장력 분포 최적화: 톤필드 근처=연한 노랑 → 앵커=강한 빨강) */}
-          <radialGradient id="starMembraneFill" cx="50%" cy="50%" r="60%">
-            <stop offset="0%" stopColor="#FFF4C6" stopOpacity="0.7" />   {/* 톤필드 근처 - 밝은 연노랑 */}
-            <stop offset="35%" stopColor="#FFD079" stopOpacity="0.8" />  {/* 막 중앙부 - 노랑오렌지 */}
-            <stop offset="70%" stopColor="#FF9F45" stopOpacity="0.85" /> {/* 중고 장력 - 오렌지 */}
-            <stop offset="100%" stopColor="#FF7847" stopOpacity="0.9" /> {/* 앵커/가장자리 - 강한 오렌지레드 */}
-          </radialGradient>
+          {/* 외부 막 그라데이션 - 이방성 장력 분포 (방향별 색상) */}
+
+          {/* 수평 방향 그라디언트 (주 레이어): 좌우 = 강한 장력 (붉은색) */}
+          <linearGradient id="starMembraneHorizontal" x1="0%" y1="50%" x2="100%" y2="50%">
+            <stop offset="0%" stopColor="#FF4B3A" stopOpacity="0.9" />   {/* 좌측 - 뜨거운 빨강 (강한 장력) */}
+            <stop offset="25%" stopColor="#FF7043" stopOpacity="0.85" /> {/* 좌중 - 주황빨강 */}
+            <stop offset="50%" stopColor="#F6C453" stopOpacity="0.75" /> {/* 중앙 - 노랑 (중립) */}
+            <stop offset="75%" stopColor="#FF7043" stopOpacity="0.85" /> {/* 우중 - 주황빨강 */}
+            <stop offset="100%" stopColor="#FF4B3A" stopOpacity="0.9" /> {/* 우측 - 뜨거운 빨강 (강한 장력) */}
+          </linearGradient>
+
+          {/* 수직 방향 그라디언트 (보조 레이어): 상하 = 약한 장력 (푸른색) */}
+          <linearGradient id="starMembraneVertical" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stopColor="#46B5E5" stopOpacity="0.6" />   {/* 상단 - 차가운 파랑 (약한 장력) */}
+            <stop offset="25%" stopColor="#2F82D0" stopOpacity="0.5" />  {/* 상중 - 청록 */}
+            <stop offset="50%" stopColor="#F6C453" stopOpacity="0.3" />  {/* 중앙 - 노랑 (투명하게) */}
+            <stop offset="75%" stopColor="#2F82D0" stopOpacity="0.5" />  {/* 하중 - 청록 */}
+            <stop offset="100%" stopColor="#46B5E5" stopOpacity="0.6" /> {/* 하단 - 차가운 파랑 (약한 장력) */}
+          </linearGradient>
 
         </defs>
 
@@ -948,14 +960,22 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             };
           });
 
-          // 오목한 부분 좌표 (별 꼭지점 사이)
+          // 오목한 부분 좌표 (방향별 차등 오목도 - 좌우 더 깊게, 상하 덜 깊게)
           const valleyAngles = [22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5];
           const valleyPoints = valleyAngles.map(deg => {
             const rad = deg * Math.PI / 180;
+            // 수평 방향 성분 (좌우 = 1, 상하 = 0)
+            const horizontalComponent = Math.abs(Math.cos(rad));
+            // 좌우(수평): 0.672 (더 깊게), 상하(수직): 0.781 (덜 깊게)
+            // 오목도 30% 총 축소 (10% + 10% + 10%): 톤필드 경계선 침범 방지
+            const valleyMultiplier = 0.781 - 0.109 * horizontalComponent;
+            const valleyRx = baseRx * valleyMultiplier;
+            const valleyRy = baseRy * valleyMultiplier;
+
             return {
               angle: deg,
-              x: cx + starInnerRx * Math.cos(rad),
-              y: adjustedCy + starInnerRy * Math.sin(rad)
+              x: cx + valleyRx * Math.cos(rad),
+              y: adjustedCy + valleyRy * Math.sin(rad)
             };
           });
 
@@ -986,10 +1006,29 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
 
           return (
             <>
-              {/* 별 모양 막 */}
+              {/* 별 모양 막 - 이방성 장력 분포 (2레이어 합성) */}
+
+              {/* 레이어 1: 수평 방향 장력 (주 레이어 - 좌우 붉은색) */}
               <path
                 d={starPath}
-                fill="url(#starMembraneFill)"
+                fill="url(#starMembraneHorizontal)"
+                stroke="none"
+                opacity={1.0}
+              />
+
+              {/* 레이어 2: 수직 방향 장력 (보조 레이어 - 상하 푸른색, 중첩) */}
+              <path
+                d={starPath}
+                fill="url(#starMembraneVertical)"
+                stroke="none"
+                opacity={0.7}
+                style={{ mixBlendMode: 'multiply' }}
+              />
+
+              {/* 막 외곽선 (구조 강조) */}
+              <path
+                d={starPath}
+                fill="none"
                 stroke="#3d7058"
                 strokeWidth={1.4}
                 opacity={0.92}
@@ -1019,7 +1058,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
 
                   return (
                     <g key={`star-anchor-${i}`}>
-                      {/* 핀 샤프트 (못대) */}
+                      {/* 핀 샤프트 (못대) - 시선 집중 감소 */}
                       <line
                         x1={point.x}
                         y1={point.y}
@@ -1027,32 +1066,35 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
                         y2={shaftEndY}
                         stroke="#3d7058"
                         strokeWidth={shaftWidth}
+                        strokeOpacity={0.5}
                         strokeLinecap="round"
                       />
-                      {/* 핀 헤드 (못머리) - 더 크고 뚜렷하게 */}
+                      {/* 핀 헤드 (못머리) - 투명도 낮춤 */}
                       <circle
                         cx={point.x}
                         cy={point.y}
                         r={7}
                         fill="#505050"
+                        fillOpacity={0.6}
                         stroke="#2a2a2a"
                         strokeWidth={1.5}
+                        strokeOpacity={0.7}
                       />
-                      {/* 핀 헤드 하이라이트 (금속 광택 효과) */}
+                      {/* 핀 헤드 하이라이트 - 축소 */}
                       <circle
                         cx={point.x - 2}
                         cy={point.y - 2}
                         r={2.5}
                         fill="#ffffff"
-                        opacity={0.6}
+                        opacity={0.3}
                       />
                     </g>
                   );
                 })}
               </g>
 
-              {/* 앵커 → 별 꼭지점 연결선 */}
-              <g stroke="#3d7058" strokeWidth={1.2} strokeLinecap="round">
+              {/* 앵커 → 별 꼭지점 연결선 - 시선 집중 감소 */}
+              <g stroke="#3d7058" strokeWidth={1.2} strokeOpacity={0.4} strokeLinecap="round">
                 {anchorPoints.map((anchor, i) => {
                   const star = starPoints[i];
                   return (
@@ -1284,7 +1326,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             );
           })}
 
-        {/* ===== 대각선 (점선) ===== */}
+        {/* ===== 대각선 (점선) - 복잡도 감소 ===== */}
         {/* 옥타브 대각선 */}
         {getOctaveDiagonalLines().map((line, idx) => (
           <line
@@ -1294,7 +1336,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             x2={line.x2}
             y2={line.y2}
             stroke="#334155"
-            strokeOpacity="0.5"
+            strokeOpacity="0.25"
             strokeWidth="0.5"
             strokeDasharray="4 2"
           />
@@ -1309,7 +1351,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             x2={line.x2}
             y2={line.y2}
             stroke="#334155"
-            strokeOpacity="0.5"
+            strokeOpacity="0.25"
             strokeWidth="0.5"
             strokeDasharray="4 2"
           />
@@ -1324,7 +1366,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             x2={line.x2}
             y2={line.y2}
             stroke="#334155"
-            strokeOpacity="0.5"
+            strokeOpacity="0.25"
             strokeWidth="0.5"
             strokeDasharray="4 2"
           />
@@ -1339,7 +1381,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             x2={line.x2}
             y2={line.y2}
             stroke="#334155"
-            strokeOpacity="0.5"
+            strokeOpacity="0.25"
             strokeWidth="0.5"
             strokeDasharray="4 2"
           />
@@ -1384,32 +1426,122 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           );
         })}
 
-        {/* Radial tension arrows: 외부 방사형 화살표 (방향별 장력 강도 표현) */}
-        {dirs.map((t, i) => {
-          const { shaft, head } = arrowPath(t);
+        {/* Traction vectors: 8개 주요 장력 벡터 (톤필드 → 막 꼭지점) - 방향별 이방성 장력 표현 */}
+        {(() => {
+          // 8개 방향 각도와 star 꼭지점 계산
+          const starAngles = [0, 45, 90, 135, 180, 225, 270, 315];
 
-          // 수평 방향 성분 계산 (좌우 = 1, 상하 = 0)
-          const horizontalIntensity = Math.abs(Math.cos(t));
+          return starAngles.map((deg, i) => {
+            const rad = deg * Math.PI / 180;
 
-          // 색상 보간: 수평(빨강) ↔ 수직(주황)
-          // 빨강 #FF4D4D (255, 77, 77)
-          // 주황 #FF9F45 (255, 159, 69)
-          const r = 255;
-          const g = Math.round(77 + (159 - 77) * (1 - horizontalIntensity));
-          const b = Math.round(77 + (69 - 77) * (1 - horizontalIntensity));
-          const arrowColor = `rgb(${r}, ${g}, ${b})`;
+            // 방향 분류: 타원의 단축(좌우)은 강한 장력, 장축(상하)은 약한 장력
+            const isHorizontal = (deg === 0 || deg === 180);
+            const isVertical = (deg === 90 || deg === 270);
 
-          return (
-            <g key={i}>
-              {/* 외곽선 (흰색 테두리로 가독성 향상) */}
-              <path d={shaft} stroke="#ffffff" strokeWidth={4} fill="none" opacity={0.8} />
-              <path d={head} stroke="#ffffff" strokeWidth={4} fill="none" opacity={0.8} />
-              {/* 화살표 본체 (장력 색상) */}
-              <path d={shaft} stroke={arrowColor} strokeWidth={2.5} fill="none" />
-              <path d={head} stroke={arrowColor} strokeWidth={2.5} fill="none" />
-            </g>
-          );
-        })}
+            // 방향별 화살표 속성: 색상, 두께, 길이
+            let arrowColor: string;
+            let arrowThickness: number;
+            let lengthMultiplier: number;
+
+            if (isHorizontal) {
+              // 좌우 (단축): 강한 장력 → 붉은색, 굵고 길게
+              arrowColor = "#FF4B3A";        // 뜨거운 빨강
+              arrowThickness = 6.0;          // 기본 대비 ~1.7배
+              lengthMultiplier = 1.3;        // 30% 더 길게
+            } else if (isVertical) {
+              // 상하 (장축): 약한 장력 → 푸른색, 기본 두께
+              arrowColor = "#46B5E5";        // 차가운 파랑
+              arrowThickness = 3.5;          // 기본 두께
+              lengthMultiplier = 1.0;        // 기본 길이
+            } else {
+              // 대각선: 중간 장력 → 노란색, 중간 두께/길이
+              arrowColor = "#F6C453";        // 노란색
+              arrowThickness = 4.5;          // 중간 두께
+              lengthMultiplier = 1.15;       // 약간 더 길게
+            }
+
+            // 좌우측 꼭지점은 더 바깥쪽
+            const baseRx = rx / 1.2;
+            const baseRy = ry / 1.2;
+            const tipMultiplier = isHorizontal ? 2.12 : 1.8;
+            const tipRx = baseRx * tipMultiplier;
+            const tipRy = baseRy * tipMultiplier;
+
+            // 화살표 시작점: 톤필드 외곽 경계 바로 바깥 (2-3px)
+            const startX = cx + (rx + 3) * Math.cos(rad);
+            const startY = adjustedCy + (ry + 3) * Math.sin(rad);
+
+            // 화살표 끝점: 막의 각 꼭지점 바로 안쪽, 방향별 길이 조정
+            const endX = cx + ((tipRx - 5) * lengthMultiplier) * Math.cos(rad);
+            const endY = adjustedCy + ((tipRy - 5) * lengthMultiplier) * Math.sin(rad);
+
+            // 화살표 헤드 크기
+            const arrowHeadLength = 12;
+            const arrowHeadWidth = 8;
+
+            // 화살표 방향 벡터
+            const dx = endX - startX;
+            const dy = endY - startY;
+            const length = Math.sqrt(dx * dx + dy * dy);
+            const ux = dx / length;
+            const uy = dy / length;
+
+            // 화살촉 좌표
+            const headBaseX = endX - ux * arrowHeadLength;
+            const headBaseY = endY - uy * arrowHeadLength;
+            const headLeft = {
+              x: headBaseX - uy * arrowHeadWidth,
+              y: headBaseY + ux * arrowHeadWidth
+            };
+            const headRight = {
+              x: headBaseX + uy * arrowHeadWidth,
+              y: headBaseY - ux * arrowHeadWidth
+            };
+
+            return (
+              <g key={`traction-vector-${i}`}>
+                {/* 화살표 샤프트 (흰색 외곽선) */}
+                <line
+                  x1={startX}
+                  y1={startY}
+                  x2={headBaseX}
+                  y2={headBaseY}
+                  stroke="#ffffff"
+                  strokeWidth={arrowThickness + 2}
+                  strokeLinecap="round"
+                  opacity={0.7}
+                />
+                {/* 화살표 샤프트 (본체) */}
+                <line
+                  x1={startX}
+                  y1={startY}
+                  x2={headBaseX}
+                  y2={headBaseY}
+                  stroke={arrowColor}
+                  strokeWidth={arrowThickness}
+                  strokeLinecap="round"
+                />
+                {/* 화살촉 (흰색 외곽선) */}
+                <path
+                  d={`M ${headLeft.x},${headLeft.y} L ${endX},${endY} L ${headRight.x},${headRight.y}`}
+                  stroke="#ffffff"
+                  strokeWidth={arrowThickness + 2}
+                  strokeLinejoin="miter"
+                  fill="none"
+                  opacity={0.7}
+                />
+                {/* 화살촉 (본체) */}
+                <path
+                  d={`M ${headLeft.x},${headLeft.y} L ${endX},${endY} L ${headRight.x},${headRight.y}`}
+                  stroke={arrowColor}
+                  strokeWidth={arrowThickness}
+                  strokeLinejoin="miter"
+                  fill={arrowColor}
+                />
+              </g>
+            );
+          });
+        })()}
 
         {/* 바깥 타원 8개 꼭지점 좌표 표시 (상하좌우 + 대각선 4곳) */}
         {(() => {
