@@ -8,7 +8,6 @@ import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
 import AcousticMaturityChart from "./AcousticMaturityChart";
 import TonefieldTensionDiagram from "./TonefieldTensionDiagram";
-import TensionMembraneDiagram from "./TensionMembraneDiagram";
 import Harmonics123Plot from "./Harmonics123Plot";
 import OctaveResonancePlot from "./OctaveResonancePlot";
 import C4C5G6ResonancePlot from "./C4C5G6ResonancePlot";
@@ -3301,12 +3300,6 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                             <TonefieldTensionDiagram width={720} height={480} color="#14B8A6" />
                           </div>
                         </div>
-                        {/* 장력 멤브레인 다이어그램 (8개 앵커) */}
-                        <div className="mt-6 w-full overflow-hidden">
-                          <div className="w-full max-w-full">
-                            <TensionMembraneDiagram />
-                          </div>
-                        </div>
                       </div>
                     )}
                   </>
@@ -3361,12 +3354,6 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                           <div className="mt-6 w-full overflow-hidden">
                             <div className="w-full max-w-full">
                               <TonefieldTensionDiagram width={720} height={480} color="#14B8A6" />
-                            </div>
-                          </div>
-                          {/* 장력 멤브레인 다이어그램 (8개 앵커) */}
-                          <div className="mt-6 w-full overflow-hidden">
-                            <div className="w-full max-w-full">
-                              <TensionMembraneDiagram />
                             </div>
                           </div>
                         </>

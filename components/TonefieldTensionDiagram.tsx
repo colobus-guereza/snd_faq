@@ -750,11 +750,13 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             <stop offset="100%" stopColor="#020617" stopOpacity="0.0" />
           </radialGradient>
 
-          {/* 별 모양 막 그라데이션 (노란색 → 연녹색) */}
+          {/* 외부 막 그라데이션 (텐세일 구조 장력 모델: 중심=저응력(파랑) → 외곽=고응력(빨강)) */}
           <radialGradient id="starMembraneFill" cx="50%" cy="50%" r="60%">
-            <stop offset="0%" stopColor="#fff9b1" />
-            <stop offset="45%" stopColor="#fff176" />
-            <stop offset="100%" stopColor="#7fe38a" />
+            <stop offset="0%" stopColor="#3A77C7" />   {/* 최저 장력 (중심, 푸른색) */}
+            <stop offset="25%" stopColor="#89D4F0" />  {/* 약한 장력 (하늘색) */}
+            <stop offset="50%" stopColor="#FFE283" />  {/* 중간 장력 (노랑) */}
+            <stop offset="75%" stopColor="#FF9F45" />  {/* 중고 장력 (주황) */}
+            <stop offset="100%" stopColor="#FF4D4D" /> {/* 고장력 (앵커 근처, 붉은색) */}
           </radialGradient>
 
         </defs>
@@ -915,23 +917,33 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           const baseRy = ry / 1.2; // 144 / 1.2 = 120
           const starOuterRx = baseRx * 1.8; // 별 꼭지점 반경
           const starOuterRy = baseRy * 1.8;
-          const starInnerRx = baseRx * 1.1; // 오목한 부분 반경
-          const starInnerRy = baseRy * 1.1;
+          const starInnerRx = baseRx * 0.88; // 오목한 부분 반경 (30% 더 오목하게)
+          const starInnerRy = baseRy * 0.88;
 
-          // 앵커 위치 (더 멀리 배치하여 당겨진 느낌 강화)
-          const anchorRx = baseRx * 2.8;
-          const anchorRy = baseRy * 2.8;
+          // 앵커 위치 (기본)
+          const anchorRxBase = baseRx * 2.8;
+          const anchorRyBase = baseRy * 2.8;
+          // 좌우측 앵커는 더 멀리 (꼭지점 증가 비율 반영: 2.12/1.8 = 1.178)
+          const anchorRxHorizontal = baseRx * 3.9;
+          const anchorRyHorizontal = baseRy * 3.9;
 
           // 8개 방향 각도 (별 꼭지점)
           const starAngles = [0, 45, 90, 135, 180, 225, 270, 315];
 
-          // 별 꼭지점 좌표
+          // 별 꼭지점 좌표 (좌우측은 더 바깥으로)
           const starPoints = starAngles.map(deg => {
             const rad = deg * Math.PI / 180;
+            // 좌측(180°) 또는 우측(0°)인지 확인
+            const isHorizontal = (deg === 0 || deg === 180);
+            // 좌우측 꼭지점은 앵커 증가 비율(3.3/2.8 = 1.179)만큼 더 바깥으로
+            const tipMultiplier = isHorizontal ? 2.12 : 1.8;
+            const tipRx = baseRx * tipMultiplier;
+            const tipRy = baseRy * tipMultiplier;
+
             return {
               angle: deg,
-              x: cx + starOuterRx * Math.cos(rad),
-              y: adjustedCy + starOuterRy * Math.sin(rad)
+              x: cx + tipRx * Math.cos(rad),
+              y: adjustedCy + tipRy * Math.sin(rad)
             };
           });
 
@@ -946,9 +958,14 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             };
           });
 
-          // 앵커 좌표
+          // 앵커 좌표 (좌우측은 더 멀리 배치)
           const anchorPoints = starAngles.map(deg => {
             const rad = deg * Math.PI / 180;
+            // 좌측(180°) 또는 우측(0°)인지 확인
+            const isHorizontal = (deg === 0 || deg === 180);
+            const anchorRx = isHorizontal ? anchorRxHorizontal : anchorRxBase;
+            const anchorRy = isHorizontal ? anchorRyHorizontal : anchorRyBase;
+
             return {
               angle: deg,
               x: cx + anchorRx * Math.cos(rad),
@@ -977,11 +994,60 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
                 opacity={0.92}
               />
 
-              {/* 앵커 8개 */}
-              <g fill="#fefefe" stroke="#3d7058" strokeWidth={1.4}>
-                {anchorPoints.map((point, i) => (
-                  <circle key={`star-anchor-${i}`} cx={point.x} cy={point.y} r={6} />
-                ))}
+              {/* 앵커 8개 (핀/못 형태) */}
+              <g>
+                {anchorPoints.map((point, i) => {
+                  // 앵커에서 중심으로 향하는 방향 벡터 계산
+                  const dx = cx - point.x;
+                  const dy = adjustedCy - point.y;
+                  const dist = Math.sqrt(dx * dx + dy * dy);
+                  const ux = dx / dist;
+                  const uy = dy / dist;
+
+                  // 핀의 샤프트(못대) 길이와 너비
+                  const shaftLength = 12;
+                  const shaftWidth = 3;
+
+                  // 샤프트 끝점 (중심 방향으로)
+                  const shaftEndX = point.x + ux * shaftLength;
+                  const shaftEndY = point.y + uy * shaftLength;
+
+                  // 샤프트에 수직인 벡터 (샤프트 너비용)
+                  const perpX = -uy;
+                  const perpY = ux;
+
+                  return (
+                    <g key={`star-anchor-${i}`}>
+                      {/* 핀 샤프트 (못대) */}
+                      <line
+                        x1={point.x}
+                        y1={point.y}
+                        x2={shaftEndX}
+                        y2={shaftEndY}
+                        stroke="#3d7058"
+                        strokeWidth={shaftWidth}
+                        strokeLinecap="round"
+                      />
+                      {/* 핀 헤드 (못머리) - 더 크고 뚜렷하게 */}
+                      <circle
+                        cx={point.x}
+                        cy={point.y}
+                        r={7}
+                        fill="#505050"
+                        stroke="#2a2a2a"
+                        strokeWidth={1.5}
+                      />
+                      {/* 핀 헤드 하이라이트 (금속 광택 효과) */}
+                      <circle
+                        cx={point.x - 2}
+                        cy={point.y - 2}
+                        r={2.5}
+                        fill="#ffffff"
+                        opacity={0.6}
+                      />
+                    </g>
+                  );
+                })}
               </g>
 
               {/* 앵커 → 별 꼭지점 연결선 */}
@@ -1317,13 +1383,29 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           );
         })}
 
-        {/* Radial tension arrows: 외부 방사형 화살표 (v2.5 재활성화) */}
+        {/* Radial tension arrows: 외부 방사형 화살표 (방향별 장력 강도 표현) */}
         {dirs.map((t, i) => {
           const { shaft, head } = arrowPath(t);
+
+          // 수평 방향 성분 계산 (좌우 = 1, 상하 = 0)
+          const horizontalIntensity = Math.abs(Math.cos(t));
+
+          // 색상 보간: 수평(빨강) ↔ 수직(주황)
+          // 빨강 #FF4D4D (255, 77, 77)
+          // 주황 #FF9F45 (255, 159, 69)
+          const r = 255;
+          const g = Math.round(77 + (159 - 77) * (1 - horizontalIntensity));
+          const b = Math.round(77 + (69 - 77) * (1 - horizontalIntensity));
+          const arrowColor = `rgb(${r}, ${g}, ${b})`;
+
           return (
             <g key={i}>
-              <path d={shaft} stroke={color} strokeWidth={2} fill="none" />
-              <path d={head} stroke={color} strokeWidth={2} fill="none" />
+              {/* 외곽선 (흰색 테두리로 가독성 향상) */}
+              <path d={shaft} stroke="#ffffff" strokeWidth={4} fill="none" opacity={0.8} />
+              <path d={head} stroke="#ffffff" strokeWidth={4} fill="none" opacity={0.8} />
+              {/* 화살표 본체 (장력 색상) */}
+              <path d={shaft} stroke={arrowColor} strokeWidth={2.5} fill="none" />
+              <path d={head} stroke={arrowColor} strokeWidth={2.5} fill="none" />
             </g>
           );
         })}
