@@ -106,8 +106,15 @@ export default function OctaveResonancePlot() {
 
       <p className="text-sm text-gray-700 dark:text-gray-300 max-w-3xl leading-relaxed text-center">
         {language === "ko" 
-          ? "일반 악기에서는 C4를 연주하면 주로 C4만 진동하지만, 핸드팬은 각 톤필드 안에 C4(토닉)·C5(옥타브)·G5(복합5도)가 함께 세팅되어 있습니다. 따라서 C4를 칠 때 같은 음계의 옥타브(C5)가 위상적으로 결속되어 함께 공명하는 것은 자연스러운 현상입니다. 아래 그래프는 시간-진폭 좌표계에서 C4(파란색), C5(주황색), 합성파(검정색)를 그립니다. 수직 가이드선은 C4의 한 주기 T₀마다 찍혀 위상 정렬 지점을 표시합니다. f(C5)=2·f(C4)이므로, 매 T₀마다 두 파는 다시 위상이 맞습니다. 이는 조율이 잘된 악기일수록 더 명확하게 들리며, 핸드팬의 음질 품질을 나타내는 긍정적 징후입니다."
+          ? "일반 악기에서는 C4를 연주하면 주로 C4만 진동하지만, 핸드팬은 C4 하나의 톤필드 안에 C4(토닉)·C5(옥타브)·G5(복합5도)가 함께 세팅되어 있습니다. 따라서 C4를 칠 때 같은 음계의 옥타브(C5)가 위상적으로 결속되어 함께 공명하는 것은 자연스러운 현상입니다. 아래 그래프는 시간-진폭 좌표계에서 C4(파란색), C5(주황색), 합성파(검정색)를 그립니다. 수직 가이드선은 C4의 한 주기 T₀마다 찍혀 위상정합 지점을 표시합니다. f(C5)=2·f(C4)이므로, 매 T₀마다 두 파는 다시 위상정합됩니다. 이는 조율이 잘된 악기일수록 더 명확하게 들리며, 핸드팬의 음질 품질을 나타내는 긍정적 징후입니다."
           : "In general instruments, when C4 is played, mainly C4 vibrates, but in a handpan, C4 (tonic), C5 (octave), and G5 (compound 5th) are set together within each tone field. Therefore, when C4 is played, it is a natural phenomenon for the octave (C5) of the same scale to be phase-locked and resonate together. The graph below plots C4 (blue), C5 (orange), and the composite wave (black) in a time-amplitude coordinate system. Vertical guide lines are marked at each C4 period T₀ to show phase alignment points. Since f(C5)=2·f(C4), the two waves realign in phase every T₀. This is heard more clearly in well-tuned instruments and is a positive sign indicating the sound quality of the handpan."}
+      </p>
+      
+      {/* 그래프 캡션 */}
+      <p className="text-xs text-gray-500 dark:text-gray-400 text-center italic">
+        {language === "ko" 
+          ? "C4-C5의 합성파형을 단순화한 개념적 모델. 실제 측정값이 아님." 
+          : "Conceptual model simplifying the composite waveform of C4-C5. Not actual measured values."}
       </p>
 
       <div ref={containerRef} className="w-full overflow-x-auto rounded-xl ring-1 ring-gray-200 dark:ring-gray-700">
@@ -187,7 +194,7 @@ export default function OctaveResonancePlot() {
             {language === "ko" ? "진폭" : "Amplitude"}
           </text>
           <text x={W - padR} y={H - padB + 32} fontSize={12} fill="#333" className="dark:fill-gray-300" textAnchor="end">
-            {language === "ko" ? "시간" : "Time"}
+            {language === "ko" ? "시간 (밀리초)" : "Time (ms)"}
           </text>
 
           {/* Waveforms */}
@@ -200,7 +207,7 @@ export default function OctaveResonancePlot() {
             <rect width="220" height="54" fill="#ffffff" stroke="#e5e7eb" className="dark:fill-gray-900 dark:stroke-gray-700" />
             <LegendItem y={12} color="#2563eb" label={language === "ko" ? "C4 (261.63 Hz)" : "C4 (261.63 Hz)"} />
             <LegendItem y={30} color="#f59e0b" label={language === "ko" ? "C5 (523.25 Hz, 약한 공명·감쇠)" : "C5 (523.25 Hz, weak resonance·decay)"} />
-            <LegendItem y={48} color="#111827" label={language === "ko" ? "합성파 C4 + C5" : "Composite C4 + C5"} />
+            <LegendItem y={48} color="#111827" label={language === "ko" ? "합성파 C4 + C5 (위상합성)" : "Composite C4 + C5 (Phase Synthesis)"} />
           </g>
         </svg>
       </div>
@@ -214,18 +221,13 @@ export default function OctaveResonancePlot() {
           <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
             <p>
               {language === "ko"
-                ? "본 도표는 실제 녹음 데이터가 아니라, 옥타브 관계(1:2 주파수 비)의 진동이 위상적으로 결속되어 공명하는 현상을 수학적으로 단순화한 개념적 시각화입니다."
-                : "This diagram is not actual recorded data, but a conceptual visualization that mathematically simplifies the phenomenon of vibrations in an octave relationship (1:2 frequency ratio) being phase-coupled to resonate."}
+                ? "본 도표는 실제 녹음 데이터가 아니라, 옥타브 간(1:2 주파수 비율)의 위상정합에 따른 진폭 상호작용을 단순화하여 시각적으로 모델링한 파형입니다. 조율 정합이 양호할수록 두 톤필드가 주기적으로 결속된 에너지를 공유한다는 원리를 표현한 개념도입니다."
+                : "This diagram is not actual recorded data, but a waveform visually modeled by simplifying amplitude interactions due to phase alignment between octaves (1:2 frequency ratio). It is a conceptual diagram expressing the principle that the better the tuning alignment, the more periodically the two tone fields share coupled energy."}
             </p>
             <p>
               {language === "ko"
-                ? "C4와 C5의 파형은 이론적 주파수 비를 기준으로 생성되었으며, 조율 정합이 높을수록 두 파형이 주기적으로 겹쳐져 에너지가 증폭되는 원리를 표현합니다."
-                : "The waveforms of C4 and C5 are generated based on theoretical frequency ratios, expressing the principle that higher tuning coherence causes the two waveforms to periodically overlap and amplify energy."}
-            </p>
-            <p>
-              {language === "ko"
-                ? "따라서 본 그래프는 실험 데이터가 아니라, 공명 개념의 시각적 이해를 돕기 위한 추상화 모델입니다."
-                : "Therefore, this graph is not experimental data but an abstracted model to aid visual understanding of the resonance concept."}
+                ? "본 페이지는 핸드팬의 옥타브 공명 현상을 이해하기 위한 이론적 모델 개념도입니다. 실제 측정 데이터가 아닌 주파수 비율(1:2) 기반의 단순화된 파형 합성 예시로, 조율 품질이 우수할수록 두 모드가 위상적으로 안정된 공결 상태를 형성한다는 원리를 시각적으로 설명합니다."
+                : "This page is a conceptual diagram of a theoretical model for understanding the octave resonance phenomenon of a handpan. It is a simplified waveform synthesis example based on a frequency ratio (1:2), not actual measured data, visually explaining the principle that the better the tuning quality, the more phase-stable the two modes become, forming a coupled state."}
             </p>
           </div>
         </div>
@@ -246,7 +248,7 @@ export default function OctaveResonancePlot() {
               </p>
               <p>
                 {language === "ko"
-                  ? "도표에서 보시는 것처럼, C4를 연주하면 옥타브 관계인 C5가 자동으로 함께 진동합니다. 이는 두 음의 주파수 비가 정확히 1:2일 때 발생하는 자연스러운 현상입니다. 파란색(C4)과 주황색(C5) 파형이 주기적으로 겹치는 지점에서 검정색 합성파의 진폭이 커지는 것을 확인할 수 있습니다."
+                  ? "도표에서 보는 것처럼, C4를 연주하면 옥타브 관계인 C5가 자동으로 함께 진동합니다. 이는 두 음의 주파수 비가 정확히 1:2일 때 발생하는 자연스러운 현상입니다. 파란색(C4)과 주황색(C5) 파형이 주기적으로 겹치는 지점에서 검정색 합성파의 진폭이 커지는 것을 확인할 수 있습니다."
                   : "As shown in the diagram, when C4 is played, C5, which is in an octave relationship, automatically vibrates together. This is a natural phenomenon that occurs when the frequency ratio of the two notes is exactly 1:2. You can see that at points where the blue (C4) and orange (C5) waveforms periodically overlap, the amplitude of the black composite wave increases."}
               </p>
             </div>
@@ -256,7 +258,7 @@ export default function OctaveResonancePlot() {
               </p>
               <p>
                 {language === "ko"
-                  ? "새 악기는 C4와 C5의 주파수 비가 매우 정확하게 1:2로 맞춰져 있어, 위상이 주기적으로 완벽하게 결속됩니다. 도표의 수직 가이드선(k·T₀)이 보여주는 것처럼, 매 주기마다 두 파형이 같은 위상으로 만나 에너지가 최대한 증폭됩니다. 시간이 지나면서 미세한 조율 변화가 생기면 이 결속이 약간 느슨해져 공명 강도가 감소합니다."
+                  ? "새 악기는 C4와 C5의 주파수 비가 매우 정확하게 1:2로 맞춰져 있어, 위상정합이 주기적으로 완벽하게 이루어집니다. 도표의 수직 가이드선(k·T₀)이 보여주는 것처럼, 매 주기마다 두 파형이 같은 위상으로 만나 에너지가 최대한 증폭됩니다. 시간이 지나면서 미세한 조율 변화가 생기면 이 위상정합이 약간 느슨해져 공명 강도가 감소합니다."
                   : "New instruments have a very precise 1:2 frequency ratio between C4 and C5, allowing phases to periodically bind perfectly. As shown by the vertical guide lines (k·T₀) in the diagram, the two waveforms meet at the same phase every cycle, maximizing energy amplification. Over time, subtle tuning changes cause this binding to loosen slightly, reducing resonance intensity."}
               </p>
             </div>
@@ -276,7 +278,7 @@ export default function OctaveResonancePlot() {
               </p>
               <p>
                 {language === "ko"
-                  ? "사용하면서 금속 내부 응력이 완화되고 미세한 변형이 누적되면, C4와 C5의 주파수 비가 약간 어긋날 수 있습니다. 이 경우 도표에서 보이는 주기적 위상 결속이 완벽하지 않게 되어 공명 강도가 감소합니다. 하지만 이는 자연스러운 성숙 과정이며, 소리는 부드러워지면서 하모닉스의 에너지 분포가 더 균형 있게 됩니다. 정기 리튠을 통해 이 상태를 복원할 수 있습니다."
+                  ? "사용하면서 금속 내부 응력이 완화되고 미세한 변형이 누적되면, C4와 C5의 주파수 비가 약간 어긋날 수 있습니다. 이 경우 도표에서 보이는 주기적 위상정합이 완벽하지 않게 되어 공명 강도가 감소합니다. 하지만 이는 자연스러운 성숙 과정이며, 소리는 부드러워지면서 하모닉스의 에너지 분포가 더 균형 있게 됩니다. 정기 리튠을 통해 이 상태를 복원할 수 있습니다."
                   : "As you use the instrument, internal stress in the metal relaxes and subtle deformations accumulate, which can slightly misalign the frequency ratio between C4 and C5. In this case, the periodic phase binding shown in the diagram becomes less perfect, reducing resonance intensity. However, this is a natural maturation process, and the sound becomes softer while the energy distribution of harmonics becomes more balanced. Regular retuning can restore this state."}
               </p>
             </div>
@@ -326,7 +328,7 @@ function DetailsPanel({ f0, f1, T0, language }: { f0: number; f1: number; T0: nu
           <Info k="f(C4)" v={`${f0.toFixed(2)} Hz`} />
           <Info k="f(C5)" v={`${f1.toFixed(2)} Hz`} />
           <Info k="T₀ = 1/f(C4)" v={`${ms(T0)} ms`} />
-          <Info k={language === "ko" ? "정렬 주기" : "Alignment Period"} v={language === "ko" ? "매 T₀마다 위상 재정렬" : "Phase realignment every T₀"} />
+          <Info k={language === "ko" ? "정렬 주기" : "Alignment Period"} v={language === "ko" ? "매 T₀마다 위상정합" : "Phase alignment every T₀"} />
         </div>
       </div>
     </section>

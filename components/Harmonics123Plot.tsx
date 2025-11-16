@@ -59,6 +59,11 @@ export default function Harmonics123Plot() {
             ? "(기본음–옥타브–복합5도 3모드의 위상 결속 구조)"
             : "(Phase Coupling Structure of Three Modes: Fundamental–Octave–Compound Fifth)"}
         </p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">
+          {language === "ko" 
+            ? "도표 1. 1:2:3 하모닉스 동기화 개념도(모식도)"
+            : "Chart 1. 1:2:3 Harmonic Synchronization Conceptual Diagram (Schematic)"}
+        </p>
       </div>
 
       {/* 1. 개요 */}
@@ -69,8 +74,8 @@ export default function Harmonics123Plot() {
         <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed space-y-3">
           <p>
             {language === "ko" 
-              ? "이 도표는 세 개의 정현파 y = sin(kt) (k = 1, 2, 3)을 0에서 2π 구간에 표시하여, 주파수비 1:2:3으로 조율된 세 하모닉 모드가 시간축 상에서 위상 정합(phase alignment)과 진동 동기(synchronization)를 이루는 원리를 시각화한 것입니다."
-              : "This diagram visualizes three sine waves y = sin(kt) (k = 1, 2, 3) over the interval from 0 to 2π, demonstrating how three harmonic modes tuned at a 1:2:3 frequency ratio achieve phase alignment and vibration synchronization on the time axis."}
+              ? "이 도표는 세 개의 정현파 y = sin(kt) (k = 1, 2, 3)을 0에서 2π 구간에 표시하여, 주파수비 1:2:3으로 조율된 세 하모닉 모드가 시간축 상에서 위상 정합(phase alignment)과 진동 동기(synchronization)를 이루는 원리를 시각화한 개념도입니다."
+              : "This diagram is a conceptual diagram that visualizes three sine waves y = sin(kt) (k = 1, 2, 3) over the interval from 0 to 2π, demonstrating how three harmonic modes tuned at a 1:2:3 frequency ratio achieve phase alignment and vibration synchronization on the time axis."}
           </p>
           <p>
             {language === "ko" 
@@ -79,8 +84,8 @@ export default function Harmonics123Plot() {
           </p>
           <p>
             {language === "ko" 
-              ? "이 도표는 단순한 수학적 파형이 아니라, 금속판 위에서 실제로 구현되는 핸드팬 하모닉스 튜닝의 물리적 원리를 추상화한 모델입니다. 이 원리는 '하모닉스 동기화(Harmonic Synchronization)'라 불리며, 핸드팬의 음색 품질·조율 안정성·지속성을 결정하는 핵심 물리 기반입니다. 이러한 구조 덕분에 핸드팬은 단순한 금속 타악기와 달리 조화적 진동체처럼 작용합니다."
-              : "This diagram is not merely a mathematical waveform but an abstracted model of the physical principles of handpan harmonic tuning realized on a metal plate. This principle is called 'Harmonic Synchronization' and forms the core physical foundation determining the handpan's timbre quality, tuning stability, and sustain. Thanks to this structure, handpans function as harmonic oscillators, unlike simple metal percussion instruments."}
+              ? "이 도표는 1:2:3 정수비 관계의 세 모드를 단순화하여 표현한 이상적인 개념적 모델로, 실제 핸드팬 톤필드에서 관측되는 기본음-옥타브-복합5도 구조를 이해하기 위한 교육적 모식도입니다. 이 원리는 '하모닉스 동기화(Harmonic Synchronization)'라 불리며, 핸드팬의 음색 품질·조율 안정성·지속성을 이해하는 데 도움을 주는 개념적 기반입니다. 이러한 구조 덕분에 핸드팬은 단순한 금속 타악기와 달리 조화적 진동체처럼 작용합니다."
+              : "This diagram is an ideal conceptual model that simplifies and expresses three modes with a 1:2:3 integer ratio relationship, and is an educational schematic for understanding the fundamental-octave-compound 5th structure observed in actual handpan tone fields. This principle is called 'Harmonic Synchronization' and provides a conceptual foundation for understanding the handpan's timbre quality, tuning stability, and sustain. Thanks to this structure, handpans function as harmonic oscillators, unlike simple metal percussion instruments."}
           </p>
         </div>
       </div>
@@ -144,10 +149,10 @@ export default function Harmonics123Plot() {
         </g>
       </svg>
 
-        <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
+        <div className="text-xs text-gray-500 dark:text-gray-400 text-center italic">
           {language === "ko" 
-            ? "도메인: t ∈ [0, 2π]. 세 파형은 t = n·2π에서 동일 위상으로 정렬."
-            : "Domain: t ∈ [0, 2π]. The three waveforms align at the same phase at t = n·2π."}
+            ? "도메인: t ∈ [0, 2π]. 세 파형은 t = n·2π에서 동일 위상으로 정렬. 본 도표는 실제 측정값이 아닌 개념적 모델입니다."
+            : "Domain: t ∈ [0, 2π]. The three waveforms align at the same phase at t = n·2π. This diagram is a conceptual model, not actual measured values."}
         </div>
       </div>
 
@@ -159,8 +164,8 @@ export default function Harmonics123Plot() {
         <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed space-y-3">
           <p>
             {language === "ko" 
-              ? "세 파형은 서로 다른 주기를 가지며, 대부분의 구간에서는 위상이 어긋나 있습니다. 그러나 t = 0, 2π, 4π 등 정수배 시점에서는 세 파형의 위상이 동시에 0으로 일치합니다. 이 지점이 바로 위상 정렬(phase alignment)이며, 세 모드의 진동이 동일한 위상 조건을 만족하여 합성 진폭이 극대화되는 순간입니다."
-              : "The three waveforms have different periods and are out of phase in most intervals. However, at integer multiples such as t = 0, 2π, 4π, the phases of all three waveforms simultaneously coincide at 0. This point is phase alignment, the moment when the vibrations of the three modes satisfy the same phase condition, maximizing the composite amplitude."}
+              ? "세 파형은 서로 다른 주기를 가지며, 대부분의 구간에서는 위상이 어긋나 있습니다. 그러나 t = 0, 2π, 4π 등 정수배 시점에서는 세 파형의 위상이 동시에 0으로 일치합니다. 이 지점이 바로 위상 정렬(phase alignment)의 기준점이며, 세 모드의 위상이 완벽하게 정렬된 기준 상태입니다. 이는 에너지가 단일 위상 상태로 재집중되는 기준점으로 이해할 수 있으며, 실제로는 다른 시점(예: t = π/2)에서도 진폭 극대화가 발생할 수 있습니다."
+              : "The three waveforms have different periods and are out of phase in most intervals. However, at integer multiples such as t = 0, 2π, 4π, the phases of all three waveforms simultaneously coincide at 0. This point is the reference point for phase alignment, where the three modes are in a perfectly aligned reference state. This can be understood as a reference point where energy is re-concentrated into a single phase state, and in reality, amplitude maximization can occur at other points (e.g., t = π/2) as well."}
           </p>
           <p>
             {language === "ko" 
@@ -211,8 +216,8 @@ export default function Harmonics123Plot() {
           </p>
           <p className="ml-4">
             {language === "ko" 
-              ? "위상 차이는 모드 간 에너지 교환을 일으키며, 소리의 두께감과 공명감을 형성합니다. 완전 정렬된 한 점에서 에너지가 결집되고, 그 이후에는 미세한 위상차를 통해 에너지가 분산되며 잔향이 형성됩니다. 이 상호작용이 핸드팬 특유의 풍부한 배음과 긴 서스테인을 만듭니다."
-              : "Phase differences cause energy exchange between modes, forming the sound's thickness and resonance. Energy concentrates at a point of complete alignment, and afterward disperses through subtle phase differences to form reverberation. This interaction creates the handpan's characteristic rich overtones and long sustain."}
+              ? "위상 차이는 에너지 분포의 변화를 일으키며, 소리의 두께감과 공명감을 형성합니다. 완전 정렬된 한 점에서 에너지 분포가 집중되고, 그 이후에는 미세한 위상차를 통해 에너지 분포가 변화하며 잔향이 형성됩니다. 이는 엄격한 의미에서 모드 간 에너지 교환이라기보다는, 에너지 분포가 한 모드를 더 두드러지게 들리게 만드는 현상을 직관적으로 설명하는 개념입니다. 이 상호작용이 핸드팬 특유의 풍부한 배음과 긴 서스테인을 만듭니다."
+              : "Phase differences cause changes in energy distribution, forming the sound's thickness and resonance. Energy distribution concentrates at a point of complete alignment, and afterward changes through subtle phase differences to form reverberation. This is more of an intuitive concept describing the phenomenon where energy distribution makes one mode sound more prominent to the ear, rather than strict energy exchange between modes. This interaction creates the handpan's characteristic rich overtones and long sustain."}
           </p>
           <p className="font-semibold text-gray-900 dark:text-gray-100">
             {language === "ko" 
@@ -276,16 +281,16 @@ export default function Harmonics123Plot() {
                   {language === "ko" ? "지속성 안정성 (Sustain Stability):" : "Sustain Stability:"}
                 </span>{" "}
                 {language === "ko" 
-                  ? "위상 동기가 유지되어 에너지 손실이 최소화됩니다."
-                  : "Phase synchronization is maintained, minimizing energy loss."}
+                  ? "위상 동기가 유지되어 지각적으로 더 균일하고 안정적인 서스테인을 제공합니다. 실제 서스테인 길이는 재료, 두께 분포, 응력 분포, 감쇠(마찰/공기 방사) 등의 기계적 요인에 더 크게 영향을 받습니다."
+                  : "Phase synchronization is maintained, providing a more uniform and stable sustain perceptually. Actual sustain length is more significantly influenced by mechanical factors such as material, thickness distribution, stress distribution, and damping (friction/air radiation)."}
               </li>
               <li>
                 <span className="font-semibold">
                   {language === "ko" ? "조율 내성 (Detune Resistance):" : "Detune Resistance:"}
                 </span>{" "}
                 {language === "ko" 
-                  ? "환경 변화에도 위상 관계가 안정적으로 유지됩니다."
-                  : "Phase relationships remain stable even with environmental changes."}
+                  ? "잘 설계된 구조에서는 환경 변화에도 세 하모닉 모드의 주파수 관계가 상대적으로 안정적으로 유지되어, 위상 정렬이 쉽게 깨지지 않습니다."
+                  : "In a well-designed structure, the frequency relationship of the three harmonic modes remains relatively stable even with environmental changes, so phase alignment does not easily break down."}
               </li>
             </ul>
           </div>

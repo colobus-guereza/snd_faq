@@ -8,6 +8,7 @@ import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
 import AcousticMaturityChart from "./AcousticMaturityChart";
 import TonefieldTensionDiagram from "./TonefieldTensionDiagram";
+import TensionMembraneDiagram from "./TensionMembraneDiagram";
 import Harmonics123Plot from "./Harmonics123Plot";
 import OctaveResonancePlot from "./OctaveResonancePlot";
 import C4C5G6ResonancePlot from "./C4C5G6ResonancePlot";
@@ -22,9 +23,17 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   const { language, t, getFAQ } = useLanguage();
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    // 모바일 감지
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const isDarkMode = mounted && resolvedTheme === "dark";
@@ -1779,27 +1788,29 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                 impact: language === "ko" ? "높을수록 긍정적" : "Higher is positive",
                               },
                             ]}
-                            margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
+                            margin={{ top: 20, right: 30, left: 20, bottom: isMobile ? 120 : 80 }}
                           >
                             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                             <XAxis 
                               dataKey="factor" 
                               angle={0}
                               textAnchor="middle"
-                              height={100}
+                              height={isMobile ? 120 : 100}
                               tick={(props: any) => {
                                 const { x, y, payload } = props;
                                 const lines = payload.value.split('\n');
+                                const fontSize = isMobile ? 10 : 12;
+                                const lineHeight = isMobile ? 12 : 14;
                                 return (
                                   <g transform={`translate(${x},${y})`}>
                                     {lines.map((line: string, index: number) => (
                                       <text
                                         key={index}
                                         x={0}
-                                        y={index * 14 + 8}
+                                        y={index * lineHeight + 8}
                                         textAnchor="middle"
                                         fill={resolvedTheme === 'dark' ? '#d1d5db' : '#374151'}
-                                        fontSize={12}
+                                        fontSize={fontSize}
                                       >
                                         {line}
                                       </text>
@@ -1905,7 +1916,40 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
         </>
       )}
 
-      {/* 본문 텍스트 - displayContent가 있을 때만 표시 (제작과정 페이지, DC04 페이지, 표면 벗겨짐 페이지, 외부충격 표면 움푹 파임 페이지, 톤필드 소리 안남 페이지, 옆면 벌어짐 페이지, 배송 기간 페이지, 배송조회 페이지, 전자세금계산서 페이지, 악기 보관 방법 페이지, 악기 관리 방법 페이지, 언제 리튠을 받으면 좋을까요 페이지 제외) */}
+      {/* 프레스 VS 메탈스피닝 페이지 - 카드 2개 형태로 표시 */}
+      {isPressSpinningPage && displayContent && (
+        <div className="mb-8 space-y-6">
+          {(() => {
+            const paragraphs = displayContent.split("\n\n");
+            const firstCardContent = paragraphs.slice(0, 2).join("\n\n"); // 1~2문단
+            const secondCardContent = paragraphs.slice(2, 4).join("\n\n"); // 3~4문단
+            
+            return (
+              <>
+                {/* 첫 번째 카드: 1~2문단 */}
+                {firstCardContent && (
+                  <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+                    <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                      {convertUrlsToLinks(firstCardContent)}
+                    </div>
+                  </div>
+                )}
+                
+                {/* 두 번째 카드: 3~4문단 */}
+                {secondCardContent && (
+                  <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
+                    <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                      {convertUrlsToLinks(secondCardContent)}
+                    </div>
+                  </div>
+                )}
+              </>
+            );
+          })()}
+        </div>
+      )}
+
+      {/* 본문 텍스트 - displayContent가 있을 때만 표시 (제작과정 페이지, DC04 페이지, 프레스 VS 메탈스피닝 페이지, 표면 벗겨짐 페이지, 외부충격 표면 움푹 파임 페이지, 톤필드 소리 안남 페이지, 옆면 벌어짐 페이지, 배송 기간 페이지, 배송조회 페이지, 전자세금계산서 페이지, 악기 보관 방법 페이지, 악기 관리 방법 페이지, 언제 리튠을 받으면 좋을까요 페이지 제외) */}
       {displayContent && !isManufacturingPage && !isDC04Page && !isPressSpinningPage && !isSurfacePeelingPage && !isDentedSurfacePage && !isNoSoundPage && !isSideOpenedPage && !isShippingPeriodPage && !isShippingTrackingPage && !isReceiptPage && !isStorageMethodPage && !isMaintenanceMethodPage && !isRetunePeriodPage && (
         <div className="prose prose-sm max-w-none">
           {isTuningCostPage ? (
@@ -3257,6 +3301,12 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                             <TonefieldTensionDiagram width={720} height={480} color="#14B8A6" />
                           </div>
                         </div>
+                        {/* 장력 멤브레인 다이어그램 (8개 앵커) */}
+                        <div className="mt-6 w-full overflow-hidden">
+                          <div className="w-full max-w-full">
+                            <TensionMembraneDiagram />
+                          </div>
+                        </div>
                       </div>
                     )}
                   </>
@@ -3307,44 +3357,23 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                       ))}
                       {/* FAQ ID "19"에만 그래프 추가 */}
                       {faq.id === "19" && (
-                        <div className="mt-6 w-full overflow-hidden">
-                          <div className="w-full max-w-full">
-                            <TonefieldTensionDiagram width={720} height={480} color="#14B8A6" />
+                        <>
+                          <div className="mt-6 w-full overflow-hidden">
+                            <div className="w-full max-w-full">
+                              <TonefieldTensionDiagram width={720} height={480} color="#14B8A6" />
+                            </div>
                           </div>
-                        </div>
+                          {/* 장력 멤브레인 다이어그램 (8개 앵커) */}
+                          <div className="mt-6 w-full overflow-hidden">
+                            <div className="w-full max-w-full">
+                              <TensionMembraneDiagram />
+                            </div>
+                          </div>
+                        </>
                       )}
                     </div>
                   )}
                 </>
-              );
-            })()
-          ) : isPressSpinningPage ? (
-            // FAQ ID 16의 경우 1~2문단을 첫 번째 카드, 3~4문단을 두 번째 카드로 표시
-            (() => {
-              const paragraphs = displayContent.split("\n\n");
-              const firstCardContent = paragraphs.slice(0, 2).join("\n\n"); // 1~2문단
-              const secondCardContent = paragraphs.slice(2, 4).join("\n\n"); // 3~4문단
-              
-              return (
-                <div className="space-y-6">
-                  {/* 첫 번째 카드: 1~2문단 */}
-                  {firstCardContent && (
-                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
-                      <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                        {convertUrlsToLinks(firstCardContent)}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* 두 번째 카드: 3~4문단 */}
-                  {secondCardContent && (
-                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
-                      <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                        {convertUrlsToLinks(secondCardContent)}
-                      </div>
-                    </div>
-                  )}
-                </div>
               );
             })()
           ) : (

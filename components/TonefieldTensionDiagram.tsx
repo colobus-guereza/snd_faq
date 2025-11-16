@@ -26,6 +26,60 @@ export type TonefieldTensionDiagramProps = {
   showLegend?: boolean;
 };
 
+/**
+ * buildTensionRimPath
+ * ------------------------------------------------------------
+ * 특정 앵커 각도에서 바깥으로 bulge가 생기는 장력 림 경로 생성
+ *
+ * @param cx - 타원 중심 x
+ * @param cy - 타원 중심 y
+ * @param rx - 타원 x 반지름
+ * @param ry - 타원 y 반지름
+ * @param anchorAngles - bulge가 생길 각도 배열 (라디안)
+ * @param bulgeAmplitude - bulge 크기 (0.06 = 6% 바깥으로)
+ * @param segments - 경로 세그먼트 개수 (부드러운 곡선)
+ * @returns SVG path d 문자열
+ */
+function buildTensionRimPath(
+  cx: number,
+  cy: number,
+  rx: number,
+  ry: number,
+  anchorAngles: number[],
+  bulgeAmplitude = -0.04,
+  segments = 220
+): string {
+  const sigma = Math.PI / 24; // bulge 폭 (각도 기준) - 넓게 하여 완만한 눌림 구간
+  let d = "";
+
+  for (let i = 0; i <= segments; i++) {
+    const t = (i / segments) * 2 * Math.PI;
+
+    // 각 앵커 방향마다 가우시안 형태의 bulge 합산
+    let bulge = 0;
+    for (const a of anchorAngles) {
+      // -π~π 범위로 각도 차 정규화
+      let diff = t - a;
+      diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+      bulge += Math.exp(-(diff * diff) / (2 * sigma * sigma));
+    }
+
+    const scale = 1 + bulgeAmplitude * bulge;
+
+    const x = cx + rx * scale * Math.cos(t);
+    const y = cy + ry * scale * Math.sin(t);
+
+    if (i === 0) {
+      d += `M ${x} ${y}`;
+    } else {
+      d += ` L ${x} ${y}`;
+    }
+  }
+
+  d += " Z";
+  return d;
+}
+
 const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
   width = 720,
   height = 480,
@@ -157,66 +211,93 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
     // ===== 기본 설정 =====
     enabled: true,                    // 등고선 활성화
 
-    // ===== 등고선 레벨 설정 =====
+    // ===== 등고선 레벨 설정 (고장력 영역에 압축) =====
     // 바깥 타원 대비 비율 배열 (1.0 = 바깥 타원, 0.0 = 중심)
-    // 림 근처에 장력 집중 시각화: [0.70, 0.82, 0.90, 0.97]
-    ratios: [0.70, 0.82, 0.90, 0.97],
+    // 중심~80% 영역은 매끈하게, 88~98% 영역에만 등고선 집중
+    ratios: [0.88, 0.94, 0.98],
 
     // ===== 색상 및 스타일 =====
-    color: "#3bb18f",                 // 등고선 색상 (청록색 계열)
-    baseOpacity: 0.18,                // 첫 번째 등고선 투명도 (낮춤)
+    color: "#2f9c7c",                 // 등고선 색상 (진한 청록색)
+    baseOpacity: 0.20,                // 첫 번째 등고선 투명도
     opacityStep: 0.06,                // 안쪽으로 갈수록 투명도 감소량
 
     // ===== 선 두께 =====
     outerStrokeWidth: 0.9,            // 가장 바깥 등고선 두께
-    innerStrokeWidth: 0.5,            // 안쪽 등고선 두께
+    innerStrokeWidth: 0.7,            // 안쪽 등고선 두께 (더 굵게)
   };
   // ============================================
 
-  // ===== 방사형 장력 곡선 설정 (Radial Tension Lines) =====
-  // 딤플에서 바깥으로 뻗어나가며 바깥쪽으로 휘어지는 곡선
-  const RADIAL_TENSION_LINES_CONFIG = {
+  // ===== 주축 장력선 설정 (Primary Tension Axes) =====
+  // Octave/Tonic/Fifth 방향에만 장력선 표시 - 주요 장력 축 강조
+  const TENSION_AXIS_CONFIG = {
     // ===== 기본 설정 =====
-    enabled: true,                    // 장력선 활성화
+    enabled: true,                    // 주축 장력선 활성화
 
-    // ===== 선 개수 =====
-    count: 24,                        // 방사형 장력선 개수 (더 촘촘하게)
+    // ===== 주축 각도 (4방향: Octave/Tonic/Fifth) =====
+    angles: [
+      0,                              // 오른쪽 (Fifth)
+      Math.PI / 2,                    // 아래 (Tonic)
+      Math.PI,                        // 왼쪽 (Fifth)
+      (3 * Math.PI) / 2,              // 위 (Octave)
+    ],
 
     // ===== 선 위치 설정 =====
-    startRatio: 0.40,                 // 시작 위치 (딤플 안쪽에서 시작)
-    endRatio: 1.03,                   // 끝 위치 (림 약간 바깥까지)
+    innerRatio: 0.35,                 // 선 시작 위치 (딤플 근처)
+    outerRatio: 0.98,                 // 선 끝 위치 (림 바로 안쪽)
 
-    // ===== 색상 및 스타일 =====
-    colorStart: "#2bb5a0",            // 시작 색상 (진한 청록색)
-    colorEnd: "#2bb5a0",              // 끝 색상
-    opacityStart: 0.7,                // 시작 투명도
-    opacityEnd: 0.2,                  // 끝 투명도
-
-    // ===== 선 두께 =====
-    strokeWidth: 1.0,                 // 선 두께
+    // ===== 선 스타일 =====
+    strokeWidth: 1.1,                 // 선 두께
+    color: "#1b6a57",                 // 선 색상 (진한 청록색)
+    opacity: 0.7,                     // 투명도
   };
   // ============================================
 
-  // ===== 소프트 멤브레인 쉐이딩 설정 (Soft Membrane Shading) =====
-  // 수직 방향 그라데이션으로 당겨진 금속 표면의 곡률과 장력 표현
+  // ===== 내부 장력선 설정 (Inner Stretch Lines) =====
+  // 림에서 중앙으로 반쯤만 들어오는 짧은 선 - "막의 결" 표현 (v2.5)
+  const INNER_STRETCH_LINES_CONFIG = {
+    // ===== 기본 설정 =====
+    enabled: true,                    // 내부 장력선 활성화
+
+    // ===== 선 개수 및 위치 =====
+    count: 12,                        // 360/12 = 30도 간격
+    innerRatio: 0.40,                 // 중앙 40% 지점에서 끝
+    outerRatio: 0.95,                 // 림 바로 안쪽에서 시작
+
+    // ===== 선 스타일 =====
+    strokeWidth: 0.6,                 // 매우 얇게
+    opacity: 0.18,                    // 매우 옅게
+    color: "#145c4a",                 // 진한 청록색
+  };
+  // ============================================
+
+  // ===== 중앙 돔 쉐이딩 설정 (Central Dome Shading) - v2.5 =====
+  // 방사형 그라데이션으로 중앙 돔의 볼록함과 림의 눌림 표현
+  // 효과: 중앙(0-25%) 밝은 돔 → 중간(55%) 평탄 → 림(100%) 눌림
   const MEMBRANE_SHADING_CONFIG = {
     // ===== 기본 설정 =====
-    enabled: true,                    // 멤브레인 쉐이딩 활성화
+    enabled: false,                   // 중앙 돔 쉐이딩 비활성화 (밝은 톤 유지)
 
-    // ===== 상단 하이라이트 (빛 반사) =====
-    topColor: "white",                // 상단 색상
-    topOpacity: 0.35,                 // 상단 투명도 (강화)
-    topOffset: 0,                     // 시작 위치 (0% = 최상단)
+    // ⚠️ 주의: v2.5부터 아래 파라미터들은 사용되지 않음
+    // 실제 그라디언트는 <radialGradient id="membrane-dome">에서 직접 정의됨
+    // 그라디언트 구조 (5-stop radial):
+    //   0%: white opacity 0.45 (돔 정점)
+    //   25%: white opacity 0.30 (돔 경사)
+    //   55%: #0f172a opacity 0.12 (평탄 전환)
+    //   80%: #0f172a opacity 0.22 (눌림 시작)
+    //   100%: #0f172a opacity 0.30 (최대 눌림)
 
-    // ===== 중간 투명 영역 =====
-    midOffset: 0.45,                  // 중간 투명 지점 (45%)
-
-    // ===== 하단 그림자 (장력으로 인한 음영) =====
-    bottomColor: "black",             // 하단 색상
-    bottomStartOffset: 0.70,          // 그림자 시작 (70%)
-    bottomStartOpacity: 0.10,         // 그림자 시작 투명도 (강화)
-    bottomEndOffset: 1.0,             // 그림자 끝 (100% = 최하단)
-    bottomEndOpacity: 0.24,           // 그림자 끝 투명도 (강화)
+    // ===== 레거시 파라미터 (v2.4 이하, 현재 미사용) =====
+    topColor: "white",
+    topOpacity: 0.22,
+    topOffset: 0,
+    centerColor: "white",
+    centerOpacity: 0.32,
+    centerOffset: 0.50,
+    bottomColor: "black",
+    bottomStartOffset: 0.70,
+    bottomStartOpacity: 0.10,
+    bottomEndOffset: 1.0,
+    bottomEndOpacity: 0.28,
   };
   // ============================================
 
@@ -224,7 +305,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
   // Conic gradient로 방향성 있는 장력 흐름 표현
   const VECTOR_FIELD_CONFIG = {
     // ===== 기본 설정 =====
-    enabled: true,                    // 벡터 필드 활성화
+    enabled: false,                   // 벡터 필드 비활성화 (시각 정보 줄이기)
 
     // ===== 방향성 줄무늬 설정 =====
     stripeCount: 24,                  // 방사형 줄무늬 개수 (권장: 16, 24, 32)
@@ -244,16 +325,16 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
   // 톤필드 외곽을 따라 안쪽으로 말려 들어가는 음영 - 당겨진 금속 표면 입체감
   const INWARD_SHADOW_CONFIG = {
     // ===== 기본 설정 =====
-    enabled: true,                    // 인워드 섀도우 활성화
+    enabled: false,                   // 인워드 섀도우 비활성화 (밝은 톤 유지)
 
-    // ===== 섀도우 범위 설정 =====
-    startOffset: 0.55,                // 섀도우 시작 지점 (55% - 중앙 쪽으로 당김)
+    // ===== 섀도우 범위 설정 (바깥 10-15%에만 집중) =====
+    startOffset: 0.85,                // 섀도우 시작 지점 (85% - 림 근처만)
     endOffset: 1.0,                   // 섀도우 끝 지점 (100% - 외곽 림)
 
     // ===== 색상 및 투명도 =====
     color: "#1f5b52",                 // 회청색 계열 진한 녹색
-    startOpacity: 0.0,                // 시작 투명도 (중심 쪽)
-    endOpacity: 0.30,                 // 끝 투명도 (외곽 림, 강화)
+    startOpacity: 0.0,                // 시작 투명도 (85% 지점)
+    endOpacity: 0.35,                 // 끝 투명도 (외곽 림, 더 진하게)
   };
   // ============================================
 
@@ -279,45 +360,86 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
   };
   // ============================================
 
-  // ===== 장력 벨트 설정 (Tension Belt) =====
-  // 림 바로 안쪽의 밝은 장력 띠 - 막이 잡아당겨지는 경계 표현
+  // ===== 장력 벨트 설정 (Tension Belt) - v2.5 =====
+  // 림 안쪽 경계 강조 (94-98%) - 막이 림에 고정되는 바로 안쪽 밝은 띠
   const TENSION_BELT_CONFIG = {
     // ===== 기본 설정 =====
     enabled: true,                    // 장력 벨트 활성화
 
-    // ===== 위치 설정 =====
-    insetOffset: 6,                   // 림에서 안쪽으로 떨어진 거리 (px)
+    // ⚠️ 주의: v2.5부터 아래 파라미터들은 사용되지 않음
+    // 실제 그라디언트는 <radialGradient id="tension-belt">에서 직접 정의됨
+    // 그라디언트 구조 (5-stop radial):
+    //   0%: transparent (내부)
+    //   90%: transparent
+    //   94%: white opacity 0.65 (밝은 띠 시작)
+    //   98%: white opacity 0.10 (페이드아웃)
+    //   100%: transparent
 
-    // ===== 그라데이션 설정 =====
-    innerStartOffset: 0.0,            // 내부 시작 (0%)
-    innerMidOffset: 0.75,             // 내부 중간 (75%)
-    beltStartOffset: 0.90,            // 벨트 시작 (90%)
-    beltEndOffset: 1.0,               // 벨트 끝 (100%)
-
-    // ===== 색상 및 투명도 =====
-    innerColor: "#ffffff",            // 내부 색상
-    beltColor: "#ffffff",             // 벨트 색상
-    innerOpacity: 0.0,                // 내부 투명도
-    beltPeakOpacity: 0.55,            // 벨트 최대 투명도 (90% 지점)
-    beltEndOpacity: 0.0,              // 벨트 끝 투명도 (100% 지점)
+    // ===== 레거시 파라미터 (v2.4 이하, 현재 미사용) =====
+    insetOffset: 6,
+    innerStartOffset: 0.0,
+    beltTransitionOffset: 0.94,
+    beltPeakOffset: 0.97,
+    beltEndOffset: 1.0,
+    innerColor: "#ffffff",
+    beltColor: "#ffffff",
+    innerOpacity: 0.0,
+    beltPeakOpacity: 0.75,
+    beltEndOpacity: 0.0,
   };
   // ============================================
 
-  // ===== 림 앵커 설정 (Rim Anchors) =====
-  // 림을 고정하는 짧은 안쪽 방향 틱 - 360° 앵커 포인트 표현
+  // ===== 림 앵커 틱 설정 (Rim Anchor Ticks) =====
+  // 주요 방향에만 최소한의 앵커 틱 표시 - rimPath가 이미 장력 형태를 표현
   const RIM_ANCHOR_CONFIG = {
     // ===== 기본 설정 =====
-    enabled: true,                    // 림 앵커 활성화
+    enabled: true,                    // 림 앵커 틱 활성화
 
-    // ===== 앵커 설정 =====
-    count: 24,                        // 앵커 개수 (장력선과 동일)
-    length: 8,                        // 안쪽으로 들어오는 길이 (px)
+    // ===== 틱 설정 =====
+    count: 4,                         // 틱 개수 (Octave/Tonic/Fifth 4방향만)
+    innerRatio: 0.98,                 // 안쪽 끝 (림 안쪽)
+    outerRatio: 1.02,                 // 바깥쪽 끝 (림 바깥쪽)
 
     // ===== 색상 및 스타일 =====
-    stroke: "#166f5b",                // 진한 청록색
+    stroke: "#145c4a",                // 진한 청록색
     strokeWidth: 0.9,                 // 선 두께
-    opacity: 0.55,                    // 투명도
+    opacity: 0.7,                     // 투명도
   };
+  // ============================================
+
+  // ===== 장력 림 설정 (Tension Rim) =====
+  // ❌ 비활성화: 타원 경계선은 완벽한 타원형으로 유지
+  // 경계선 자체의 변형(bulge)은 물리적 의미가 불명확
+  const TENSION_RIM_CONFIG = {
+    // ===== 기본 설정 =====
+    enabled: false,                   // ❌ 장력 림 비활성화 (v2.4)
+
+    // ===== Bulge 설정 (사용 안 함) =====
+    bulgeAmplitude: -0.04,            // (미사용)
+    segments: 220,                    // (미사용)
+
+    // ===== 앵커 각도 (사용 안 함) =====
+    anchorAngles: [
+      0,                              // (미사용)
+      Math.PI / 2,                    // (미사용)
+      Math.PI,                        // (미사용)
+      (3 * Math.PI) / 2,              // (미사용)
+    ],
+  };
+  // ============================================
+
+  // 장력 림 경로 생성
+  const tensionRimPath = TENSION_RIM_CONFIG.enabled
+    ? buildTensionRimPath(
+        cx,
+        adjustedCy,
+        rx,
+        ry,
+        TENSION_RIM_CONFIG.anchorAngles,
+        TENSION_RIM_CONFIG.bulgeAmplitude,
+        TENSION_RIM_CONFIG.segments
+      )
+    : "";
   // ============================================
 
   // 타원의 호(arc)를 그리는 헬퍼 함수
@@ -522,6 +644,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           </filter>
 
           {/* 방사형 그라데이션 정의 (도너츠 전체 영역, 360도 균일) */}
+          {/* 하단 도표와 동일한 노란색 → 연녹색 그라데이션 */}
           <radialGradient
             id="radial-tonefield-gradient"
             cx="50%"
@@ -531,37 +654,14 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           >
             {RADIAL_GRADIENT_CONFIG.enabled ? (
               <>
-                {/* 중심 (0%) */}
-                <stop
-                  offset="0%"
-                  stopColor={RADIAL_GRADIENT_CONFIG.useMultiColor ? RADIAL_GRADIENT_CONFIG.startColor : RADIAL_GRADIENT_CONFIG.color}
-                  stopOpacity={RADIAL_GRADIENT_CONFIG.innerOpacity}
-                />
-
-                {/* 딤플 경계 (자동 계산) - 투명 유지 */}
-                <stop
-                  offset={`${RADIAL_GRADIENT_CONFIG.dimpleRatio * 100}%`}
-                  stopColor={RADIAL_GRADIENT_CONFIG.useMultiColor ? RADIAL_GRADIENT_CONFIG.startColor : RADIAL_GRADIENT_CONFIG.color}
-                  stopOpacity={RADIAL_GRADIENT_CONFIG.innerOpacity}
-                />
-
-                {/* 중간 지점 (옵션) */}
-                {RADIAL_GRADIENT_CONFIG.useMidPoint && (
-                  <stop
-                    offset={`${RADIAL_GRADIENT_CONFIG.midPoint * 100}%`}
-                    stopColor={RADIAL_GRADIENT_CONFIG.useMultiColor
-                      ? `color-mix(in srgb, ${RADIAL_GRADIENT_CONFIG.startColor} 50%, ${RADIAL_GRADIENT_CONFIG.endColor} 50%)`
-                      : RADIAL_GRADIENT_CONFIG.color}
-                    stopOpacity={RADIAL_GRADIENT_CONFIG.midOpacity}
-                  />
-                )}
-
-                {/* 바깥 타원 경계 (100%) */}
-                <stop
-                  offset="100%"
-                  stopColor={RADIAL_GRADIENT_CONFIG.useMultiColor ? RADIAL_GRADIENT_CONFIG.endColor : RADIAL_GRADIENT_CONFIG.color}
-                  stopOpacity={RADIAL_GRADIENT_CONFIG.outerOpacity}
-                />
+                {/* 중심: 밝은 노랑 */}
+                <stop offset="0%" stopColor="#ffff80" stopOpacity="1" />
+                {/* 중간 1: 노랑 */}
+                <stop offset="45%" stopColor="#ffe066" stopOpacity="1" />
+                {/* 중간 2: 연두 */}
+                <stop offset="70%" stopColor="#a4f36a" stopOpacity="0.9" />
+                {/* 가장자리: 연두/초록 */}
+                <stop offset="100%" stopColor="#44c767" stopOpacity="0.8" />
               </>
             ) : (
               // 그라데이션 비활성화 시 완전 투명
@@ -595,55 +695,38 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             />
           </radialGradient>
 
-          {/* 소프트 멤브레인 쉐이딩용 그라데이션 (수직 방향 장력 표현) */}
-          {/* 위쪽 밝게 (빛 반사) → 중간 투명 → 아래쪽 어둡게 (그림자) */}
-          <linearGradient
-            id="membrane-shading-gradient"
-            x1="0%"
-            y1="0%"
-            x2="0%"
-            y2="100%"
-          >
-            {/* 상단 하이라이트 */}
-            <stop
-              offset={`${MEMBRANE_SHADING_CONFIG.topOffset * 100}%`}
-              stopColor={MEMBRANE_SHADING_CONFIG.topColor}
-              stopOpacity={MEMBRANE_SHADING_CONFIG.topOpacity}
-            />
-            {/* 중간 투명 */}
-            <stop
-              offset={`${MEMBRANE_SHADING_CONFIG.midOffset * 100}%`}
-              stopColor={MEMBRANE_SHADING_CONFIG.topColor}
-              stopOpacity={0}
-            />
-            {/* 하단 그림자 시작 */}
-            <stop
-              offset={`${MEMBRANE_SHADING_CONFIG.bottomStartOffset * 100}%`}
-              stopColor={MEMBRANE_SHADING_CONFIG.bottomColor}
-              stopOpacity={MEMBRANE_SHADING_CONFIG.bottomStartOpacity}
-            />
-            {/* 하단 그림자 끝 */}
-            <stop
-              offset={`${MEMBRANE_SHADING_CONFIG.bottomEndOffset * 100}%`}
-              stopColor={MEMBRANE_SHADING_CONFIG.bottomColor}
-              stopOpacity={MEMBRANE_SHADING_CONFIG.bottomEndOpacity}
-            />
-          </linearGradient>
+          {/* 중앙 돔 쉐이딩용 방사형 그라데이션 (v2.5) */}
+          {/* 중앙: 밝은 돔 → 중간: 평탄 → 림: 눌린 어두운 링 */}
+          <radialGradient id="membrane-dome" cx="50%" cy="50%" r="60%">
+            {/* 중앙 하이라이트: 살짝 작고 강하게 (돔 정점) */}
+            <stop offset="0%" stopColor="white" stopOpacity="0.45" />
+            <stop offset="25%" stopColor="white" stopOpacity="0.30" />
+            {/* 돔의 받침 링: 약간 어둡게 (평탄 전환) */}
+            <stop offset="55%" stopColor="#0f172a" stopOpacity="0.12" />
+            {/* 림 방향으로 갈수록 더 어둡게 (눌림 효과) */}
+            <stop offset="80%" stopColor="#0f172a" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="#0f172a" stopOpacity="0.30" />
+          </radialGradient>
 
-          {/* 외곽 인워드 섀도우용 그라데이션 (외곽 림 → 안쪽으로 말려들어가는 음영) */}
+          {/* 외곽 인워드 섀도우용 그라데이션 (바깥 10-15%에만 집중) */}
           <radialGradient
             id="inward-shadow-gradient"
             cx="50%"
             cy="50%"
-            r="55%"
+            r="70%"
           >
-            {/* 중심 쪽은 영향 없음 */}
+            {/* 중심부터 85%까지는 투명 */}
+            <stop
+              offset="0%"
+              stopColor={INWARD_SHADOW_CONFIG.color}
+              stopOpacity="0"
+            />
             <stop
               offset={`${INWARD_SHADOW_CONFIG.startOffset * 100}%`}
               stopColor={INWARD_SHADOW_CONFIG.color}
               stopOpacity={INWARD_SHADOW_CONFIG.startOpacity}
             />
-            {/* 외곽 림 근처에서만 어두워짐 */}
+            {/* 외곽 림 근처에서만 급격히 어두워짐 */}
             <stop
               offset={`${INWARD_SHADOW_CONFIG.endOffset * 100}%`}
               stopColor={INWARD_SHADOW_CONFIG.color}
@@ -651,36 +734,19 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             />
           </radialGradient>
 
-          {/* 장력 벨트용 그라데이션 (림 바로 안쪽의 밝은 띠) */}
-          <radialGradient
-            id="tension-belt-gradient"
-            cx="50%"
-            cy="50%"
-            r="60%"
-          >
-            {/* 내부는 거의 영향 없음 */}
-            <stop
-              offset={`${TENSION_BELT_CONFIG.innerStartOffset * 100}%`}
-              stopColor={TENSION_BELT_CONFIG.innerColor}
-              stopOpacity={TENSION_BELT_CONFIG.innerOpacity}
-            />
-            <stop
-              offset={`${TENSION_BELT_CONFIG.innerMidOffset * 100}%`}
-              stopColor={TENSION_BELT_CONFIG.innerColor}
-              stopOpacity={TENSION_BELT_CONFIG.innerOpacity}
-            />
-            {/* 림 바로 안쪽에서 급격히 밝아짐 */}
-            <stop
-              offset={`${TENSION_BELT_CONFIG.beltStartOffset * 100}%`}
-              stopColor={TENSION_BELT_CONFIG.beltColor}
-              stopOpacity={TENSION_BELT_CONFIG.beltPeakOpacity}
-            />
-            {/* 림 근처에서 다시 사라짐 */}
-            <stop
-              offset={`${TENSION_BELT_CONFIG.beltEndOffset * 100}%`}
-              stopColor={TENSION_BELT_CONFIG.beltColor}
-              stopOpacity={TENSION_BELT_CONFIG.beltEndOpacity}
-            />
+          {/* 장력 벨트용 그라데이션 (94-98% 안쪽 경계 강조) - v2.5 */}
+          <radialGradient id="tension-belt" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="90%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="94%" stopColor="#ffffff" stopOpacity="0.65" />
+            <stop offset="98%" stopColor="#ffffff" stopOpacity="0.10" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+          </radialGradient>
+
+          {/* 림 눌림 링 그라데이션 (Rim Press Ring) - 눌린 림 강조 (v2.5) */}
+          <radialGradient id="rim-press-ring" cx="50%" cy="50%" r="60%">
+            <stop offset="96%" stopColor="#020617" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#020617" stopOpacity="0.0" />
           </radialGradient>
 
         </defs>
@@ -810,17 +876,27 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           );
         })}
 
-        {/* Outer ellipse (tonefield body) - fill 투명 처리로 영역 색상 표시 */}
-        <ellipse
-          cx={cx}
-          cy={adjustedCy}
-          rx={rx}
-          ry={ry}
-          fill="none"
-          stroke="#334155"
-          strokeWidth={1}
-          filter="url(#soft)"
-        />
+        {/* Outer rim (tonefield body) - 장력 림 또는 기본 타원 */}
+        {TENSION_RIM_CONFIG.enabled ? (
+          <path
+            d={tensionRimPath}
+            fill="none"
+            stroke="#334155"
+            strokeWidth={1}
+            filter="url(#soft)"
+          />
+        ) : (
+          <ellipse
+            cx={cx}
+            cy={adjustedCy}
+            rx={rx}
+            ry={ry}
+            fill="none"
+            stroke="#334155"
+            strokeWidth={1}
+            filter="url(#soft)"
+          />
+        )}
 
         {/* ===== 외곽 리플 엣지 (Ripple Edge) ===== */}
         {/* 바깥 경계를 따라 360° 가느다란 주름 - 장력이 바깥으로 빠져나가는 느낌 */}
@@ -896,12 +972,12 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             );
           })}
 
-        {/* ===== 소프트 멤브레인 쉐이딩 오버레이 ===== */}
-        {/* 수직 방향 그라데이션으로 당겨진 금속 표면의 곡률과 장력 표현 */}
+        {/* ===== 중앙 돔 쉐이딩 오버레이 (v2.5) ===== */}
+        {/* 방사형 그라데이션으로 중앙 돔의 볼록함과 림의 눌림 표현 */}
         {MEMBRANE_SHADING_CONFIG.enabled && (
           <path
             d={createDonutPath()}
-            fill="url(#membrane-shading-gradient)"
+            fill="url(#membrane-dome)"
             fillRule="evenodd"
             stroke="none"
           />
@@ -923,29 +999,56 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           />
         ))}
 
-        {/* ===== 방사형 장력선 (Radial Tension Lines) ===== */}
-        {/* 딤플에서 바깥으로 팽팽하게 당겨진 직선 - 금속판 장력 표현 */}
-        {RADIAL_TENSION_LINES_CONFIG.enabled &&
-          Array.from({ length: RADIAL_TENSION_LINES_CONFIG.count }, (_, i) => {
-            const angle = (i / RADIAL_TENSION_LINES_CONFIG.count) * 2 * Math.PI;
+        {/* ===== 주축 장력선 (Primary Tension Axes) ===== */}
+        {/* Octave/Tonic/Fifth 방향에만 장력선 표시 - 주요 장력 축 강조 */}
+        {TENSION_AXIS_CONFIG.enabled &&
+          TENSION_AXIS_CONFIG.angles.map((angle, i) => {
+            const { innerRatio, outerRatio } = TENSION_AXIS_CONFIG;
 
-            // 시작점 (딤플 경계 근처)
-            const x1 = cx + Math.cos(angle) * rx * RADIAL_TENSION_LINES_CONFIG.startRatio;
-            const y1 = adjustedCy + Math.sin(angle) * ry * RADIAL_TENSION_LINES_CONFIG.startRatio;
-
-            // 끝점 (바깥 타원 가까이)
-            const x2 = cx + Math.cos(angle) * rx * RADIAL_TENSION_LINES_CONFIG.endRatio;
-            const y2 = adjustedCy + Math.sin(angle) * ry * RADIAL_TENSION_LINES_CONFIG.endRatio;
+            const x1 = cx + Math.cos(angle) * rx * innerRatio;
+            const y1 = adjustedCy + Math.sin(angle) * ry * innerRatio;
+            const x2 = cx + Math.cos(angle) * rx * outerRatio;
+            const y2 = adjustedCy + Math.sin(angle) * ry * outerRatio;
 
             return (
               <line
-                key={`tension-line-${i}`}
+                key={`tension-axis-${i}`}
                 x1={x1}
                 y1={y1}
                 x2={x2}
                 y2={y2}
-                stroke="url(#tension-line-stroke-gradient)"
-                strokeWidth={RADIAL_TENSION_LINES_CONFIG.strokeWidth}
+                stroke={TENSION_AXIS_CONFIG.color}
+                strokeWidth={TENSION_AXIS_CONFIG.strokeWidth}
+                strokeOpacity={TENSION_AXIS_CONFIG.opacity}
+                strokeLinecap="round"
+              />
+            );
+          })}
+
+        {/* ===== 내부 장력선 (Inner Stretch Lines) ===== */}
+        {/* 림에서 중앙으로 반쯤만 들어오는 짧은 선 - "막의 결" 표현 (v2.5) */}
+        {INNER_STRETCH_LINES_CONFIG.enabled &&
+          Array.from({ length: INNER_STRETCH_LINES_CONFIG.count }).map((_, i) => {
+            const angle = (i / INNER_STRETCH_LINES_CONFIG.count) * 2 * Math.PI;
+            const cos = Math.cos(angle);
+            const sin = Math.sin(angle);
+
+            const xOuter = cx + cos * rx * INNER_STRETCH_LINES_CONFIG.outerRatio;
+            const yOuter = adjustedCy + sin * ry * INNER_STRETCH_LINES_CONFIG.outerRatio;
+
+            const xInner = cx + cos * rx * INNER_STRETCH_LINES_CONFIG.innerRatio;
+            const yInner = adjustedCy + sin * ry * INNER_STRETCH_LINES_CONFIG.innerRatio;
+
+            return (
+              <line
+                key={`inner-stretch-${i}`}
+                x1={xOuter}
+                y1={yOuter}
+                x2={xInner}
+                y2={yInner}
+                stroke={INNER_STRETCH_LINES_CONFIG.color}
+                strokeWidth={INNER_STRETCH_LINES_CONFIG.strokeWidth}
+                strokeOpacity={INNER_STRETCH_LINES_CONFIG.opacity}
                 strokeLinecap="round"
               />
             );
@@ -963,33 +1066,40 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
         )}
 
         {/* ===== 장력 벨트 (Tension Belt) ===== */}
-        {/* 림 바로 안쪽의 밝은 장력 띠 - 막이 잡아당겨지는 경계 표현 */}
+        {/* 림 안쪽 경계 강조 (94-98%) - 막이 고정되는 바로 안쪽 밝은 띠 (v2.5) */}
         {TENSION_BELT_CONFIG.enabled && (
           <path
             d={createDonutPath()}
-            fill="url(#tension-belt-gradient)"
+            fill="url(#tension-belt)"
             fillRule="evenodd"
             stroke="none"
           />
         )}
 
-        {/* ===== 림 앵커 (Rim Anchors) ===== */}
-        {/* 림을 고정하는 짧은 안쪽 방향 틱 - 360° 앵커 포인트 표현 */}
+        {/* ===== 림 눌림 링 (Rim Press Ring) ===== */}
+        {/* 림 안쪽 어두운 쉐도우 (96-100%) - 눌린 림 효과 강조 (v2.5) */}
+        {TENSION_RIM_CONFIG.enabled && (
+          <path
+            d={tensionRimPath}
+            fill="url(#rim-press-ring)"
+            stroke="none"
+          />
+        )}
+
+        {/* ===== 림 앵커 틱 (Rim Anchor Ticks) ===== */}
+        {/* 주요 방향에만 최소한의 앵커 틱 표시 - rimPath가 이미 장력 형태를 표현 */}
         {RIM_ANCHOR_CONFIG.enabled &&
           Array.from({ length: RIM_ANCHOR_CONFIG.count }, (_, i) => {
             const angle = (i / RIM_ANCHOR_CONFIG.count) * 2 * Math.PI;
 
-            // 림 위의 시작점
-            const sx = cx + Math.cos(angle) * rx;
-            const sy = adjustedCy + Math.sin(angle) * ry;
-
-            // 안쪽으로 조금 들어온 끝점
-            const ex = cx + Math.cos(angle) * (rx - RIM_ANCHOR_CONFIG.length);
-            const ey = adjustedCy + Math.sin(angle) * (ry - RIM_ANCHOR_CONFIG.length);
+            const sx = cx + Math.cos(angle) * rx * RIM_ANCHOR_CONFIG.outerRatio;
+            const sy = adjustedCy + Math.sin(angle) * ry * RIM_ANCHOR_CONFIG.outerRatio;
+            const ex = cx + Math.cos(angle) * rx * RIM_ANCHOR_CONFIG.innerRatio;
+            const ey = adjustedCy + Math.sin(angle) * ry * RIM_ANCHOR_CONFIG.innerRatio;
 
             return (
               <line
-                key={`rim-anchor-${i}`}
+                key={`rim-tick-${i}`}
                 x1={sx}
                 y1={sy}
                 x2={ex}
@@ -1102,8 +1212,8 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           );
         })}
 
-        {/* Radial tension arrows: 비활성화 (타원을 당기는 느낌 없음) */}
-        {false && dirs.map((t, i) => {
+        {/* Radial tension arrows: 외부 방사형 화살표 (v2.5 재활성화) */}
+        {dirs.map((t, i) => {
           const { shaft, head } = arrowPath(t);
           return (
             <g key={i}>
