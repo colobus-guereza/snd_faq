@@ -750,13 +750,12 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             <stop offset="100%" stopColor="#020617" stopOpacity="0.0" />
           </radialGradient>
 
-          {/* 외부 막 그라데이션 (텐세일 구조 장력 모델: 중심=저응력(파랑) → 외곽=고응력(빨강)) */}
+          {/* 외부 막 그라데이션 (장력 분포 최적화: 톤필드 근처=연한 노랑 → 앵커=강한 빨강) */}
           <radialGradient id="starMembraneFill" cx="50%" cy="50%" r="60%">
-            <stop offset="0%" stopColor="#3A77C7" />   {/* 최저 장력 (중심, 푸른색) */}
-            <stop offset="25%" stopColor="#89D4F0" />  {/* 약한 장력 (하늘색) */}
-            <stop offset="50%" stopColor="#FFE283" />  {/* 중간 장력 (노랑) */}
-            <stop offset="75%" stopColor="#FF9F45" />  {/* 중고 장력 (주황) */}
-            <stop offset="100%" stopColor="#FF4D4D" /> {/* 고장력 (앵커 근처, 붉은색) */}
+            <stop offset="0%" stopColor="#FFF4C6" stopOpacity="0.7" />   {/* 톤필드 근처 - 밝은 연노랑 */}
+            <stop offset="35%" stopColor="#FFD079" stopOpacity="0.8" />  {/* 막 중앙부 - 노랑오렌지 */}
+            <stop offset="70%" stopColor="#FF9F45" stopOpacity="0.85" /> {/* 중고 장력 - 오렌지 */}
+            <stop offset="100%" stopColor="#FF7847" stopOpacity="0.9" /> {/* 앵커/가장자리 - 강한 오렌지레드 */}
           </radialGradient>
 
         </defs>
@@ -891,8 +890,9 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           <path
             d={tensionRimPath}
             fill="none"
-            stroke="#334155"
-            strokeWidth={1}
+            stroke="#2f855a"
+            strokeWidth={1.2}
+            strokeOpacity={0.8}
             filter="url(#soft)"
           />
         ) : (
@@ -902,8 +902,9 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             rx={rx}
             ry={ry}
             fill="none"
-            stroke="#334155"
-            strokeWidth={1}
+            stroke="#2f855a"
+            strokeWidth={1.2}
+            strokeOpacity={0.8}
             filter="url(#soft)"
           />
         )}
@@ -915,10 +916,10 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
           // 톤필드가 20% 증가되어 있으므로 (rx=96, ry=144), 원래 크기로 환산
           const baseRx = rx / 1.2; // 96 / 1.2 = 80
           const baseRy = ry / 1.2; // 144 / 1.2 = 120
-          const starOuterRx = baseRx * 1.8; // 별 꼭지점 반경
+          const starOuterRx = baseRx * 1.8; // 별 꼭지점 반경 (유지)
           const starOuterRy = baseRy * 1.8;
-          const starInnerRx = baseRx * 0.88; // 오목한 부분 반경 (30% 더 오목하게)
-          const starInnerRy = baseRy * 0.88;
+          const starInnerRx = baseRx * 0.80; // 오목한 부분 반경 (처진 막 효과 최적화)
+          const starInnerRy = baseRy * 0.80;
 
           // 앵커 위치 (기본)
           const anchorRxBase = baseRx * 2.8;
