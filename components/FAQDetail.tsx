@@ -3248,9 +3248,18 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
               // FAQ ID 19의 경우 첫 번째 문단을 카드로 표시
               if (faq.id === "19") {
                 const remainingParagraphs = paragraphs.slice(1);
-                
+
                 return (
                   <>
+                    {/* 튜닝 작업 이미지 */}
+                    <div className="mb-6">
+                      <img
+                        src="/images/tuning-work.jpg"
+                        alt="핸드팬 튜닝 작업"
+                        className="w-full h-auto rounded-lg"
+                      />
+                    </div>
+
                     {/* 첫 번째 문단 - 카드 형태로 표시 */}
                     <div className="mb-6">
                       <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
@@ -3297,13 +3306,11 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
 
                         {/* FAQ ID "19"에만 장력 튜닝 GIF 애니메이션 추가 */}
                         {faq.id === "19" && (
-                          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
-                            <img
-                              src="/images/tension.gif"
-                              alt="핸드팬 장력 튜닝 애니메이션"
-                              className="w-full h-auto rounded-lg"
-                            />
-                          </div>
+                          <img
+                            src="/images/tension.gif"
+                            alt="핸드팬 장력 튜닝 애니메이션"
+                            className="w-full h-auto rounded-lg mt-6"
+                          />
                         )}
 
                         {/* FAQ ID "19"에만 그래프 추가 - 총 24개 (애니메이션 프레임) */}
@@ -3371,13 +3378,11 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
 
                       {/* FAQ ID "19"에만 장력 튜닝 GIF 애니메이션 추가 (모바일) */}
                       {faq.id === "19" && (
-                        <div className="mt-6 bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-800 shadow-sm">
-                          <img
-                            src="/images/tension.gif"
-                            alt="핸드팬 장력 튜닝 애니메이션"
-                            className="w-full h-auto rounded-lg"
-                          />
-                        </div>
+                        <img
+                          src="/images/tension.gif"
+                          alt="핸드팬 장력 튜닝 애니메이션"
+                          className="w-full h-auto rounded-lg mt-6"
+                        />
                       )}
 
                       {/* FAQ ID "19"에만 그래프 추가 - 총 24개 (애니메이션 프레임) */}
