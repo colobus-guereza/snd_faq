@@ -3306,11 +3306,16 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
 
                         {/* FAQ ID "19"에만 장력 튜닝 GIF 애니메이션 추가 */}
                         {faq.id === "19" && (
-                          <img
-                            src="/images/tension.gif"
-                            alt="핸드팬 장력 튜닝 애니메이션"
-                            className="w-full h-auto rounded-lg mt-6"
-                          />
+                          <div className="mt-6">
+                            <img
+                              src="/images/tension.gif"
+                              alt="핸드팬 장력 튜닝 애니메이션"
+                              className="w-full h-auto rounded-lg"
+                            />
+                            <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-3">
+                              톤필드 장력–하모닉스 활성화 시퀀스
+                            </p>
+                          </div>
                         )}
 
                         {/* FAQ ID "19"에만 그래프 추가 - 총 24개 (애니메이션 프레임) */}
@@ -3378,11 +3383,16 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
 
                       {/* FAQ ID "19"에만 장력 튜닝 GIF 애니메이션 추가 (모바일) */}
                       {faq.id === "19" && (
-                        <img
-                          src="/images/tension.gif"
-                          alt="핸드팬 장력 튜닝 애니메이션"
-                          className="w-full h-auto rounded-lg mt-6"
-                        />
+                        <div className="mt-6">
+                          <img
+                            src="/images/tension.gif"
+                            alt="핸드팬 장력 튜닝 애니메이션"
+                            className="w-full h-auto rounded-lg"
+                          />
+                          <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-3">
+                            톤필드 장력–하모닉스 활성화 시퀀스
+                          </p>
+                        </div>
                       )}
 
                       {/* FAQ ID "19"에만 그래프 추가 - 총 24개 (애니메이션 프레임) */}
