@@ -87,6 +87,10 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   // 자세히보기/간단히보기 기능이 있는 페이지의 상세 내용 접기/펼치기 상태 관리
   const [isContentDetailExpanded, setIsContentDetailExpanded] = useState(false);
   
+  // 옥타브 공명 도표 표시 상태 관리
+  const [showOctavePlot, setShowOctavePlot] = useState(false);
+  const [showC4C5G6Plot, setShowC4C5G6Plot] = useState(false);
+  
   // URL을 링크로 변환하는 함수
   const convertUrlsToLinks = (text: string) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -1965,10 +1969,13 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                 }
                 
                 // 기본 정보를 2개의 카드로 나눔
-                // 첫 번째 카드: "개별노트 리튠비용" + 딩 사이즈 + 일반 사이즈 (basicInfo[0] + basicInfo[1])
-                const firstCardInfo = basicInfo.slice(0, 2).join("\n\n");
-                // 두 번째 카드: 할인 정보 + 택배 정보 (basicInfo[2])
-                const secondCardInfo = basicInfo.slice(2, 3).join("\n\n");
+                // 첫 번째 카드: "개별노트 리튠비용" (bold) + 딩 사이즈 + 일반 사이즈 + "악기 전체리튠 진행 시" (basicInfo[0] + basicInfo[1] + basicInfo[2]의 첫 번째 줄)
+                const firstCardTitle = basicInfo[0]; // "개별노트 리튠비용"
+                const firstCardBody = basicInfo[1]; // 딩 사이즈 + 일반 사이즈
+                const secondCardFull = basicInfo[2] || ""; // "· 악기 전체리튠 진행 시 25% 할인 적용\n· 리튠 택배접수 시, 왕복배송비 고객부담"
+                const secondCardLines = secondCardFull.split("\n");
+                const fullRetuneLine = secondCardLines[0] || ""; // "· 악기 전체리튠 진행 시 25% 할인 적용"
+                const shippingLine = secondCardLines[1] || ""; // "· 리튠 택배접수 시, 왕복배송비 고객부담"
                 
                 return (
                   <>
@@ -1977,15 +1984,17 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                       {/* 첫 번째 카드 */}
                       <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
                         <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                          {firstCardInfo}
+                          <span className="font-bold">{firstCardTitle}</span>
+                          {firstCardBody && `\n\n${firstCardBody}`}
+                          {fullRetuneLine && `\n\n${fullRetuneLine}`}
                         </div>
                       </div>
                       
                       {/* 두 번째 카드 */}
-                      {secondCardInfo.trim() && (
+                      {shippingLine.trim() && (
                         <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
                           <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                            {secondCardInfo}
+                            {shippingLine}
                           </div>
                         </div>
                       )}
@@ -2912,9 +2921,6 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                           <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                             D Kurd 10에서 C4를 연주하실 때 옥타브인 C5가 공명할 수 있습니다. C5에는 2F₀(옥타브), 3F₀(복합5도: 한 옥타브 + 완전5도) 성분이 포함되어 있어, C4를 타격하셔도 귀에는 C5의 고역 성분 C6와 G6가 동반되어 들릴 수 있습니다. 이는 핸드팬의 본질인 하모닉스 정렬(1:2:3 비)이 잘 구현되었다는 정상 특성입니다.
                           </p>
-                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed mt-2">
-                            또한 이 현상은 조율이 정확하게 이루어졌기 때문에 나타나는 현상으로, 조율 품질의 긍정적 지표로 보아 주시면 됩니다.
-                          </p>
                         </div>
                       </div>
                     </div>
@@ -2964,20 +2970,84 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                       </div>
                       <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
                         <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                          C4–C5 공명이 가장 두드러지지만, D3을 연주하실 때 D4가 공명하여 딩 D3의 댐핑감과 울림이 더 풍성하게 느껴지는 것도 동일한 옥타브 공명입니다. 악기와의 청감 학습이 진행되면, 처음에는 인지하지 못하셨던 다른 옥타브 쌍에서도 공명이 점차 또렷하게 들리실 수 있습니다. 이는 조율이 잘 되었기 때문에 나타나는 현상이며, 조율 품질을 가늠하는 긍정적 지표로 이해해 주시면 좋습니다.
+                          C4–C5 공명이 가장 두드러지지만, D3을 연주하실 때 D4가 공명하여 딩 D3의 댐핑감과 울림이 더 풍성하게 느껴지는 것도 동일한 옥타브 공명입니다. 악기와의 청감 학습이 진행되면, 처음에는 인지하지 못하셨던 다른 옥타브 쌍에서도 공명이 점차 또렷하게 들리실 수 있습니다. 이는 조율의 정확성을 나타내는 지표가 됩니다.
                         </p>
                       </div>
                     </div>
 
-                    {/* 옥타브 공명 시각화 그래프 */}
-                    <div className="mb-6">
-                      <OctaveResonancePlot />
+                    {/* 도표 해설 카드 */}
+                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                      <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                          왜 새 악기에서 더 도드라지게 들릴까요?
+                        </h4>
+                      </div>
+                      <div className="space-y-6">
+                        {/* 3. 이것이 정상인가요? */}
+                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                            새 악기에서는 해머링 직후 톤필드의 장력이 가장 팽팽하고 모드(기본음·옥타브·복합5도)의 경계가 또렷하게 세팅되어 있어, 타격 순간 고주파 성분이 빠르게 응답하며 옥타브(2F₀) 모드가 더욱 선명하게 공명하는 경향이 있습니다. 사용이 누적되면 금속 내부의 미세 응력들이 완화되면서 장력 분포가 자연스럽게 안정화되고, 각 모드가 결에 맞춰 부드럽게 정렬되기 때문에 초기보다 옥타브 응답이 과하게 도드라져 들리는 느낌이 줄어들고 전체 음색이 한층 매끈하고 안정된 울림으로 자리 잡습니다.
+                          </p>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* C4-C5-G6 공명 그래프 */}
-                    <div className="mb-6">
-                      <C4C5G6ResonancePlot />
+                    {/* 도표 토글 버튼 카드 그리드 */}
+                    <div className="grid grid-cols-2 gap-6">
+                      {/* C4-C5 옥타브 공명 개념도 토글 버튼 */}
+                      <button
+                        onClick={() => setShowOctavePlot(!showOctavePlot)}
+                        className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-all cursor-pointer text-left"
+                      >
+                        <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                          <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 text-center">
+                            C4-C5 옥타브 공명 개념도
+                            {showOctavePlot && (
+                              <span className="ml-2 text-sm text-[#14B8A6]">●</span>
+                            )}
+                          </h4>
+                        </div>
+                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-center text-sm">
+                            {showOctavePlot ? "도표 숨기기" : "도표 보기"}
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* C4 연주 시 하모닉 동반 공명 토글 버튼 */}
+                      <button
+                        onClick={() => setShowC4C5G6Plot(!showC4C5G6Plot)}
+                        className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-all cursor-pointer text-left"
+                      >
+                        <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                          <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 text-center">
+                            C4 연주 시 하모닉 동반 공명
+                            {showC4C5G6Plot && (
+                              <span className="ml-2 text-sm text-[#14B8A6]">●</span>
+                            )}
+                          </h4>
+                        </div>
+                        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-center text-sm">
+                            {showC4C5G6Plot ? "도표 숨기기" : "도표 보기"}
+                          </p>
+                        </div>
+                      </button>
                     </div>
+
+                    {/* 옥타브 공명 시각화 그래프 */}
+                    {showOctavePlot && (
+                      <div className="mb-6">
+                        <OctaveResonancePlot />
+                      </div>
+                    )}
+
+                    {/* C4-C5-G6 공명 그래프 */}
+                    {showC4C5G6Plot && (
+                      <div className="mb-6">
+                        <C4C5G6ResonancePlot />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
