@@ -3382,17 +3382,94 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                               alt="핸드팬 장력 튜닝 애니메이션"
                               className="w-full h-auto rounded-lg"
                             />
-                            <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-3">
-                              톤필드 장력–하모닉스 활성화 시퀀스
+                            <p className="text-center text-sm font-semibold text-gray-700 dark:text-gray-300 mt-3">
+                              핸드팬 톤필드 장력 정렬 개념도
+                            </p>
+                            <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-1 italic">
+                              (Elastic Tension Tuning Conceptual Map)
+                            </p>
+                            <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-2">
+                              — SND Handpan 하모닉스톤 활성화 원리를 시각적으로 추상화한 기술 개념도 —
                             </p>
                           </div>
                         )}
 
                         {/* 개념도 설명 텍스트 카드 추가 */}
                         {faq.id === "19" && (
-                          <div className="mt-6 bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-shadow">
-                            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                              위 이미지는 이러한 장력 정렬 원리를 이해하기 위한 추상화된 개념도입니다. 가상의 앵커가 톤필드를 360도 방향으로 당기는 모습은 실제 해머링 과정에서 톤필드 내외부를 두드려 금속의 탄성과 응력 분포를 미세하게 균형 맞추는 과정을 비유적으로 표현한 것입니다. 장력이 균일하게 맞춰지면 세 하모닉 모드가 조화롭게 활성화되고, 팽팽하게 당길수록 공명은 선명해지며 음정의 안정성과 음색의 깊이가 향상됩니다. 이 개념도는 실제 조율 과정에서 일어나는 보이지 않는 장력 균형을 직관적으로 보여주는 시각적 설명 자료입니다.
+                          <div className="mt-6 space-y-6">
+                            {/* 개요 */}
+                            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                                개요
+                              </h3>
+                              <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                                <p className="mb-4">
+                                  이 영상은 핸드팬 톤필드 내부에서 실제로 작용하는 <strong className="font-semibold">보이지 않는 장력(tension)</strong>이 튜닝 과정에서 어떻게 재배분되고, 그 결과 하모닉스톤이 활성화되는지 이해하기 위한 추상화된 개념적 설명 모델입니다.
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* 튜닝 과정 */}
+                            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                                튜닝 과정
+                              </h3>
+                              <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                                <p className="mb-4">
+                                  튜닝 초기의 톤필드는 장력이 불균일하여 기본음–옥타브–복합5도(1:2:3)의 세 하모닉 모드가 안정적으로 결속되지 못한 상태에서 시작합니다. 튜너는 톤필드의 내·외부를 360도 방향에서 해머링하며 금속의 탄성·응력·장력 분포를 미세하게 조정하고, 이를 통해 점차 탄력 있고 팽팽한 Elastic Tension을 만들어갑니다.
+                                </p>
+                                <p>
+                                  장력이 균일하게 정렬될수록 세 주파수의 오차가 줄고, 모드 간 진동의 <strong className="font-semibold">위상적 일치</strong>가 촉진되며, 전체 공명 구조가 안정화되는 경향을 보입니다.
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* 성능 향상 요소 */}
+                            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                                성능 향상 요소
+                              </h3>
+                              <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                                <p className="mb-4">이러한 장력 상태는 다음 특성에 유리하게 작용합니다:</p>
+                                <ul className="list-none space-y-4 ml-0">
+                                  <li>
+                                    <strong className="font-semibold">• 디튠 내성(detune resistance)</strong>: 국부 변형에 의해 음정이 쉽게 흐트러지지 않는 경향
+                                  </li>
+                                  <li>
+                                    <strong className="font-semibold">• 피치 드리프트 복원력(pitch drift resilience)</strong>: 온도·충격 등 외부 요인에 의한 피치 변화를 비교적 안정적으로 회복
+                                  </li>
+                                  <li>
+                                    <strong className="font-semibold">• 공명 선명도(clarity)</strong>: 비의도적 모드 분할이 줄어들어 하모닉스 구조가 더 뚜렷해짐
+                                  </li>
+                                  <li>
+                                    <strong className="font-semibold">• 음색의 깊이(perceived depth)</strong>: 기본음과 배음 결속이 안정되어 더 풍부하고 입체적으로 느껴짐
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+
+                            {/* 시각화 설명 */}
+                            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                                시각화 설명
+                              </h3>
+                              <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed space-y-4">
+                                <p>
+                                  영상 속 앵커(anchor)는 <strong className="font-semibold">실제 구조물이 아니라</strong>, 튜닝 과정의 장력 이동과 콤프레션·텐션 재정렬의 원리를 이해하기 위한 시각적 비유 장치로 사용된 것입니다. 붉은 인장막은 장력이 당겨지는 강도를 표시하기 위한 그래픽 요소이며, 내부의 연두·노란색 영역이 밝아지는 변화는 하모닉스톤이 활성화되는 정도를 표현하기 위한 추상적 시각화입니다.
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* 참고 */}
+                            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+                              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                                참고
+                              </h3>
+                              <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                                <p>
+                                  따라서 이 자료는 실제 물리 구조를 그대로 재현한 것이 아니라, SND Handpan의 Elastic Tension Tuning 기법과 하모닉스톤 활성화 원리를 시각적으로 이해하기 쉽도록 단순화한 개념적 참조 모델입니다.
+                                </p>
+                              </div>
                             </div>
                           </div>
                         )}
@@ -3468,17 +3545,94 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                             alt="핸드팬 장력 튜닝 애니메이션"
                             className="w-full h-auto rounded-lg"
                           />
-                          <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-3">
-                            톤필드 장력–하모닉스 활성화 시퀀스
+                          <p className="text-center text-sm font-semibold text-gray-700 dark:text-gray-300 mt-3">
+                            핸드팬 톤필드 장력 정렬 개념도
+                          </p>
+                          <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-1 italic">
+                            (Elastic Tension Tuning Conceptual Map)
+                          </p>
+                          <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-2">
+                            — SND Handpan 하모닉스톤 활성화 원리를 시각적으로 추상화한 기술 개념도 —
                           </p>
                         </div>
                       )}
 
                       {/* 개념도 설명 텍스트 카드 추가 (모바일) */}
                       {faq.id === "19" && (
-                        <div className="mt-6 bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
-                          <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                            위 이미지는 이러한 장력 정렬 원리를 이해하기 위한 추상화된 개념도입니다. 가상의 앵커가 톤필드를 360도 방향으로 당기는 모습은 실제 해머링 과정에서 톤필드 내외부를 두드려 금속의 탄성과 응력 분포를 미세하게 균형 맞추는 과정을 비유적으로 표현한 것입니다. 장력이 균일하게 맞춰지면 세 하모닉 모드가 조화롭게 활성화되고, 팽팽하게 당길수록 공명은 선명해지며 음정의 안정성과 음색의 깊이가 향상됩니다. 이 개념도는 실제 조율 과정에서 일어나는 보이지 않는 장력 균형을 직관적으로 보여주는 시각적 설명 자료입니다.
+                        <div className="mt-6 space-y-6">
+                          {/* 개요 */}
+                          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                              개요
+                            </h3>
+                            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                              <p className="mb-4">
+                                이 영상은 핸드팬 톤필드 내부에서 실제로 작용하는 <strong className="font-semibold">보이지 않는 장력(tension)</strong>이 튜닝 과정에서 어떻게 재배분되고, 그 결과 하모닉스톤이 활성화되는지 이해하기 위한 추상화된 개념적 설명 모델입니다.
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* 튜닝 과정 */}
+                          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                              튜닝 과정
+                            </h3>
+                            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                              <p className="mb-4">
+                                튜닝 초기의 톤필드는 장력이 불균일하여 기본음–옥타브–복합5도(1:2:3)의 세 하모닉 모드가 안정적으로 결속되지 못한 상태에서 시작합니다. 튜너는 톤필드의 내·외부를 360도 방향에서 해머링하며 금속의 탄성·응력·장력 분포를 미세하게 조정하고, 이를 통해 점차 탄력 있고 팽팽한 Elastic Tension을 만들어갑니다.
+                              </p>
+                              <p>
+                                장력이 균일하게 정렬될수록 세 주파수의 오차가 줄고, 모드 간 진동의 <strong className="font-semibold">위상적 일치</strong>가 촉진되며, 전체 공명 구조가 안정화되는 경향을 보입니다.
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* 성능 향상 요소 */}
+                          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                              성능 향상 요소
+                            </h3>
+                            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                              <p className="mb-4">이러한 장력 상태는 다음 특성에 유리하게 작용합니다:</p>
+                              <ul className="list-none space-y-4 ml-0">
+                                <li>
+                                  <strong className="font-semibold">• 디튠 내성(detune resistance)</strong>: 국부 변형에 의해 음정이 쉽게 흐트러지지 않는 경향
+                                </li>
+                                <li>
+                                  <strong className="font-semibold">• 피치 드리프트 복원력(pitch drift resilience)</strong>: 온도·충격 등 외부 요인에 의한 피치 변화를 비교적 안정적으로 회복
+                                </li>
+                                <li>
+                                  <strong className="font-semibold">• 공명 선명도(clarity)</strong>: 비의도적 모드 분할이 줄어들어 하모닉스 구조가 더 뚜렷해짐
+                                </li>
+                                <li>
+                                  <strong className="font-semibold">• 음색의 깊이(perceived depth)</strong>: 기본음과 배음 결속이 안정되어 더 풍부하고 입체적으로 느껴짐
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+
+                          {/* 시각화 설명 */}
+                          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                              시각화 설명
+                            </h3>
+                            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed space-y-4">
+                              <p>
+                                영상 속 앵커(anchor)는 <strong className="font-semibold">실제 구조물이 아니라</strong>, 튜닝 과정의 장력 이동과 콤프레션·텐션 재정렬의 원리를 이해하기 위한 시각적 비유 장치로 사용된 것입니다. 붉은 인장막은 장력이 당겨지는 강도를 표시하기 위한 그래픽 요소이며, 내부의 연두·노란색 영역이 밝아지는 변화는 하모닉스톤이 활성화되는 정도를 표현하기 위한 추상적 시각화입니다.
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* 참고 */}
+                          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                              참고
+                            </h3>
+                            <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                              <p>
+                                따라서 이 자료는 실제 물리 구조를 그대로 재현한 것이 아니라, SND Handpan의 Elastic Tension Tuning 기법과 하모닉스톤 활성화 원리를 시각적으로 이해하기 쉽도록 단순화한 개념적 참조 모델입니다.
+                              </p>
+                            </div>
                           </div>
                         </div>
                       )}
