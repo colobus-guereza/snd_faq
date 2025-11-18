@@ -172,11 +172,11 @@ export default function AcousticMaturityChart() {
                   strokeWidth={1.5}
                 />
               ))}
-              <Line 
-                type="monotone" 
-                dataKey="tuningQuality" 
-                name="정기리튠 실시" 
-                dot={(props: any) => {
+              <Line
+                type="monotone"
+                dataKey="tuningQuality"
+                name="정기리튠 실시"
+                dot={(props: { cx?: number; cy?: number; payload?: { t?: number; isRetunePoint?: boolean } }) => {
                   const { cx, cy, payload } = props;
                   if (payload?.isRetunePoint) {
                     return (

@@ -154,7 +154,7 @@ export default function ErrorBoundary() {
 
     // console.error도 가로채서 필터링
     const originalConsoleError = console.error;
-    console.error = (...args: any[]) => {
+    console.error = (...args: unknown[]) => {
       const errorString = args.join(" ");
       if (
         !errorString.includes("className.split") &&
@@ -168,7 +168,7 @@ export default function ErrorBoundary() {
 
     // console.warn도 필터링 (일부 브라우저에서 경고로 표시)
     const originalConsoleWarn = console.warn;
-    console.warn = (...args: any[]) => {
+    console.warn = (...args: unknown[]) => {
       const warnString = args.join(" ");
       if (
         !warnString.includes("className.split") &&

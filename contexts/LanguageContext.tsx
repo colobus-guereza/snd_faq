@@ -6,11 +6,19 @@ import faqsEn from "@/data/faqs.en.json";
 
 type Language = "ko" | "en";
 
+interface FAQ {
+  id: string;
+  title?: string;
+  content?: string;
+  tags?: string[];
+  [key: string]: unknown;
+}
+
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: (key: string) => string;
-  getFAQ: (id: string) => any | null; // FAQ 번역 데이터 가져오기
+  getFAQ: (id: string) => FAQ | null; // FAQ 번역 데이터 가져오기
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -40,11 +48,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   };
 
   // FAQ 번역 데이터 가져오기
-  const getFAQ = (id: string) => {
+  const getFAQ = (id: string): FAQ | null => {
     if (language === "ko") {
       return null; // 한국어는 원본 사용
     }
-    return faqsEn.find((faq: any) => faq.id === id) || null;
+    return (faqsEn.find((faq: FAQ) => faq.id === id) as FAQ) || null;
   };
 
   // 마운트 전에는 한국어 기본값 반환

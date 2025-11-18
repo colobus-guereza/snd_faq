@@ -1702,9 +1702,10 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                               angle={0}
                               textAnchor="middle"
                               height={100}
-                              tick={(props: any) => {
+                              tick={(props: { x?: number; y?: number; payload?: { index?: number } }) => {
                                 const { x, y, payload } = props;
-                                const dataIndex = payload.index;
+                                const dataIndex = payload?.index;
+                                if (dataIndex === undefined) return <g />;
                                 const data = [
                                   {
                                     property: language === "ko" ? "탄성률" : "Elastic Modulus",
@@ -1720,6 +1721,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                   },
                                 ];
                                 const item = data[dataIndex];
+                                if (!item) return <g />;
                                 return (
                                   <g transform={`translate(${x},${y})`}>
                                     <text
@@ -1797,13 +1799,14 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                             margin={{ top: 20, right: 30, left: 20, bottom: isMobile ? 120 : 80 }}
                           >
                             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                            <XAxis 
-                              dataKey="factor" 
+                            <XAxis
+                              dataKey="factor"
                               angle={0}
                               textAnchor="middle"
                               height={isMobile ? 120 : 100}
-                              tick={(props: any) => {
+                              tick={(props: { x?: number; y?: number; payload?: { value?: string } }) => {
                                 const { x, y, payload } = props;
+                                if (!payload?.value) return <g />;
                                 const lines = payload.value.split('\n');
                                 const fontSize = isMobile ? 10 : 12;
                                 const lineHeight = isMobile ? 12 : 14;
@@ -1958,15 +1961,14 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
       {/* 바텀 업그레이드 페이지 (ID 41) - 별도 처리 */}
       {isBottomUpgradePage && (
         <div className="prose prose-sm max-w-none">
+          {/* 배경 이미지 */}
+          <div 
+            className="w-full h-[400px] md:h-[500px] lg:h-[600px] bg-cover bg-center bg-no-repeat mb-6 rounded-lg"
+            style={{
+              backgroundImage: 'url(/images/handpan.png)',
+            }}
+          />
           <div className="space-y-6">
-            {/* 핸드팬 이미지 */}
-            <div className="mb-6">
-              <img
-                src="/images/handpan.png"
-                alt="핸드팬"
-                className="w-full h-auto rounded-lg"
-              />
-            </div>
 
             {/* 제목 및 소개 */}
             <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
@@ -1983,7 +1985,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                   최근 유튜브 및 SNS에서 많이 접하시는 감성적인 핸드팬 연주는, 대부분 <strong className="font-semibold">하단 베이스 딩(Ding)</strong>이 추가된 악기를 기반으로 이루어집니다. 이러한 악기들은 상단의 기본 딩 1개에 더해 하단에 2개의 베이스 노트가 포함되어 있어, 하나의 악기 안에서 베이스라인–코드–멜로디를 동시에 표현할 수 있는 스토리텔링 기반의 현대적 연주 스타일이 가능합니다.
                 </p>
                 <p>
-                  하지만 이미 9~10개 음 구성의 일반 악기를 사용 중이신 경우, 새로운 뮤턴트 악기를 새로 구매하는 것이 가격적으로 부담되거나, 현재 사용 중인 악기에 애정이 있어 계속 사용하고 싶으신 경우도 많습니다. 이러한 상황을 고려하여 SND Handpan에서는 현재 가지고 계신 일반 악기의 하단에 베이스 딩 2개를 추가하는 <strong className="font-semibold">'바텀 업그레이드(Bottom Upgrade)'</strong> 서비스를 제공하고 있습니다.
+                  하지만 이미 9~10개 음 구성의 일반 악기를 사용 중이신 경우, 새로운 뮤턴트 악기를 새로 구매하는 것이 가격적으로 부담되거나, 현재 사용 중인 악기에 애정이 있어 계속 사용하고 싶으신 경우도 많습니다. 이러한 상황을 고려하여 SND Handpan에서는 현재 가지고 계신 일반 악기의 하단에 베이스 딩 2개를 추가하는 <strong className="font-semibold">&apos;바텀 업그레이드(Bottom Upgrade)&apos;</strong> 서비스를 제공하고 있습니다.
                 </p>
               </div>
             </div>
@@ -2842,7 +2844,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
               const parseTechnicalContent = (content: string) => {
                 const sections: Array<{ type: string; title?: string; items?: Array<{ label: string; text: string }>; text?: string }> = [];
                 const paragraphs = content.split("\n\n");
-                let currentSection: any = null;
+                let currentSection: { type: string; title?: string; items?: Array<{ label: string; text: string }>; text?: string } | null = null;
                 
                 for (const para of paragraphs) {
                   const trimmed = para.trim();
@@ -2961,7 +2963,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                 </h4>
                                 {section.items && section.items.length > 0 && (
                                   <div className="space-y-3">
-                                    {section.items.map((item: any, itemIndex: number) => (
+                                    {section.items.map((item: { label?: string; text: string }, itemIndex: number) => (
                                       <div key={itemIndex} className="flex items-start gap-3">
                                         {item.label && (
                                           <div className="font-semibold text-gray-900 dark:text-gray-100 text-sm min-w-[80px] flex-shrink-0">
@@ -2997,7 +2999,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                                 </h4>
                                 {section.items && section.items.length > 0 && (
                                   <div className="space-y-3">
-                                    {section.items.map((item: any, itemIndex: number) => (
+                                    {section.items.map((item: { label?: string; text: string }, itemIndex: number) => (
                                       <div key={itemIndex} className="flex items-start gap-3">
                                         {item.label && (
                                           <div className="font-semibold text-gray-900 dark:text-gray-100 text-sm min-w-[80px] flex-shrink-0">
@@ -3056,7 +3058,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                     <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
                       <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                          현상 설명 — '옥타브 공명'
+                          현상 설명 — &apos;옥타브 공명&apos;
                         </h4>
                       </div>
                       <div className="space-y-4">
@@ -3407,7 +3409,7 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
                           최근 유튜브 및 SNS에서 많이 접하시는 감성적인 핸드팬 연주는, 대부분 <strong className="font-semibold">하단 베이스 딩(Ding)</strong>이 추가된 악기를 기반으로 이루어집니다. 이러한 악기들은 상단의 기본 딩 1개에 더해 하단에 2개의 베이스 노트가 포함되어 있어, 하나의 악기 안에서 베이스라인–코드–멜로디를 동시에 표현할 수 있는 스토리텔링 기반의 현대적 연주 스타일이 가능합니다.
                         </p>
                         <p>
-                          하지만 이미 9~10개 음 구성의 일반 악기를 사용 중이신 경우, 새로운 뮤턴트 악기를 새로 구매하는 것이 가격적으로 부담되거나, 현재 사용 중인 악기에 애정이 있어 계속 사용하고 싶으신 경우도 많습니다. 이러한 상황을 고려하여 SND Handpan에서는 현재 가지고 계신 일반 악기의 하단에 베이스 딩 2개를 추가하는 <strong className="font-semibold">'바텀 업그레이드(Bottom Upgrade)'</strong> 서비스를 제공하고 있습니다.
+                          하지만 이미 9~10개 음 구성의 일반 악기를 사용 중이신 경우, 새로운 뮤턴트 악기를 새로 구매하는 것이 가격적으로 부담되거나, 현재 사용 중인 악기에 애정이 있어 계속 사용하고 싶으신 경우도 많습니다. 이러한 상황을 고려하여 SND Handpan에서는 현재 가지고 계신 일반 악기의 하단에 베이스 딩 2개를 추가하는 <strong className="font-semibold">&apos;바텀 업그레이드(Bottom Upgrade)&apos;</strong> 서비스를 제공하고 있습니다.
                         </p>
                       </div>
                     </div>

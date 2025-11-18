@@ -19,10 +19,8 @@ export default function Home() {
     const validCategories: Category[] = [
       "기술특징",
       "튜닝리튠",
-      "관리보관",
-      "파손수리",
       "교육레슨",
-      "결제배송",
+      "고객지원",
     ];
     if (categoryParam && validCategories.includes(categoryParam as Category)) {
       return categoryParam as Category;
@@ -65,7 +63,7 @@ export default function Home() {
         minMatchCharLength: 2, // 최소 매칭 문자 길이 (2글자 이상)
         includeScore: true,
         // 태그 배열 검색을 위한 설정
-        getFn: (obj, path) => {
+        getFn: (obj, path): string | readonly string[] => {
           if (path === "searchTags") {
             return Array.isArray(obj.searchTags) ? obj.searchTags.join(" ") : "";
           }
@@ -73,7 +71,8 @@ export default function Home() {
             // 본문 내용을 문자열로 반환 (null/undefined 처리)
             return obj.searchContent || "";
           }
-          return obj[path as keyof typeof obj] || "";
+          const value = obj[path as keyof typeof obj];
+          return typeof value === "string" ? value : "";
         },
         // 부분 일치 검색 활성화
         ignoreLocation: true, // 위치 무시하고 전체 텍스트에서 검색
@@ -120,17 +119,6 @@ export default function Home() {
           "32": 3,  // 튜닝을 하면 소리가 더 좋아지는게 맞나요?
           "27": 4,  // 언제 리튠을 받으면 좋을까요?
           "31": 5,  // 튜닝 비용은 어떻게 책정되어 있나요?
-        };
-        result.sort((a, b) => {
-          const orderA = orderMap[a.id] || 999;
-          const orderB = orderMap[b.id] || 999;
-          return orderA - orderB;
-        });
-      } else if (selectedCategory === "관리보관") {
-        // 관리보관 카테고리는 특정 순서로 정렬
-        const orderMap: Record<string, number> = {
-          "12": 1,  // 악기 보관 방법이 궁금해요.
-          "5": 2,   // 악기 관리 방법을 알려주세요.
         };
         result.sort((a, b) => {
           const orderA = orderMap[a.id] || 999;
@@ -191,17 +179,6 @@ export default function Home() {
           "32": 3,  // 튜닝을 하면 소리가 더 좋아지는게 맞나요?
           "27": 4,  // 언제 리튠을 받으면 좋을까요?
           "31": 5,  // 튜닝 비용은 어떻게 책정되어 있나요?
-        };
-        result.sort((a, b) => {
-          const orderA = orderMap[a.id] || 999;
-          const orderB = orderMap[b.id] || 999;
-          return orderA - orderB;
-        });
-      } else if (selectedCategory === "관리보관") {
-        // 관리보관 카테고리는 특정 순서로 정렬
-        const orderMap: Record<string, number> = {
-          "12": 1,  // 악기 보관 방법이 궁금해요.
-          "5": 2,   // 악기 관리 방법을 알려주세요.
         };
         result.sort((a, b) => {
           const orderA = orderMap[a.id] || 999;

@@ -49,10 +49,8 @@ export default function CommonLayout({ children }: CommonLayoutProps) {
     const validCategories: Category[] = [
       "기술특징",
       "튜닝리튠",
-      "관리보관",
-      "파손수리",
       "교육레슨",
-      "결제배송",
+      "고객지원",
     ];
     if (categoryParam && validCategories.includes(categoryParam as Category)) {
       return categoryParam as Category;

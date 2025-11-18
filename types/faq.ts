@@ -7,10 +7,8 @@ export interface FAQ {
   tags?: string[];
 }
 
-export type Category = 
+export type Category =
   | "기술특징"
   | "튜닝리튠"
-  | "관리보관"
-  | "파손수리"
   | "교육레슨"
-  | "결제배송";
+  | "고객지원";

@@ -1311,7 +1311,7 @@ const TonefieldTensionDiagram: React.FC<TonefieldTensionDiagramProps> = ({
             const outerY2 = adjustedCy + ry * Math.sin(endAngle);
 
             // 각도 차이 계산
-            let angleDiff = endAngle - startAngle;
+            const angleDiff = endAngle - startAngle;
             const largeArcFlag = angleDiff > Math.PI ? 1 : 0;
 
             // 부채꼴 path: 안쪽 시작 → 안쪽 호 → 바깥쪽 끝으로 직선 → 바깥 호 역방향 → 안쪽 시작으로 직선
