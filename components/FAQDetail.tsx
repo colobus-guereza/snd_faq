@@ -52,11 +52,14 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
   // "프레스 VS 메탈스피닝" 질문(id: "16")은 카드 형태로 표시
   const isPressSpinningPage = faq.id === "16";
   
+  // "바텀 업그레이드" 질문(id: "41")은 카드 형태로 표시
+  const isBottomUpgradePage = faq.id === "41";
+  
   // "튜닝을 하면 소리가 더 좋아지는게 맞나요?" 질문(id: "32")은 그래프 표시
   const isTuningSoundPage = faq.id === "32";
   
   // 자세히보기/간단히보기 기능이 필요한 질문 ID 목록
-  const expandableContentPages = ["3", "32", "34", "19", "20"];
+  const expandableContentPages = ["3", "32", "34", "19", "20", "41"];
   const isExpandableContentPage = expandableContentPages.includes(faq.id);
   
   // 영어일 경우 번역된 FAQ 데이터 사용
@@ -1952,8 +1955,146 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
         </div>
       )}
 
-      {/* 본문 텍스트 - displayContent가 있을 때만 표시 (제작과정 페이지, DC04 페이지, 프레스 VS 메탈스피닝 페이지, 표면 벗겨짐 페이지, 외부충격 표면 움푹 파임 페이지, 톤필드 소리 안남 페이지, 옆면 벌어짐 페이지, 배송 기간 페이지, 배송조회 페이지, 전자세금계산서 페이지, 악기 보관 방법 페이지, 악기 관리 방법 페이지, 언제 리튠을 받으면 좋을까요 페이지 제외) */}
-      {displayContent && !isManufacturingPage && !isDC04Page && !isPressSpinningPage && !isSurfacePeelingPage && !isDentedSurfacePage && !isNoSoundPage && !isSideOpenedPage && !isShippingPeriodPage && !isShippingTrackingPage && !isReceiptPage && !isStorageMethodPage && !isMaintenanceMethodPage && !isRetunePeriodPage && (
+      {/* 바텀 업그레이드 페이지 (ID 41) - 별도 처리 */}
+      {isBottomUpgradePage && (
+        <div className="prose prose-sm max-w-none">
+          <div className="space-y-6">
+            {/* 제목 및 소개 */}
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+              <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                  바텀 업그레이드 안내
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+                  (Bottom Upgrade – 하단 베이스 노트 추가 서비스)
+                </p>
+              </div>
+              <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed space-y-4">
+                <p>
+                  최근 유튜브 및 SNS에서 많이 접하시는 감성적인 핸드팬 연주는, 대부분 <strong className="font-semibold">하단 베이스 딩(Ding)</strong>이 추가된 악기를 기반으로 이루어집니다. 이러한 악기들은 상단의 기본 딩 1개에 더해 하단에 2개의 베이스 노트가 포함되어 있어, 하나의 악기 안에서 베이스라인–코드–멜로디를 동시에 표현할 수 있는 스토리텔링 기반의 현대적 연주 스타일이 가능합니다.
+                </p>
+                <p>
+                  하지만 이미 9~10개 음 구성의 일반 악기를 사용 중이신 경우, 새로운 뮤턴트 악기를 새로 구매하는 것이 가격적으로 부담되거나, 현재 사용 중인 악기에 애정이 있어 계속 사용하고 싶으신 경우도 많습니다. 이러한 상황을 고려하여 SND Handpan에서는 현재 가지고 계신 일반 악기의 하단에 베이스 딩 2개를 추가하는 <strong className="font-semibold">'바텀 업그레이드(Bottom Upgrade)'</strong> 서비스를 제공하고 있습니다.
+                </p>
+              </div>
+            </div>
+
+            {/* 바텀 업그레이드가 특히 적합한 분들 */}
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+              <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                  바텀 업그레이드가 특히 적합한 분들
+                </h3>
+              </div>
+              <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                <ul className="list-none space-y-4 ml-0">
+                  <li>
+                    <strong className="font-semibold">• 9~10개 음 구성의 일반 악기를 사용 중이며,</strong>
+                    <p className="mt-1 ml-4">현대적 감성 연주나 베이스 기반의 표현에서 한계를 느끼시는 분</p>
+                  </li>
+                  <li>
+                    <strong className="font-semibold">• 400만 원 이상의 고가 뮤턴트 악기 구매는 부담되지만,</strong>
+                    <p className="mt-1 ml-4">그에 준하는 베이스 표현력을 원하시는 분</p>
+                  </li>
+                  <li>
+                    <strong className="font-semibold">• 뮤턴트 악기 또는 바텀 베이스 악기의 중고 구매 시</strong>
+                    <p className="mt-1 ml-4">신뢰도·하자 여부·추가 튜닝 비용이 걱정되시는 분</p>
+                  </li>
+                  <li>
+                    <strong className="font-semibold">• 현재 사용 중인 악기에 대한 애정과 익숙함을 유지한 채</strong>
+                    <p className="mt-1 ml-4">연주 표현력을 확장하고 싶으신 분</p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* 작업 방식 및 기술적 특징 */}
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+              <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                  작업 방식 및 기술적 특징
+                </h3>
+              </div>
+              <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed space-y-4">
+                <p>
+                  바텀 업그레이드는 단순히 노트를 새로 뚫는 작업이 아니라, 새 악기를 제작하는 것에 준하는 고난도 공정을 포함합니다.
+                </p>
+                <ul className="list-none space-y-4 ml-0">
+                  <li>
+                    <strong className="font-semibold">• 상·하판 분리</strong>
+                    <p className="mt-1 ml-4">이미 접착된 두 판을 손상 없이 분리하는 작업은 높은 기술을 요구합니다.</p>
+                  </li>
+                  <li>
+                    <strong className="font-semibold">• 하판 베이스 노트 신규 제작 및 튜닝</strong>
+                    <p className="mt-1 ml-4">하단에 두 개의 베이스 딩을 추가하고, 각각의 음정·진동모드·하모닉스 구조(1:2:3)를 정밀하게 튜닝합니다.</p>
+                  </li>
+                  <li>
+                    <strong className="font-semibold">• 재접착 및 구조 복원</strong>
+                    <p className="mt-1 ml-4">하판을 다시 결합한 후 악기 전체의 공명 구조가 안정적으로 유지되도록 정교한 정렬 작업이 필요합니다.</p>
+                  </li>
+                  <li>
+                    <strong className="font-semibold">• 최종 전체 튜닝 및 전수 점검 포함</strong>
+                    <p className="mt-1 ml-4">바텀 업그레이드 과정에는 별도로 진행할 경우 비용이 발생하는 <strong className="font-semibold">전체 음역대의 재점검·재튜닝(전수튜닝)</strong>이 추가 비용 없이 포함됩니다.</p>
+                  </li>
+                </ul>
+                <p className="mt-4">
+                  이 모든 과정은 새 악기 제작과 동일한 시간과 기술이 투입되는 공정입니다.
+                </p>
+              </div>
+            </div>
+
+            {/* 비용 안내 */}
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+              <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                  비용 안내
+                </h3>
+              </div>
+              <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed space-y-3">
+                <ul className="list-none space-y-2 ml-0">
+                  <li>재접착 공정: <strong className="font-semibold">400,000원</strong></li>
+                  <li>베이스 딩(노트) 추가: <strong className="font-semibold">300,000원 × 2개 = 600,000원</strong></li>
+                </ul>
+                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    총 비용: <span className="text-[#14B8A6]">1,000,000원</span>
+                  </p>
+                </div>
+                <p className="mt-4">
+                  이는 새 뮤턴트 악기를 구매하거나, 이미 하판에 베이스 노트가 포함된 악기를 중고로 구매하는 것보다 가격 대비 효율이 높은 업그레이드 옵션입니다.
+                </p>
+                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    * D5, E5처럼, 딩이 아닌 일반 사이즈 노트 추가도 가능하며, 비용은 <strong className="font-semibold">200,000원</strong>입니다.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 바텀 업그레이드의 장점 */}
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+              <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                  바텀 업그레이드의 장점
+                </h3>
+              </div>
+              <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                <ul className="list-disc list-inside space-y-3 ml-4">
+                  <li>현재 보유한 악기를 그대로 유지하면서 뮤턴트 연주 스타일 구현 가능</li>
+                  <li>하단 베이스라인을 통해 현대적 감성·화성 기반 연주 가능</li>
+                  <li>새 악기를 구매하는 것보다 경제적</li>
+                  <li>업그레이드 과정에서 전체 검수·전수 튜닝 포함 → 악기 컨디션 개선 효과</li>
+                  <li>개인이 아끼던 악기의 고유 음색·특성 유지</li>
+                  <li>최근 트렌드(베이스 화성 기반 연주)에 적합하여 연주 폭이 크게 확장</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 본문 텍스트 - displayContent가 있을 때만 표시 (제작과정 페이지, DC04 페이지, 프레스 VS 메탈스피닝 페이지, 표면 벗겨짐 페이지, 외부충격 표면 움푹 파임 페이지, 톤필드 소리 안남 페이지, 옆면 벌어짐 페이지, 배송 기간 페이지, 배송조회 페이지, 전자세금계산서 페이지, 악기 보관 방법 페이지, 악기 관리 방법 페이지, 언제 리튠을 받으면 좋을까요 페이지, 바텀 업그레이드 페이지 제외) */}
+      {displayContent && !isManufacturingPage && !isDC04Page && !isPressSpinningPage && !isSurfacePeelingPage && !isDentedSurfacePage && !isNoSoundPage && !isSideOpenedPage && !isShippingPeriodPage && !isShippingTrackingPage && !isReceiptPage && !isStorageMethodPage && !isMaintenanceMethodPage && !isRetunePeriodPage && !isBottomUpgradePage && (
         <div className="prose prose-sm max-w-none">
           {isTuningCostPage ? (
             // 튜닝 비용 페이지는 견적서 양식으로 표시
@@ -3235,6 +3376,113 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
           ) : isExpandableContentPage ? (
             // 자세히보기/간단히보기 기능이 있는 페이지는 첫 번째 문단은 항상 표시, 나머지는 접기/펼치기
             (() => {
+              // FAQ ID 41 (바텀 업그레이드)의 경우 카드 형태로 구조화된 내용 표시
+              if (faq.id === "41") {
+                return (
+                  <div className="space-y-6">
+                    {/* 제목 및 소개 */}
+                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                      <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                          바텀 업그레이드 안내
+                        </h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+                          (Bottom Upgrade – 하단 베이스 노트 추가 서비스)
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          SND Handpan 공식 기술지원 문서
+                        </p>
+                      </div>
+                      <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed space-y-4">
+                        <p>
+                          최근 유튜브 및 SNS에서 많이 접하시는 감성적인 핸드팬 연주는, 대부분 <strong className="font-semibold">하단 베이스 딩(Ding)</strong>이 추가된 악기를 기반으로 이루어집니다. 이러한 악기들은 상단의 기본 딩 1개에 더해 하단에 2개의 베이스 노트가 포함되어 있어, 하나의 악기 안에서 베이스라인–코드–멜로디를 동시에 표현할 수 있는 스토리텔링 기반의 현대적 연주 스타일이 가능합니다.
+                        </p>
+                        <p>
+                          하지만 이미 9~10개 음 구성의 일반 악기를 사용 중이신 경우, 새로운 뮤턴트 악기를 새로 구매하는 것이 가격적으로 부담되거나, 현재 사용 중인 악기에 애정이 있어 계속 사용하고 싶으신 경우도 많습니다. 이러한 상황을 고려하여 SND Handpan에서는 현재 가지고 계신 일반 악기의 하단에 베이스 딩 2개를 추가하는 <strong className="font-semibold">'바텀 업그레이드(Bottom Upgrade)'</strong> 서비스를 제공하고 있습니다.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* 작업 방식 및 기술적 특징 */}
+                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                      <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                          작업 방식 및 기술적 특징
+                        </h3>
+                      </div>
+                      <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed space-y-4">
+                        <p>
+                          바텀 업그레이드는 단순히 노트를 새로 뚫는 작업이 아니라, 새 악기를 제작하는 것에 준하는 고난도 공정을 포함합니다.
+                        </p>
+                        <ul className="list-none space-y-4 ml-0">
+                          <li>
+                            <strong className="font-semibold">• 상·하판 분리</strong>
+                            <p className="mt-1 ml-4">이미 접착된 두 판을 손상 없이 분리하는 작업은 높은 기술을 요구합니다.</p>
+                          </li>
+                          <li>
+                            <strong className="font-semibold">• 하판 베이스 노트 신규 제작 및 튜닝</strong>
+                            <p className="mt-1 ml-4">하단에 두 개의 베이스 딩을 추가하고, 각각의 음정·진동모드·하모닉스 구조(1:2:3)를 정밀하게 튜닝합니다.</p>
+                          </li>
+                          <li>
+                            <strong className="font-semibold">• 재접착 및 구조 복원</strong>
+                            <p className="mt-1 ml-4">하판을 다시 결합한 후 악기 전체의 공명 구조가 안정적으로 유지되도록 정교한 정렬 작업이 필요합니다.</p>
+                          </li>
+                          <li>
+                            <strong className="font-semibold">• 최종 전체 튜닝 및 전수 점검 포함</strong>
+                            <p className="mt-1 ml-4">바텀 업그레이드 과정에는 별도로 진행할 경우 비용이 발생하는 <strong className="font-semibold">전체 음역대의 재점검·재튜닝(전수튜닝)</strong>이 추가 비용 없이 포함됩니다.</p>
+                          </li>
+                        </ul>
+                        <p className="mt-4">
+                          이 모든 과정은 새 악기 제작과 동일한 시간과 기술이 투입되는 공정입니다.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* 비용 안내 */}
+                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                      <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                          비용 안내
+                        </h3>
+                      </div>
+                      <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed space-y-3">
+                        <ul className="list-none space-y-2 ml-0">
+                          <li>재접착 공정: <strong className="font-semibold">400,000원</strong></li>
+                          <li>베이스 딩(노트) 추가: <strong className="font-semibold">300,000원 × 2개 = 600,000원</strong></li>
+                        </ul>
+                        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                            총 비용: <span className="text-[#14B8A6]">1,000,000원</span>
+                          </p>
+                        </div>
+                        <p className="mt-4">
+                          이는 새 뮤턴트 악기를 구매하거나, 이미 하판에 베이스 노트가 포함된 악기를 중고로 구매하는 것보다 가격 대비 효율이 높은 업그레이드 옵션입니다.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* 바텀 업그레이드의 장점 */}
+                    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+                      <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                          바텀 업그레이드의 장점
+                        </h3>
+                      </div>
+                      <div className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                        <ul className="list-disc list-inside space-y-3 ml-4">
+                          <li>현재 보유한 악기를 그대로 유지하면서 뮤턴트 연주 스타일 구현 가능</li>
+                          <li>하단 베이스라인을 통해 현대적 감성·화성 기반 연주 가능</li>
+                          <li>새 악기를 구매하는 것보다 경제적</li>
+                          <li>업그레이드 과정에서 전체 검수·전수 튜닝 포함 → 악기 컨디션 개선 효과</li>
+                          <li>개인이 아끼던 악기의 고유 음색·특성 유지</li>
+                          <li>최근 트렌드(베이스 화성 기반 연주)에 적합하여 연주 폭이 크게 확장</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+              
               const paragraphs = displayContent.split("\n\n");
               const firstParagraph = paragraphs[0];
               
