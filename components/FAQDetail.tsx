@@ -1959,6 +1959,15 @@ export default function FAQDetail({ faq, returnCategory }: FAQDetailProps) {
       {isBottomUpgradePage && (
         <div className="prose prose-sm max-w-none">
           <div className="space-y-6">
+            {/* 핸드팬 이미지 */}
+            <div className="mb-6">
+              <img
+                src="/images/handpan.png"
+                alt="핸드팬"
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+
             {/* 제목 및 소개 */}
             <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
               <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
